@@ -1,0 +1,229 @@
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var exphbs = require('express-handlebars');
+var expressValidator = require('express-validator');
+var flash = require('connect-flash');
+var session = require('express-session');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var mongo = require('mongodb');
+var mongoose = require('mongoose');
+
+var request = require('request');
+var fs = require('fs');
+var data = require("./data.js");
+var path = require('path');
+var moment = require('moment');
+var ejs = require('ejs');
+var functions = require('./resources/functions.js')
+
+
+
+mongoose.connect('mongodb://localhost/loginapp');
+var db = mongoose.connection;
+
+var routes = require('./routes/index');
+var users = require('./routes/users');
+
+// Init App
+var app = express();
+
+
+// here you set that all templates are located in `/views` directory
+app.set('views', __dirname + '/views');
+app.use(express.static(__dirname + '/public'));
+// here you set that you're using `ejs` template engine, and the
+// default extension is `ejs`
+app.engine('handlebars', exphbs({defaultLayout:'layout'}));
+// app.registerPartials(__dirname + '/templates/theme/includes');
+app.set('view engine', 'handlebars');
+
+// BodyParser Middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+
+// Set Static Folder
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Express Session
+app.use(session({
+    secret: 'secret',
+    saveUninitialized: true,
+    resave: true
+}));
+
+
+
+
+// Express Session
+app.use(session({
+    secret: 'secret',
+    saveUninitialized: true,
+    resave: true
+}));
+
+// Passport init
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Express Validator
+app.use(expressValidator({
+  errorFormatter: function(param, msg, value) {
+      var namespace = param.split('.')
+      , root    = namespace.shift()
+      , formParam = root;
+
+    while(namespace.length) {
+      formParam += '[' + namespace.shift() + ']';
+    }
+    return {
+      param : formParam,
+      msg   : msg,
+      value : value
+    };
+  }
+}));
+
+// Connect Flash
+app.use(flash());
+
+// Global Vars
+app.use(function (req, res, next) {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
+  res.locals.user = req.user || null;
+  next();
+});
+
+
+
+app.use('/', routes);
+app.use('/users', users);
+
+
+// require('./users/server/routes')(app);
+
+
+// My Configurations
+$accountid= "NNx1cEtu";
+$secret="xDw3oz05F9o05r1PrXfHnLNSadYltJEOr30V7TCN4KDGERALJk2jqe35p3c4ZRhM";
+$serverPort = 3000;
+
+
+
+
+
+
+
+
+
+
+
+
+
+$token = null;
+app.get('/authorize', function (req, res) {
+	
+	tokenHost = "https://www.wrike.com/oauth2/token"
+	$grant_type = "authorization_code"
+	$authorize_code = req.query.code
+
+	// Request Data from wrike
+	Resources.load(require('./resources/api.js')).then(resources => {
+		resources.fetchData($parsedToken).then(() => {
+			resources.get('tasks').toFile('Wrike_data.HTML', '/');
+
+			//resources.update('comments').updateData($parsedToken);
+
+			resources.toFiles();
+			res.send(resources.toHTML());
+
+		});
+	});
+
+})
+
+
+/**
+*  Dashboard
+*/
+app.get('/', function(req, res){
+	// Get content from file
+ var tasksContents = fs.readFileSync("data/tasks.json");
+ var foldersContents = fs.readFileSync("data/folders.json");
+ var workflowsContents = fs.readFileSync("data/workflows.json");
+ var accountsContents = fs.readFileSync("data/accounts.json");
+ var contactsContents = fs.readFileSync("data/contacts.json");
+ var groupsContents = fs.readFileSync("data/groups.json");
+ var invitationsContents = fs.readFileSync("data/invitations.json");
+ var customfieldsContents = fs.readFileSync("data/customfields.json");
+ var commentsContents = fs.readFileSync("data/comments.json");
+ var timelogsContents = fs.readFileSync("data/timelogs.json");
+ var attachmentsContents = fs.readFileSync("data/attachments.json");
+
+ functions.foldersHeierarcy(foldersContents).then((foldersHeiraricalData)=>{
+ 	res.render('theme/index', {
+ 						  layout: 'layout2',
+						  'tasks': tasksContents, 
+						  'folders': foldersContents, 
+						  //'foldersHeiraricalData': foldersHeiraricalData[0],
+						  'foldermenu':  foldersHeiraricalData,
+						  'workflows': workflowsContents,
+						  'accounts': accountsContents, 
+						  'contacts': contactsContents, 
+						  'groups':groupsContents,
+						  'invitations':invitationsContents,
+						  'customfields':customfieldsContents,
+						  'comments':commentsContents,
+						  'timelogs':timelogsContents,
+						  'attachments':attachmentsContents
+						});
+ 	});
+})
+	
+
+
+
+
+app.get('/folders', function(req, res){
+
+	var folderId = req.query.id
+ 	var foldersContents = fs.readFileSync("data/folders.json");
+ 	functions.foldersHeierarcy(foldersContents, folderId).then((foldersHeiraricalData)=>{
+		functions.foldersDetails(foldersContents, folderId).then((folderDetailsData)=>{
+			console.log(folderDetailsData);
+			res.render('theme/folderdetails', {
+				layout: 'layout2',
+				'folderDetails':  folderDetailsData,
+				'foldermenu':  foldersHeiraricalData
+			});
+		})
+	});
+
+})
+
+
+app.get('/contacts', function(req, res){
+
+	var contactsContents = fs.readFileSync("data/contacts.json");
+ 	var foldersContents = fs.readFileSync("data/folders.json");
+ 	functions.foldersHeierarcy(foldersContents).then((foldersHeiraricalData)=>{
+			res.render('theme/contacts', {
+				layout: 'layout2',
+				'contacts':  contactsContents,
+				'foldermenu':  foldersHeiraricalData
+			});
+	});
+
+})
+
+// Set Port
+app.set('port', (process.env.PORT || 3000));
+
+app.listen(app.get('port'), function(){
+	console.log('Server started on port '+app.get('port'));
+});
