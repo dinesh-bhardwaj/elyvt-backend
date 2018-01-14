@@ -1,5 +1,9 @@
-<body class="nav-md">
 
+<style>
+@media only screen and (max-width: 1024px) {.login,body { background-image: url(/build/images/bg_3_mobile.jpg) !important; }}
+.login, body { background-image: url(/build/images/bg_3.jpg) !important; }
+.login_content {     min-width: 280px;     }
+</style>
   <script>
   if (jQuery("body").width() < 760) {
     $('body').addClass('nav-sm');
@@ -29,44 +33,31 @@
          <nav aria-label="breadcrumb" role="navigation">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Profile</li>
+                    <li class="breadcrumb-item active" aria-current="page">Profile update</li>
                 </ol>
             </nav>
        
 
+        <div class="clearfix"></div>
 
         <section class="login_content">
 
               <form method="POST">
-              			<legend>My Profile</legend>
-              			<div class="col-md-6">
-                      <label for="text">First Name</label>
+              			<legend>Email</legend>
+              			<div class="form-group">
+                      <label for="email">First Name</label>
                       <input class="form-control" type="text" name="fname" value="{{{ userDetails.firstname }}}" autofocus="autofocus"/>
                     </div>
 
-                    <div class="col-md-6">
-
-                      <label for="text">Last Name</label>
+                    <div class="form-group">
+                      <label for="email">Last Name</label>
                       <input class="form-control" type="text" name="lname" value="{{{ userDetails.lastname }}}" autofocus="autofocus"/>
                     </div>
 
-                    <div class="col-md-6">
-
-                      <label for="email">E-mail</label>
-                      <input class="form-control" type="text" name="text" value="{{{ userDetails.text }}}" autofocus="autofocus"/>
-                    </div>
-                      <div class="col-md-6">
-                      <label for="text">Roles</label>
-                      <input class="form-control" type="text" name="roles" value="{{{ userDetails.roles }}}" autofocus="autofocus"/>
-                    </div>
-					<div class="col-md-6">
-                      <label for="text">Title</label>
+                    <div class="form-group">
+                      <label for="email">Title</label>
                       <input class="form-control" type="text" name="title" value="{{{ userDetails.title }}}" autofocus="autofocus"/>
                     </div>
-					<div class="col-md-6">
-					<label for="text">Type</label>
-                      <input class="form-control" type="text" name="type" value="{{{ userDetails.type }}}" autofocus="autofocus"/>
-					</div>
 
               			<button class="btn btn-primary" type="submit">Update</button>
               		</form>
@@ -76,16 +67,6 @@
                               </div>
 
               </section>
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-            
-            
-
-            </div>
-          </div>
 
           <!-- footer content -->
           <footer>
@@ -117,20 +98,26 @@
   <!-- Custom Theme Scripts -->
   <script src="/build/js/custom.min.js"></script>
 
-  <script src="/vendors/plotly/js/plotly-latest.min.js"></script>
-  <script src="/vendors/plotly/js/numeric.min.js"></script>
-
-  <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-
   <script type="text/javascript" src="js/snap.svg-min.js"></script>
   <script src="/js/frappe-gantt.min.js" ></script>
 
   <script>
   // initalise variables
+  // var contactsData = contacts}}}
+  // var tasksData = tasks}}}
 
-  
+  // var now = moment();
+  // var monthsLists = []
+  // var activetaskList = []
+  // var completedtaskList = []
+  // var thisWeekTasks = []
+  // var todaysTasks = []
+  // var overdueTasks = []
+  // var A_WEEK_OLD = now.clone().subtract(7, 'days').startOf('day');
+  // var ONE_DAY_OLD = now.clone().subtract(1, 'days').startOf('day');
 
-/*
+  // var taskTypes = {'Backlog':0, 'Milestone':0, 'Planned':0}
+
   var tasksGanttChartContents = []
 
   var tasksgantdata = {{{tasksGanttChartContents}}}
@@ -150,37 +137,17 @@
   }
 
 
-  
-   * Function getContactByID
-   *
-   * Find and Return Contact from contactList by ID
-   *
-   * @param (type): $contactID(integer)
-   * @return Contact Details: (Json Obj)
-   
-   function getContactByID($contactID){
-    for(var contactsElement in contactsData['data']){
-      if($contactID==contactsData['data'][contactsElement]['id']){
-        return contactsData['data'][contactsElement];
-      }
-    }
-    return false;
-  }
-
+tasksGanttChartContents.sort(function(a,b){
+  var c = new Date(a.start);
+  var d = new Date(b.start);
+  return c-d;
+});
 
 var gantt = new Gantt("#gantt", tasksGanttChartContents);
 gantt.change_view_mode('Week')
 
-*/
-
-  $(window).load(function(){
-    $('#completedTaskstable').DataTable();
-    $("#overdueTaskstable").DataTable();
-    $("#upcomingTaskstable").DataTable();
-  });
-
+  
   </script>
 
 </body>
 </html>
-

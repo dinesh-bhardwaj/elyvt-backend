@@ -1,4 +1,4 @@
-  <body class="nav-md">
+ <body class="nav-md">
 
   <script>
   if (jQuery("body").width() < 760) {
@@ -35,39 +35,50 @@
             </nav>
        
 
-        <div class="clearfix"></div>
-      <a href='/addcontacts' class='btn btn-primary btn-sm'>Add Contact</a>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="x_panel">
-              <div class="x_content">
-                <div class="row">
-                  <div class="col-md-12 col-sm-12 col-xs-12 text-center">
-                    <h3>Contact List</h3>
-                  </div>
+        <div class="login_wrapper">
 
-                  <div class="clearfix"></div>
+        <h2 class="page-header">Update</h2>
+        {{#if errors}}
+              {{#each errors}}
+                <div class="alert alert-danger">{{msg}}</div>
+              {{/each}}
+        {{/if}}
+        <form method="post">
+           <div class="form-group">
+            <label>First Name</label>
+            <input type="text" class="form-control" placeholder="First Name" name="firstname" value ="{{{ userDetails.firstname }}}">
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" class="form-control" placeholder="Last Name" name="lastname" value ="{{{ userDetails.lastname }}}">
+          </div>
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" class="form-control" placeholder="Title" name="title" value ="{{{ userDetails.title }}}">
+          </div>
+          <div class="form-group">
+            <label>Roles</label>
+            <input type="text" class="form-control" placeholder="Role" name="roles" value ="{{{ userDetails.roles }}}">
+          </div>
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" class="form-control" placeholder="Username" name="username" value ="{{{ userDetails.username }}}">
+          </div>
+           <div class="form-group">
+            <label>Email</label>
+            <input type="email" class="form-control" placeholder="Email" name="email" value ="{{{ userDetails.email }}}">
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="ptext" class="form-control" placeholder="Phone Number" name="phone" value ="{{{ userDetails.phone }}}">
+          </div>
+		  
+          <button type="submit" class="btn btn-default">Update</button>
+        </form>
 
-                  <div class="row">
-                    <div class="col-md-12 col-xs-12  widget_tally_box col-lg-12">
-                          {{{contactsHTML}}}
-                      </div>
-                      <div class="clearfix"></div>
-
-
-                      <div class="clearfix"></div>
-
-
-                      <div id="placeholder"></div>
-                      <div class="clearfix"></div>
 
 
 
-
-                    </div>
-                  </div>
-                </div>
-              </div>
             
             
 
@@ -128,3 +139,5 @@
   
 </body>
 </html>
+
+    

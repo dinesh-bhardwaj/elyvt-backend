@@ -179,6 +179,34 @@ return foldersListHtml
 
 },
 
+getcontacts: function ($userdata){
+return new Promise(function (resolve, reject) {
+	
+
+		var contactsHTML = '<table class="table table-responsive table-striped">\
+		<tr>\
+		<th>Title</th>\
+		<th>Name</th>\
+		<th>Email</th>\
+		<th>Roles</th>\
+		<th>Phone No.</th>\
+		</tr>'
+		for (var alldata in $userdata){
+		contactsHTML += "<tr>\
+				<td>"+$userdata[alldata]['title']+"</td>\
+				<td>"+$userdata[alldata]['firstname']+"</td>\
+				<td>"+$userdata[alldata]['email']+"</td>\
+				<td>"+$userdata[alldata]['roles']+"</td>\
+				<td>"+$userdata[alldata]['phone']+"</td>\
+				<td><a href='/edit/updatecontact/?id="+$userdata[alldata]['_id']+"' class='btn btn-primary btn-sm'>Edit</a></td>\
+				</tr>"
+			}
+		contactsHTML  += '</table>'
+		
+		resolve(contactsHTML)
+});
+
+},
 getProjects: function(moment, $foldersData, $contactsData){
 	return new Promise(function (resolve, reject) {
 		var foldersArr = []
@@ -256,9 +284,11 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId){
 		    				var d = moment($tasksData[taskindex]['createdDate'],'YYYY-MM-DDTHH:mm:ssZ');
 		    				tasks += '<small>Created '+d.format('DD MMM,  YYYY')+'</small</td>'
 		    				var contact = module.exports.getContactByID($contactsData, $tasksData[taskindex]['authorIds'])
+		    				tasks += '<td>';
 		    				if (contact != false){
-		    					tasks += '<td>'+contact['firstName']+' '+contact['lastName']+'</td>'
+		    					tasks += contact['firstName']+' '+contact['lastName']
 		    				}
+		    				tasks += '</td>';
 		    				//tasks += '<td>'+$tasksData[taskindex]['accountId']+'</td>'
 		    				if ($tasksData[taskindex]['status']=='Completed'){
 		    					tasks += '<td><button class="btn btn-success btn-xs">'+$tasksData[taskindex]['status']+'</button></td>'
@@ -266,8 +296,7 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId){
 		    					tasks += '<td>'+$tasksData[taskindex]['status']+'</td>'
 		    				}
 		    				tasks += '</tr>';
-		    			}
-		    		
+		    			}		    		
 	    		}
 	    		else{
 	    			//tasks += "<tr> There are no Tasks in this folder</tr>"
@@ -548,29 +577,8 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId){
     contactsHTML: function(contactsData){
     	return new Promise(function (resolve, reject) {
     	  contactsHTML = ''
-		  for(var contactsElement in contactsData['data']){
-		    contactsHTML += "<div class='col-md-4 col-sm-4 col-xs-12 profile_details'>"
-		    contactsHTML += '<div class="well profile_view" style="display:block !important;overflow:auto">'
-		    contactsHTML += "<div class='col-sm-12'>"
-		    contactsHTML += '<h4 class="brief"><i>'+contactsData['data'][contactsElement]['title']+'</i></h4>'
-		    contactsHTML += '<div class="left col-xs-7">'
-		    contactsHTML += '<h2>'+contactsData['data'][contactsElement]['firstName']+" "+contactsData['data'][contactsElement]['lastName']+'</h2>'
-		    contactsHTML += ' <ul class="list-unstyled">'
-		    contactsHTML += '    <li><i class="fa fa-mail"></i> Email: '+contactsData['data'][contactsElement]['profiles'][0]['email']+' </li>'
-		    if(contactsData['data'][contactsElement]['phone']){
-		      contactsHTML += '    <li><i class="fa fa-phone"></i> Phone #: '+contactsData['data'][contactsElement]['phone']+'</li>'
-		    }
-		    contactsHTML += ' </ul>'
-		    contactsHTML += '</div>'
-		    contactsHTML += ' <div class="right col-xs-5 text-center">'
-		    contactsHTML += '     <img src="'+contactsData['data'][contactsElement]['avatarUrl']+'" alt="" class="img-circle img-responsive">'
-		    contactsHTML += ' </div>'
-		    //contactsHTML += "<img src='"+contactsData['data'][contactsElement]['avatarUrl']+"' ></strong></div>"
-		    //contactsHTML += "<div class='col-md-8'><div><strong> Account: "+contactsData['data'][contactsElement]['firstName']+" "+contactsData['data'][contactsElement]['lastName']+"</strong></div>"
-		    //contactsHTML += "<div>Accounts: "+contactsData['data'][contactsElement]['title']+"</strong></div>"
-		    //contactsHTML += "<div>Accounts: "+contactsData['data'][contactsElement]['profiles'][0]['email']+"</strong></div>"
-		    contactsHTML += "</div></div></div>"
-		    //contactsHTML += "<div class='clearfix'>&nbsp</div>"
+		  for(var contactsElement in contactsData){
+		    
 		  }
 		  resolve(contactsHTML);
 	   });

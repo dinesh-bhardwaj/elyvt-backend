@@ -17,6 +17,7 @@ var UserSchema = mongoose.Schema({
 	lastname: { type: String},
 	title: { type: String},
 	type: { type: String},
+	phone:{type:String},
 	roles: { type: String},
 	avatarUrl: { type: String},
 	deleted: {type: String},
@@ -50,9 +51,20 @@ module.exports.getUserByUsername = function(username, callback){
 	User.findOne(query, callback);
 }
 
+module.exports.getAllUser = function(callback){
+	var query = {};
+	User.find(query, callback);
+}
+
+module.exports.getUserID = function(id, callback){
+	var query = {_id: id};
+	User.find(query, callback);
+}
+
 module.exports.getUserById = function(id, callback){
 	User.findById(id, callback);
 }
+
 
 module.exports.comparePassword = function(candidatePassword, hash, callback){
 	bcrypt.compare(candidatePassword, hash, function(err, isMatch) {

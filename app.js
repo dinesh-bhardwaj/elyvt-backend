@@ -27,6 +27,7 @@ var userModel = require('./models/user');
 var tasks = require('./models/tasks');
 var foldersModel = require('./models/folders');
 var contacts = require('./models/contacts');
+var contactModel = require('./models/contact');
 var accounts = require('./models/accounts');
 var workflows = require('./models/workflows');
 var invitations = require('./models/invitations');
@@ -647,6 +648,7 @@ app.post('/task/update', AuthenteCheck.ensureAuthenticated, function(req, res){
 		}
 	}
 
+
 	tasks.findOneAndUpdate({_id: taskId}, taskentrydata, function(err, taskentrydata) {
 	  
 	  tasks.findOne({dependencyIds: taskId}, function(err, dependecydata) {
@@ -813,13 +815,15 @@ app.get('/contacts', AuthenteCheck.ensureAuthenticated, function(req, res){
  	//var foldersContents = fs.readFileSync("data/folders.json");
  	var userDetails = req.user;
 
- 	foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
-	 	contacts.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
-		 	functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-		 		functions.contactsHTML(contactsContents['contactdata']).then((contactsHTML)=>{
+ 	foldersModel.getfolders(function(folderserr, foldersContents){
+    //contacts.getcontacts(function(contactserr, contactsContents){	//Get/Fetch folders
+	userModel.getAllUser(function(contactserr, userdata){
+	//console.log('=============userdata line 820==========', userdata);
+	 	 functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+		 		functions.getcontacts(userdata).then((contactsHTML)=>{
 					res.render('theme/contacts', {
 						layout: 'layout2',
-						'contacts':  contactsContents['contactdata'],
+						//'contacts':  contactsContents['contactdata'],
 						'contactsHTML': contactsHTML,
 						'foldermenu':  foldersHeiraricalData,
 						'userDetails': userDetails
@@ -828,8 +832,8 @@ app.get('/contacts', AuthenteCheck.ensureAuthenticated, function(req, res){
 			});
 		}); // End Fetching Contacts
 	}); // End Fetching folders
-
 });
+
 
 
 app.get('/kanban', AuthenteCheck.ensureAuthenticated, function(req, res){
@@ -1043,7 +1047,46 @@ app.get('/profile', AuthenteCheck.ensureAuthenticated, function(req, res){
 	});
 });
 
+app.get('/addcontacts', AuthenteCheck.ensureAuthenticated, function(req, res){
+        res.render('theme/contactregister');
 
+
+});
+app.get('/edit/updatecontact', AuthenteCheck.ensureAuthenticated, function(req, res){
+	var userDetails = req.user;
+	var UserId = req.query.id;
+	userModel.getUserID(UserId, function(alluserdetails){
+		console.log(alluserdetails);
+	foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
+		functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+			res.render('theme/updatecontact', {
+					layout: 'layout2',
+					'foldermenu':  foldersHeiraricalData,
+					'userDetails': alluserdetails,
+				});
+		});
+	});
+});
+	});
+app.post('edit/updatecontact', AuthenteCheck.ensureAuthenticated, function(req, res){
+	var email = req.body.email;
+	var fname = req.body.fname;
+	var lname = req.body.lname;
+	var title = req.body.title;
+	var email = req.body.email;
+	var phone = req.body.phone;
+	var username = req.body.usename;
+	var userDetails = req.user;
+	var updateData = {
+		'firstname': fname,
+		'lastname': lname,
+		'title': title
+	}
+	userModel.findOneAndUpdate({_id: userDetails._id}, updateData, function(err, userData) {
+	  console.log("User Updated: ",userDetails._id, updateData, userData);
+	  res.redirect('/edit/updatecontact')
+	});
+});
 app.post('/profile', AuthenteCheck.ensureAuthenticated, function(req, res){
 	var email = req.body.email;
 	var fname = req.body.fname;
