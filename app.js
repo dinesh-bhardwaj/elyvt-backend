@@ -1043,6 +1043,11 @@ app.get('/profile', AuthenteCheck.ensureAuthenticated, function(req, res){
 	});
 });
 
+app.get('/charts', AuthenteCheck.ensureAuthenticated, function(req, res) {
+    res.render('theme/charts', {
+		layout: 'layout2'
+	});
+});
 
 app.post('/profile', AuthenteCheck.ensureAuthenticated, function(req, res){
 	var email = req.body.email;
