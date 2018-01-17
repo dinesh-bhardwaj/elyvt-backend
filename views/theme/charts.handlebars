@@ -131,7 +131,7 @@
           });
 
           var numberProjects = new Chart(chartNumberProjects, {
-            type: 'bar',
+            type: 'horizontalBar',
             data: {
               labels: ["Number of Projects"],
               datasets: [{
@@ -285,7 +285,7 @@
           }
 
           var remainingTasks = new Chart(chartRemainingTasks, {
-            type: 'bar',
+            type: 'horizontalBar',
             data: {
               labels: labels,
               datasets: [{
@@ -319,7 +319,7 @@
           }
 
           var tasksAssigne = new Chart(chartTasksAssigne, {
-            type: 'bar',
+            type: 'horizontalBar',
             data: {
               labels: labels,
               datasets: [{
@@ -375,7 +375,7 @@
           data = [totalTasks, plannedTasks, backlogTasks];
 
           var tasksPB = new Chart(chartTasksPB, {
-            type: 'bar',
+            type: 'horizontalBar',
             data: {
               labels: labels,
               datasets: [{
@@ -402,7 +402,7 @@
           data = [totalTasks, activeTasks, completedTasks];
 
           var tasksAC = new Chart(chartTasksAC, {
-            type: 'bar',
+            type: 'horizontalBar',
             data: {
               labels: labels,
               datasets: [{
