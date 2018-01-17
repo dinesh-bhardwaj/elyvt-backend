@@ -248,12 +248,20 @@
 
           var datasets = [];
 
+          var counter = 0
+
+          var taskcolors = [
+            "#03586A", "#26B99A", "#acadac", "#03586A", "#26B99A", "#acadac"
+          ]
+
           for(var name in countProject) {
             datasets.push({
               label: name,
               data: upcomingTasks[name],
-              backgroundColor: "#03586A",
+              backgroundColor: taskcolors[counter],
             });
+
+            counter++
           }
 
           var upcomingTasks = new Chart(chartUpcomingTasks, {
