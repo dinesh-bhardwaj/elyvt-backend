@@ -512,7 +512,7 @@
                       <h4>Remaining Tasks</h4>
                       <canvas id="remainingTasks"></canvas>
                     </div>
-                    <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="upcoming col-md-12 col-sm-12 col-xs-12">
                       <h4>Upcoming tasks (2018)</h4>
                       <canvas id="upcomingTasks"></canvas>
                     </div>
@@ -662,6 +662,10 @@ gantt.change_view_mode('Week')
     .task-visuals .col-md-8 > div, .task-visuals .col-lg-8 > div, .task-visuals .col-sm-8 > div,
     .task-visuals .col-md-4 > div, .task-visuals .col-lg-4 > div, .task-visuals .col-sm-4 > div,
     .ppp .col-md-8, .ppp .col-lg-8, .ppp .col-sm-8 {
+      height: 250px;
+    }
+
+    .upcoming {
       height: 250px;
     }
 
