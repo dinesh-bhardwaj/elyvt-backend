@@ -60,59 +60,39 @@
         var chartRemainingTasks = document.getElementById("remainingTasks").getContext("2d");
         var chartUpcomingTasks = document.getElementById("upcomingTasks").getContext("2d");
 
-        $.getJSON("data/json/users.json", function(result){
-          var res = result;
-          totalUsers = res.length - 1;
+        var labels = ["Total Users", "Has No Roles"];
+        var data = [0, roles.NoRoles];
 
-          res.forEach(value => {
-            if (value.roles) {
-              if (user.hasRoles.indexOf(value.roles) === -1) {
-                if (typeof(user.hasRoles[value.roles]) === "undefined") {
-                  user.hasRoles[value.roles] = 1;
-                } else {
-                  user.hasRoles[value.roles] += 1;
-                }
-                
-              }
-            } else {
-              user.hasNoRoles += 1;
-            }
-          });
-
-          var labels = ["Total Users", "Has No Roles"];
-          var data = [0, roles.NoRoles];
-
-          for (var role in roles) {
-            if (role !== 'NoRoles') {
-              labels.push(role);
-              data.push(roles[role]);
-            }
-            data[0] += roles[role]
+        for (var role in roles) {
+          if (role !== 'NoRoles') {
+            labels.push(role);
+            data.push(roles[role]);
           }
+          data[0] += roles[role]
+        }
 
-          var userRoles = new Chart(chartUserRoles, {
-            type: 'bar',
-            data: {
-              labels: labels,
-              datasets: [{
-                label: "Users",
-                data: data,
-                backgroundColor: [
-                  "#03586A", "#26B99A", "#acadac", "#03586A", "#26B99A", "#acadac"
-                ],
+        var userRoles = new Chart(chartUserRoles, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: "Users",
+              data: data,
+              backgroundColor: [
+                "#03586A", "#26B99A", "#acadac", "#03586A", "#26B99A", "#acadac"
+              ],
+            }]
+          },
+          options: {
+            maintainAspectRatio: false,
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true
+                }
               }]
-            },
-            options: {
-              maintainAspectRatio: false,
-              scales: {
-                yAxes: [{
-                  ticks: {
-                    beginAtZero: true
-                  }
-                }]
-              }
             }
-          });
+          }
         });
 
         $.getJSON("data/json/tasks.json", function(result){
