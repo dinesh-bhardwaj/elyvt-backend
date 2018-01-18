@@ -362,14 +362,14 @@
             }
           });
 
-          const unassigned = ((data[1]/data[0]) * 100).toFixed(2);
+          const unassigned = ((+data[1]/+data[0]) * 100).toFixed(2);
 
           labels = ["Unassigned"];
           data = [unassigned];
           var colors2 = ["rgba(255,0,0,0.5)"];
 
           for(assignee in assignees) {
-            var count = ((assignees[assignee]/data[0]) * 100).toFixed(2);
+            var count = ((+assignees[assignee]/+data[0]) * 100).toFixed(2);
             labels.push(assignee);
             data.push(count);
           }
