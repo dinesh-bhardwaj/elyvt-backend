@@ -24,6 +24,24 @@
       var folders = {{{folders}}}
       var roles = {{{roles}}}
 
+      findProject(folderId) {
+        const folder = folders.find(folder => folderId === folder._id)
+
+        if (folder.isProject) return folder
+
+        else return findProject(folder.parentId)
+      }
+
+      var upcomingtasks = tasks.reduce((acc, task) => {
+        if (task.dates.type !== 'backlog') {
+          acc[findProject(task.parentFolderIds[0]).title] = 
+            acc[findProject(task.parentFolderIds[0]).title] ?
+              acc[findProject(task.parentFolderIds[0]).title] + 1 : 1
+        }
+
+        return acc;
+      }, {})
+
       $(function(){
         function randomRGBA() {
           var o = Math.round, r = Math.random, s = 255;
@@ -96,34 +114,13 @@
         });
 
         $.getJSON("data/json/tasks.json", function(result){
-          var res = result;
-          var folder = {};
-          var project = [];
-          var countProject = [];
-          var upcomingTasks = [];
-          var defaultMonth = [0,0,0,0,0,0,0,0,0,0,0,0];
-          var year = new Date().getFullYear();
-          totalTasks = res.length - 1;
-
-          $.getJSON("data/json/folders.json", function(result){
-            localStorage.setItem('folder', JSON.stringify(result));
-          });
-
-          folder = JSON.parse(localStorage.getItem('folder'));
-
-          folder.forEach(value => {
-            if(value.isProject === "True") {
-              project.push(value);
-            }
-          });
-
           var numberProjects = new Chart(chartNumberProjects, {
             type: 'horizontalBar',
             data: {
               labels: ["Number of Projects"],
               datasets: [{
                 label: "Projects",
-                data: [project.length],
+                data: [projects.length],
                 backgroundColor: [
                   "#03586A", "#26B99A", "#acadac", "#03586A", "#26B99A", "#acadac"
                 ],
