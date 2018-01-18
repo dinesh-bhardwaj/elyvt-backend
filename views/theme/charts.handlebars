@@ -444,8 +444,8 @@
             }
           });
 
-          activeTasks = ((activeTasks/totalTasks) * 100).toFixed(2);
-          completedTasks = ((completedTasks/totalTasks) * 100).toFixed(2);
+          activeTasks = ((data[1]/data[0]) * 100).toFixed(2);
+          completedTasks = ((data[2]/data[0]) * 100).toFixed(2);
 
           labels = ["Active Tasks", "Completed Tasks"];
           data = [activeTasks, completedTasks];
