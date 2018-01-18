@@ -325,11 +325,12 @@
               }
             }
           });
+          */
 
           var labels = ["Total Tasks", "Unassigned"];
           var data = [assignees.unassigned, assignees.unassigned];
 
-          for(var assignee in assignees) {
+          for (var assignee in assignees) {
             if (assignee !== 'unassigned') {
               labels.push(assignee)
               data.push(assignees[assignee])
@@ -388,7 +389,6 @@
               maintainAspectRatio: false
             }
           });
-          */
 
           var data = [0, 0, 0]
 
