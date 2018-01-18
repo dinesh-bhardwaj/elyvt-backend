@@ -915,16 +915,14 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId){
     },
 
     buildUpcomingTasksData(tasks) {
-    	return {}
-
     	return tasks.reduce((acc, task) => {
+    		return { a: 1 }
+
 			if (task.dates.type !== 'backlog') {
 				acc[findProject(task.parentFolderIds[0]).title] = 
 					acc[findProject(task.parentFolderIds[0]).title] ?
 						acc[findProject(task.parentFolderIds[0]).title] + 1 : 1
 			}
-
-			return acc;
 		}, {})
     },
 
