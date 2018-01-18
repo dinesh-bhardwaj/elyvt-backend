@@ -1068,7 +1068,6 @@ app.get('/charts', AuthenteCheck.ensureAuthenticated, function(req, res) {
 								functions.taskGanntChart(moment, (tasksContents),null, (contactsContents['contactdata']), (foldersContents)).then((tasksGanttChartContents)=>{
 									res.render('theme/charts', {
 										layout: 'layout2',
-										'upcomingtasks': JSON.stringify(functions.buildUpcomingTasksData(tasksContents, foldersContents)),
 										'roles': JSON.stringify(functions.buildUserRoleData(users)),
 										'users': JSON.stringify(users),
 										'tasks': JSON.stringify(tasksContents), 
