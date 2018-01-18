@@ -1061,7 +1061,7 @@ app.get('/charts', AuthenteCheck.ensureAuthenticated, function(req, res) {
 	 accounts.getaccounts(function(accountserr, accounts) {
 	 	tasks.getalltasks(function(taskserr, tasksContents){ //Get/Fetch Tasks
 			foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
-				foldersModel.getProjects(function(projectserr, projectsContents){ //Get/Fetch folders
+				foldersModel.getprojects(function(projectserr, projectsContents){ //Get/Fetch folders
 					contacts.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
 						functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
 							functions.folderDashboardContent(moment, (foldersContents), (tasksContents), (contactsContents['contactdata'])).then((folderDashboardData)=>{
