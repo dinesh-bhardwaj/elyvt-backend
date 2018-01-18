@@ -362,10 +362,10 @@
             }
           });
 
-          people.unassigned = ((data[1]/data[0]) * 100).toFixed(2);
+          const unassigned = ((data[1]/data[0]) * 100).toFixed(2);
 
           labels = ["Unassigned"];
-          data = [people.unassigned];
+          data = [unassigned];
           var colors2 = ["rgba(255,0,0,0.5)"];
 
           for(assignee in assignees) {
@@ -373,6 +373,8 @@
             labels.push(assignee);
             data.push(count);
           }
+
+          console.log(data);
 
           var taskAssigne2 = new Chart(chartTasksAssigne2, {
             type: 'pie',
