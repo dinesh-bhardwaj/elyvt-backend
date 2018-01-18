@@ -54,6 +54,14 @@
         return acc;
       }, {})
 
+      var taskPerProject = projects.reduce((projects, project) => {
+        var count = tasks.reduce((acc, task) => acc + findProject(task)._id === project.id ? 1 : 0, 0)
+
+        acc[project.title] = count
+
+        return acc;
+      }, {})
+
       var assignees = tasks.reduce((acc, task) => {
         if (task.user && task.user[0]) {
           var assignee = users.find(user => user._id === task.user[0])
@@ -291,15 +299,14 @@
               }
             }
           });
+          */
 
           var labels = [];
           var data = [];
-          var colors = [];
 
-          for(var name in countProject) {
-            labels.push(name);
-            data.push(countProject[name]);
-            colors.push(randomRGBA());
+          for(var project in taskPerProject) {
+            labels.push(project);
+            data.push(taskPerProject[project]);
           }
 
           var remainingTasks = new Chart(chartRemainingTasks, {
@@ -325,7 +332,6 @@
               }
             }
           });
-          */
 
           var labels = ["Total Tasks", "Unassigned"];
           var data = [assignees.unassigned, assignees.unassigned];
