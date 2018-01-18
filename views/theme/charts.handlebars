@@ -362,8 +362,6 @@
             }
           });
 
-          console.log(data, assignees);
-
           const unassigned = ((+data[1]/+data[0]) * 100).toFixed(2);
 
           labels = ["Unassigned"];
@@ -371,12 +369,12 @@
           var colors2 = ["rgba(255,0,0,0.5)"];
 
           for(assignee in assignees) {
-            var count = ((+assignees[assignee]/+data[0]) * 100).toFixed(2);
-            labels.push(assignee);
-            data.push(count);
+            if (assignee !== 'unassigned') {
+              var count = ((+assignees[assignee]/+data[0]) * 100).toFixed(2);
+              labels.push(assignee);
+              data.push(count);
+            }
           }
-
-          console.log(data);
 
           var taskAssigne2 = new Chart(chartTasksAssigne2, {
             type: 'pie',
