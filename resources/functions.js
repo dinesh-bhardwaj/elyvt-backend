@@ -3,12 +3,12 @@ const util = require('util');
 var folders = require('../models/folders');
 var async = require('async');
 
-function findProject(folderId) {
+function findProject(folderId, folders) {
 	const folder = folders.find(folder => folderId === folder._id)
 
 	if (folder.isProject) return folder
 
-	else return findProject(folder.parentId)
+	else return findProject(folder.parentId, folders)
 }
 
 module.exports = {
@@ -914,16 +914,16 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId){
     	}, { NoRoles: 0 })
     },
 
-    buildUpcomingTasksData(tasks) {
+    buildUpcomingTasksData(tasks, folders) {
     	return tasks.reduce((acc, task) => {
-			// if (task.dates.type !== 'backlog') {
-			// 	acc[findProject(task.parentFolderIds[0]).title] = 
-			// 		acc[findProject(task.parentFolderIds[0]).title] ?
-			// 			acc[findProject(task.parentFolderIds[0]).title] + 1 : 1
-			// }
+			if (task.dates.type !== 'backlog') {
+				acc[findProject(task.parentFolderIds[0], folders).title] = 
+					acc[findProject(task.parentFolderIds[0], folders).title] ?
+						acc[findProject(task.parentFolderIds[0], folders).title] + 1 : 1
+			}
 
-			return [...acc, task];
-		}, [])
+			return acc;
+		}, {})
     },
 
     tasksEmailContent: function(moment, $folders, $tasks, $contacts){
