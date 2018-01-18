@@ -42,6 +42,12 @@
         return acc;
       }, {})
 
+      var taskTypes = tasks.reduce((acc, task) => {
+        acc[task.dates.type] = acc[task.dates.type] ? acc[task.dates.type] + 1 : 1
+
+        return acc;
+      }, {})
+
       $(function(){
         function randomRGBA() {
           var o = Math.round, r = Math.random, s = 255;
@@ -363,8 +369,15 @@
             }
           });
 
+          var data = [0, 0, 0]
+
+          for (type in taskTypes) {
+            data[0] += taskTypes[task]
+            if (type === 'backlog') data[1] = taskTypes[task]
+            else data[2] = taskTypes[task]
+          }
+
           labels = ["Total Tasks", "Planned Tasks", "Backlog Tasks"];
-          data = [totalTasks, plannedTasks, backlogTasks];
 
           var tasksPB = new Chart(chartTasksPB, {
             type: 'horizontalBar',
