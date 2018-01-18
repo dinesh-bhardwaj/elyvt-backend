@@ -901,6 +901,8 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId){
     		} else {
     			acc.NoRoles += 1
     		}
+
+    		return acc
     	}, { NoRoles: 0 })
     },
 
