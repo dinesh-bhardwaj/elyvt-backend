@@ -54,6 +54,19 @@
         return acc;
       }, {})
 
+      var assignees = tasks.reduce((acc, task) => {
+        if (task.user && task.user[0]) {
+          var assignee = users.find(user => user._id === task.user[0])
+          assignee = `${assignee.firstname} ${assignee.lastname}`
+
+          acc[assignee] = acc[assignee] ? acc[assignee] + 1 : 1
+        } else {
+          acc.unassigned += 1
+        }
+
+        return acc
+      }, { unassigned: 0 })
+
       $(function(){
         function randomRGBA() {
           var o = Math.round, r = Math.random, s = 255;
@@ -314,13 +327,14 @@
           });
 
           var labels = ["Total Tasks", "Unassigned"];
-          var data = [totalTasks, people.unassigned];
-          var colors = ["rgba(0,0,255,0.5)","rgba(255,0,0,0.5)"];
+          var data = [assignees.unassigned, assignees.unassigned];
 
-          for(var name in people['assigned']) {
-            labels.push(name);
-            data.push(people['assigned'][name]);
-            colors.push(randomRGBA());
+          for(var assignee in assignees) {
+            if (assignee !== 'unassigned') {
+              labels.push(assignee)
+              data.push(assignees[assignee])
+              data[0] += assignees[assignee]
+            } 
           }
 
           var tasksAssigne = new Chart(chartTasksAssigne, {
@@ -347,17 +361,16 @@
             }
           });
 
-          people.unassigned = ((people.unassigned/totalTasks) * 100).toFixed(2);
+          people.unassigned = ((data[1]/data[0]) * 100).toFixed(2);
 
           labels = ["Unassigned"];
           data = [people.unassigned];
           var colors2 = ["rgba(255,0,0,0.5)"];
 
-          for(var name in people['assigned']) {
-            var count = ((people['assigned'][name]/totalTasks) * 100).toFixed(2);
-            labels.push(name);
+          for(assignee in assignees) {
+            var count = ((assignees[assignee]/data[0]) * 100).toFixed(2);
+            labels.push(assignee);
             data.push(count);
-            colors2.push(randomRGBA());
           }
 
           var taskAssigne2 = new Chart(chartTasksAssigne2, {
