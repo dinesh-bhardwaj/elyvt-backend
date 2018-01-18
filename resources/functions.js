@@ -4,6 +4,8 @@ var folders = require('../models/folders');
 var async = require('async');
 
 function findProject(folderId, folders) {
+	console.log(folder, folderId)
+
 	const folder = folders.find(folder => folderId === folder._id)
 
 	if (folder.isProject) return folder
