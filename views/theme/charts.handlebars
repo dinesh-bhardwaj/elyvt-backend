@@ -75,6 +75,25 @@
         return acc
       }, { unassigned: 0 })
 
+      var upcomingTasksPerProject = tasks.reduce((acc, task) => {
+        for (var i = 0; i < 12; i++) {
+          var month = moment().month(i)
+          var monthName = month.format('MMMM')
+
+          if (!acc[monthName]) acc[monthName] = {}
+
+          if (task.dates.type === 'Planned') {
+            console.log(moment(task.dates.end).format())
+            if (moment(task.dates.end).isSame(month, 'month')) {
+              var project = findProject(task.parentFolderIds[0]).title
+
+              acc[monthName][project] = acc[monthName][project] ? acc[monthName][project] + 1 : 1
+            }
+          }
+        }
+        return acc
+      }, {})
+
       $(function(){
         function randomRGBA() {
           var o = Math.round, r = Math.random, s = 255;
