@@ -1058,37 +1058,42 @@ app.get('/charts', AuthenteCheck.ensureAuthenticated, function(req, res) {
 	 //var attachmentsContents = fs.readFileSync("data/attachments.json");
 	 var userDetails = req.user;
 
-    tasks.getalltasks(function(taskserr, tasksContents){ //Get/Fetch Tasks
-		foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
-			contacts.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
-				functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-					functions.folderDashboardContent(moment, (foldersContents), (tasksContents), (contactsContents['contactdata'])).then((folderDashboardData)=>{
-						functions.taskGanntChart(moment, (tasksContents),null, (contactsContents['contactdata']), (foldersContents)).then((tasksGanttChartContents)=>{
-							res.render('theme/charts', {
-								layout: 'layout2',
-								'tasks': JSON.stringify(tasksContents), 
-								'tasksGanttChartContents': JSON.stringify(tasksGanttChartContents),
-								'folders': foldersContents,
-								'folderDashboardData': folderDashboardData, 
-								//'foldersHeiraricalData': foldersHeiraricalData[0],
-								'foldermenu':  foldersHeiraricalData,
-								'workflows': workflowsContents,
-								'accounts': accountsContents, 
-								'contacts': contactsContents['contactdata'], 
-								//'groups':groupsContents,
-								//'invitations':invitationsContents,
-								//'customfields':customfieldsContents,
-								//'comments':commentsContents,
-								//'timelogs':timelogsContents,
-								//'attachments':attachmentsContents,
-								'userDetails': userDetails
+	 accounts.getaccounts(function(accountserr, accounts) {
+	 	tasks.getalltasks(function(taskserr, tasksContents){ //Get/Fetch Tasks
+			foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
+				foldersModel.getProjects(function(projectserr, projectsContents){ //Get/Fetch folders
+					contacts.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
+						functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+							functions.folderDashboardContent(moment, (foldersContents), (tasksContents), (contactsContents['contactdata'])).then((folderDashboardData)=>{
+								functions.taskGanntChart(moment, (tasksContents),null, (contactsContents['contactdata']), (foldersContents)).then((tasksGanttChartContents)=>{
+									res.render('theme/charts', {
+										layout: 'layout2',
+										'accounts': JSON.stringify(accounts),
+										'tasks': JSON.stringify(tasksContents), 
+										'tasksGanttChartContents': JSON.stringify(tasksGanttChartContents),
+										'folders': JSON.stringify(foldersContents),
+										'folderDashboardData': folderDashboardData, 
+										//'foldersHeiraricalData': foldersHeiraricalData[0],
+										'foldermenu':  foldersHeiraricalData,
+										'workflows': workflowsContents,
+										'contacts': contactsContents['contactdata'],
+										'projects': JSON.stringify(projectsContents),
+										//'groups':groupsContents,
+										//'invitations':invitationsContents,
+										//'customfields':customfieldsContents,
+										//'comments':commentsContents,
+										//'timelogs':timelogsContents,
+										//'attachments':attachmentsContents,
+										'userDetails': userDetails
+									});
+								});
 							});
 						});
-					});
+					}); // End Fetching Contacts
 				});
-			}); // End Fetching Contacts
-		}); // End Fetching folders
-	});
+			}); // End Fetching folders
+		});
+	 })
 });
 
 app.post('/profile', AuthenteCheck.ensureAuthenticated, function(req, res){
