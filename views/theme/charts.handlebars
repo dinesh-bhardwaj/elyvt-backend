@@ -48,6 +48,12 @@
         return acc;
       }, {})
 
+      var taskStatus = tasks.reduce((acc, task) => {
+        acc[task.status] = acc[task.status] ? acc[task.status] + 1 : 1
+
+        return acc;
+      }, {})
+
       $(function(){
         function randomRGBA() {
           var o = Math.round, r = Math.random, s = 255;
@@ -406,7 +412,13 @@
           });
 
           labels = ["Total Tasks", "Active Tasks", "Completed Tasks"];
-          data = [totalTasks, activeTasks, completedTasks];
+          data = [0, 0, 0];
+
+          for (type in taskStatus) {
+            data[0] += taskStatus[type]
+            if (type === 'Active') data[1] = taskStatus[type]
+            else data[2] = taskStatus[type]
+          }
 
           var tasksAC = new Chart(chartTasksAC, {
             type: 'horizontalBar',
