@@ -897,7 +897,7 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId){
     buildUserRoleData(users) {
     	return users.reduce((acc, user) => {
     		if (user.roles) {
-    			acc[user.roles] = acc[user.roles] ? acc[user.roles] + 1 : 0
+    			acc[user.roles] = acc[user.roles] ? acc[user.roles] + 1 : 1
     		} else {
     			acc.NoRoles += 1
     		}
