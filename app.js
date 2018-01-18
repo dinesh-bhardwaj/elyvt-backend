@@ -1050,7 +1050,7 @@ app.get('/charts', AuthenteCheck.ensureAuthenticated, function(req, res) {
 				functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
 					functions.folderDashboardContent(moment, (foldersContents), (tasksContents), (contactsContents['contactdata'])).then((folderDashboardData)=>{
 						functions.taskGanntChart(moment, (tasksContents),null, (contactsContents['contactdata']), (foldersContents)).then((tasksGanttChartContents)=>{
-							res.render('theme/tasks', {
+							res.render('theme/charts', {
 								layout: 'layout2',
 								'tasks': JSON.stringify(tasksContents), 
 								'tasksGanttChartContents': JSON.stringify(tasksGanttChartContents),
