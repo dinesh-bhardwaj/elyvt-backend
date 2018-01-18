@@ -1044,6 +1044,20 @@ app.get('/profile', AuthenteCheck.ensureAuthenticated, function(req, res){
 });
 
 app.get('/charts', AuthenteCheck.ensureAuthenticated, function(req, res) {
+	// Get content from file
+	 //var tasksContents = fs.readFileSync("data/tasks.json");
+	 //var foldersContents = fs.readFileSync("data/folders.json");
+	 var workflowsContents = fs.readFileSync("data/workflows.json");
+	 var accountsContents = fs.readFileSync("data/accounts.json");
+	 //var contactsContents = fs.readFileSync("data/contacts.json");
+	 //var groupsContents = fs.readFileSync("data/groups.json");
+	 //var invitationsContents = fs.readFileSync("data/invitations.json");
+	 //var customfieldsContents = fs.readFileSync("data/customfields.json");
+	 //var commentsContents = fs.readFileSync("data/comments.json");
+	 //var timelogsContents = fs.readFileSync("data/timelogs.json");
+	 //var attachmentsContents = fs.readFileSync("data/attachments.json");
+	 var userDetails = req.user;
+
     tasks.getalltasks(function(taskserr, tasksContents){ //Get/Fetch Tasks
 		foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
 			contacts.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
