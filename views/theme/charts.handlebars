@@ -18,6 +18,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
 
   <script>
+    window.tasks = {{{tasks}}}
+    window.users = {{{users}}}
+    window.projects = {{{projects}}}
+    window.folders = {{{folders}}}
+    window.roles = {{{roles}}}
+
       $(function(){
         function randomRGBA() {
           var o = Math.round, r = Math.random, s = 255;
@@ -74,13 +80,12 @@
           });
 
           var labels = ["Total Users", "Has No Roles"];
-          var data = [totalUsers, user.hasNoRoles];
-          var colors = [randomRGBA(), randomRGBA()];
+          var data = [0, roles.NoRoles];
 
-          for(var name in user['hasRoles']) {
-            labels.push(name);
-            data.push(user['hasRoles'][name]);
-            colors.push(randomRGBA());
+          foreach (var role in roles) {
+            labels.push(role);
+            data.push(roles[role]);
+            data[0] += roles[role]
           }
 
           var userRoles = new Chart(chartUserRoles, {
@@ -631,14 +636,6 @@
 
   <script>
   // initalise variables
-  
-  console.log('hi')
-
-  window.tasks = {{{tasks}}}
-  window.users = {{{users}}}
-  window.projects = {{{projects}}}
-  window.folders = {{{folders}}}
-  window.roles = {{{roles}}}
 
 /*
   var tasksGanttChartContents = []
