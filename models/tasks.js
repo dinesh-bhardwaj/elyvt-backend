@@ -16,9 +16,7 @@ var tasksSchema = new Schema({
     description: {type: String},
     briefDescription: {type: String},
     parentIds: Object,
-    parentFolderIds: [
-      {type: Schema.Types.ObjectId, ref: 'Folders'}
-    ],
+    parentFolderIds: {type: String},
     project: [
       {type: Schema.Types.ObjectId, ref: 'Folders'}
     ],
@@ -55,6 +53,16 @@ module.exports.getalltasks = function(callback){
 module.exports.gettaskbyId = function($taskID, callback){
 	var query = {_id: $taskID};
 	tasks.findOne(query, callback);
+}
+
+module.exports.gettaskbyTitle = function($taskTitle, callback){
+    var query = {title: $taskTitle};
+    tasks.findOne(query, callback);
+}
+
+module.exports.gettaskbyParentId = function($taskID, callback){
+    var query = {parentFolderIds: $taskID};
+    tasks.find(query, callback);
 }
 
 module.exports.deletetask = function($taskID, callback){

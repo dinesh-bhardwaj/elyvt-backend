@@ -43,9 +43,9 @@ router.get('/', AuthenteCheck.ensureAuthenticated,  function(req, res){
 				 	var userDetails = req.user
 				 	functions.foldersHeierarcy(foldersContents, folderId).then((foldersHeiraricalData)=>{
 						functions.foldersDetails(moment, tasksContents, foldersContents, contactsContents, folderId).then((folderDetailsData)=>{
-							console.log("I am Here", folderDetailsData);
+							//console.log("I am Here", folderDetailsData);
 							functions.taskGanntChart(moment, tasksContents, folderId, contactsContents, foldersContents).then((tasksGanttChartContents)=>{
-								//console.log(folderDetailsData);
+								console.log("Line 48", tasksGanttChartContents);
 								res.render('theme/folderdetails', {
 									layout: 'layout2',
 									'folderId': folderId,
@@ -122,31 +122,71 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						      'tasks': [
 						        {
 						          'title': 'UI Config',
-						          'description': 'This is a default-on option for any landlord or standalone implementation'
+						          'description': 'This is a default-on option for any landlord or standalone implementation',
+						          'dates': {
+						          	'type': 'Planned',
+						          	'start': moment().add(12, 'months').format('YYYY-MM-DDTHH:mm'),
+						          	'due': moment().add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm')
+						          }
 						        },
 						        {
 						          'title': '? - Security Y/N',
-						          'description': 'Will we implement security for this instance?'
+						          'description': 'Will we implement security for this instance?',
+						          'dates': {
+						          	'type': 'Planned',
+						          	'start': moment().add(12, 'months').format('YYYY-MM-DDTHH:mm'),
+						          	'due': moment().add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm')
+						          }
 						        },
 						        {
 						          'title': '? - F&B Y/N',
-						          'description': 'Will we implement Food & Beverage for this instance?'
+						          'description': 'Will we implement Food & Beverage for this instance?',
+						          'dates': {
+						          	'type': 'Planned',
+						          	'start': moment().add(12, 'months').format('YYYY-MM-DDTHH:mm'),
+						          	'due': moment().add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+						          	'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(12, 'months').format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
+						          }
 						        },
 						        {
 						          'title': '? - Facilities Booking Y/N',
-						          'description': 'Will we implement Facilities/Conference Room booking for this instance?'
+						          'description': 'Will we implement Facilities/Conference Room booking for this instance?',
+						          'dates': {
+						          	'type': 'Planned',
+						          	'start': moment().add(12, 'months').format('YYYY-MM-DDTHH:mm'),
+						          	'due': moment().add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm')
+						          }
 						        },
 						        {
 						          'title': '? - Events Y/N',
-						          'description': 'Will we implement Events for this instance?'
+						          'description': 'Will we implement Events for this instance?',
+						          'dates': {
+						          	'type': 'Planned',
+						          	'start': moment().add(12, 'months').format('YYYY-MM-DDTHH:mm'),
+						          	'due': moment().add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm')
+						          }
 						        },
 						        {
 						          'title': '? - Comms Y/N',
-						          'description': 'Will we implement Communications for this instance?'
+						          'description': 'Will we implement Communications for this instance?',
+						          'dates': {
+						          	'type': 'Planned',
+						          	'start': moment().add(12, 'months').format('YYYY-MM-DDTHH:mm'),
+						          	'due': moment().add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm')
+						          }
 						        },
 						        {
 						          'title': '? - Concierge Y/N',
-						          'description': 'Will we implement Concierge for this instance?'
+						          'description': 'Will we implement Concierge for this instance?',
+						          'dates': {
+						          	'type': 'Planned',
+						          	'start': moment().add(12, 'months').format('YYYY-MM-DDTHH:mm'),
+						          	'due': moment().add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm')
+						          }
 						        }
 						      ]
 						    },
@@ -154,7 +194,22 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						      'tasks': [
 						        {
 						          'title': 'Requested: Building Imagery & Title Icon',
-						          'description': 'Have we requested the building`s imagery and logo?'
+						          'description': 'Have we requested the building`s imagery and logo?',
+						          'dates': {
+						          	'type': 'Planned',
+						          	'start': moment().add(8, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+						          	'due': moment().add(24, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm')
+						          }
+						        },
+                                {
+						          'title': 'Requested: Building Imagery & Title Icon',
+						          'description': 'Have we requested the building`s imagery and logo?',
+						          'dates': {
+						          	'type': 'Planned',
+						          	'start': moment().add(8, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+						          	'due': moment().add(8, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm')
+						          },
+						          'dependency': ''
 						        }
 						      ]
 						    },
@@ -163,19 +218,39 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						        'tasks': [
 						          {
 						            'title': 'Question - HID',
-						            'description': 'Does this instance use HID access systems?'
+						            'description': 'Does this instance use HID access systems?',
+						            'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(58, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						          },
 						          {
 						            'title': '? - BLE Enabled',
-						            'description': 'Are their readers BLE (Bluetooth Low-Energy) enabled?'
+						            'description': 'Are their readers BLE (Bluetooth Low-Energy) enabled?',
+						            'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						          },
 						          {
 						            'title': '? - NFC Enabled',
-						            'description': 'Are their readers NFC (near-field communication) enabled?'
+						            'description': 'Are their readers NFC (near-field communication) enabled?',
+						            'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						          },
 						          {
 						            'title': 'Question - WALTZ',
-						            'description': 'Does this instance use WALTZ access?'
+						            'description': 'Does this instance use WALTZ access?',
+						            'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(58, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						          },
 						          {
 						            'title': 'Additional steps TBD',
@@ -183,11 +258,25 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          },
 						          {
 						            'title': 'Question - Others',
-						            'description': 'Does this instance use an "other" access system?'
+						            'description': 'Does this instance use an "other" access system?',
+						            'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(58, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }, 
+							          'dependency': "Additional steps TBD"
+
 						          },
 						          {
 						            'title': 'Additional Data Gathering As Needed',
-						            'description': 'TBD'
+						            'description': 'TBD',
+						            'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							          'dependency': "Additional steps TBD"
+
 						          }
 						        ]
 						      },
@@ -195,23 +284,56 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						        'tasks': [
 						          {
 						            'title': 'ID ACS Platform',
-						            'description': 'What Access Control Software (ACS) does this instance use?'
+						            'description': 'What Access Control Software (ACS) does this instance use?',
+						            'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(54, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						          },
 						          {
 						            'title': 'Intro Elevate to ACS Key Contact',
-						            'description': 'Who should be our contact at your ACS vendor?'
+						            'description': 'Who should be our contact at your ACS vendor?',
+                                                            'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(58, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						          },
 						          {
 						            'title': 'Request: ACS Documentation',
-						            'description': 'Have we requested the ACS documentation?'
+						            'description': 'Have we requested the ACS documentation?',
+                                                            'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							          'dependency': "ID ACS Platform"
+
 						          },
+                                                            
 						          {
 						            'title': 'Request: ACS SDK',
-						            'description': 'Have we requested the ACS SDK (software development kit)?'
+						            'description': 'Have we requested the ACS SDK (software development kit)?',
+                                                            'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							          'dependency': "Intro Elevate to ACS Key Contact" 
 						          },
+
+
 						          {
 						            'title': 'Request: ACS API Access',
-						            'description': 'Have we requested access into the ACS API (application programming interface)?'
+						            'description': 'Have we requested access into the ACS API (application programming interface)?',
+                                                               'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							           'dependency': "Intro Elevate to ACS Key Contact" 
+
 						          }
 						        ]
 						      },
@@ -219,27 +341,62 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						        'tasks': [
 						          {
 						            'title': 'Intro Elevate to VMS Key Contact',
-						            'description': 'Who should be our contact at your VMS vendor?'
+						            'description': 'Who should be our contact at your VMS vendor?', 
+                                                             'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(57, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							           'dependency': "ID VMS Platform" 
 						          },
 						          {
 						            'title': 'Request: VMS Documentation',
-						            'description': 'Have we requested the VMS documentation?'
+						            'description': 'Have we requested the VMS documentation?',
+                                                            'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(58, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							          'dependency': "Intro Elevate to VMS Key Contact" 
 						          },
 						          {
 						            'title': 'Request: VMS SDK',
-						            'description': 'Have we requested the VMS SDK (software development kit)?'
+						            'description': 'Have we requested the VMS SDK (software development kit)?',
+                                                            'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(58, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							         'dependency': "Intro Elevate to VMS Key Contact" 
 						          },
 						          {
 						            'title': 'Request: VMS API Access',
-						            'description': 'Have we requested access into the VMS API (application programming interface)?'
+						            'description': 'Have we requested access into the VMS API (application programming interface)?',
+                                     'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(58, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							            },
+							            'dependency': "Intro Elevate to VMS Key Contact"
 						          },
 						          {
 						            'title': 'ID VMS Platform',
-						            'description': 'What Vistor Management Software (VMS) does this instance use?'
+						            'description': 'What Vistor Management Software (VMS) does this instance use?',
+                                     'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(54, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          } 
 						          },
 						          {
 						            'title': 'ID Intro Key Stackholders',
-						            'description': '<Set up key stakeholder within PM tool>'
+						            'description': '<Set up key stakeholder within PM tool>',
+                                                             'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							          'dependency': "? - Security Y/N"
 						          }
 						        ]
 						      }
@@ -248,39 +405,93 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						      'tasks': [
 						        {
 						          'title': 'ID/Intro Key Contact',
-						          'description': 'Who should be our main Food and Beverage contact(s)?'
+						          'description': 'Who should be our main Food and Beverage contact(s)?',
+									'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        },
 						        {
 						          'title': 'Assign Key Stakeholder for Responsibility (Elevate & Client)',
-						          'description': '<Set up key stakeholder within PM tool>'
+						          'description': '<Set up key stakeholder within PM tool>',
+                                    'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(16, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							      'dependency': "ID/Intro Key Contact"    
+
 						        },
 						        {
 						          'title': 'ID POS/Inventory Management System(s) (IMS)',
-						          'description': 'What Point of Sale System (POS)/Inventory Management System(s) (IMS) does this instance use?'
+						          'description': 'What Point of Sale System (POS)/Inventory Management System(s) (IMS) does this instance use?',
+                                    'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(9, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(23, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							          'dependency': "ID/Intro Key Contact" 
 						        },
 						        {
 						          'title': 'Request: POS Documentation',
-						          'description': 'Have we requested the POS documentation?'
+						          'description': 'Have we requested the POS documentation?',
+                                    'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(9, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							          'dependency': "F&B Workflow Structure/Walkthrough" 
 						        },
 						        {
 						          'title': 'Request: POS SDK',
-						          'description': 'Have we requested the POS SDK (software development kit)?'
+						          'description': 'Have we requested the POS SDK (software development kit)?',
+                                  'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(9, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							        'dependency': "F&B Workflow Structure/Walkthrough" 
 						        },
 						        {
 						          'title': 'Request: POS API Access',
-						          'description': 'Have we requested access into the POS API (application programming interface)?'
+						          'description': 'Have we requested access into the POS API (application programming interface)?',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(9, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							          'dependency': "F&B Workflow Structure/Walkthrough" 
 						        },
 						        {
 						          'title': 'Request: IMS Documentation',
-						          'description': 'Have we requested the IMS documentation?'
+						          'description': 'Have we requested the IMS documentation?',
+                                   'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(9, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							        'dependency': "F&B Workflow Structure/Walkthrough" 
 						        },
 						        {
 						          'title': 'Request: IMS SDK',
-						          'description': 'Have we requested the IMS SDK (software development kit)?'
+						          'description': 'Have we requested the IMS SDK (software development kit)?',
+                                    'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(9, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							        'dependency': "F&B Workflow Structure/Walkthrough" 
 						        },
 						        {
 						          'title': 'Request: IMS API Access',
-						          'description': 'Have we requested access into the IMS API (application programming interface)?'
+						          'description': 'Have we requested access into the IMS API (application programming interface)?',
+                                   'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(9, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							       'dependency': "F&B Workflow Structure/Walkthrough" 
 						        }
 						      ]
 						    },
@@ -288,15 +499,32 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						      'tasks': [
 						        {
 						          'title': 'ID/Intro Key Contact',
-						          'description': ' Who should be our main Facilities contact(s)?  contact(s)?'
+						          'description': ' Who should be our main Facilities contact(s)?  contact(s)?',
+                                  'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        },
 						        {
 						          'title': 'Assign Key Stakeholder for Responsibility (Elevate & Client)',
-						          'description': '<Set up key stakeholder within PM tool>'
+						          'description': '<Set up key stakeholder within PM tool>',
+                                   'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							        'dependency': "ID/Intro Key Contact"
 						        },
 						        {
 						          'title': 'Request: Facilities Details: Occupancy, Rates, Imagery ',
-						          'description': ' Have we requested the conference rooms imagery, occupancy, and rates?'
+						          'description': ' Have we requested the conference rooms imagery, occupancy, and rates?',
+                                   'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(23, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							        'dependency': "ID/Intro Key Contact"
 						        }
 						      ]
 						    },
@@ -304,27 +532,62 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						      'tasks': [
 						        {
 						          'title': 'ID/Intro Key Contact',
-						          'description': 'Who should be our main Events contact(s)? '
+						          'description': 'Who should be our main Events contact(s)? ',
+                                   'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        },
 						        {
 						          'title': 'Assign Key Stakeholder for Responsibility (Elevate & Client) ',
-						          'description': '<Set up key stakeholder within PM tool> '
+						          'description': '<Set up key stakeholder within PM tool> ',
+                                   'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							          'dependency': "ID/Intro Key Contact"
 						        },
 						        {
 						          'title': 'ID Events CMS (As applicable) ',
-						          'description': 'What Content Management System (CMS) does this instance use? '
+						          'description': 'What Content Management System (CMS) does this instance use? ',
+                                   'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(22, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							          'dependency': "ID/Intro Key Contact"
 						        },
 						        {
 						          'title': 'Request: Events CMS Access (As Applicable) ',
-						          'description': 'Have we requested access into the event`sCMS(Content Management Software)?'
+						          'description': 'Have we requested access into the event`sCMS(Content Management Software)?',
+ 									'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(22, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							          'dependency': "ID/Intro Key Contact"
 						        },
 						        {
 						          'title': 'Request: SampleEventsData',
-						          'description': 'Have we requested sample Events data?'
+						          'description': 'Have we requested sample Events data?',
+                                   'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(22, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							          'dependency': "ID/Intro Key Contact"
 						        },
 						        {
 						          'title': 'Confirm: SampleEventsDataReceived',
-						          'description': 'Have we received the same Events data?'
+						          'description': 'Have we received the same Events data?',
+                                   'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(29, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							          'dependency': "Request: Sample Events Data"
 						        }
 						      ]
 						    },
@@ -332,15 +595,33 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						      'tasks': [
 						        {
 						          'title': 'ID/Intro Key Contact',
-						          'description': 'Who should be our main Food and Beverage contact(s)?'
+						          'description': 'Who should be our main Food and Beverage contact(s)?',
+                                   'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        },
 						        {
 						          'title': 'Assign Key Stakeholder for Responsibility(Elevate&Client)',
-						          'description': '<Setup key stakeholder within PMtool>'
+						          'description': '<Setup key stakeholder within PMtool>',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							          'dependency': "ID/Intro Key Contact"
+
 						        },
 						        {
 						          'title': 'IDCommsSystem(s)(IfApplicable)',
-						          'description': 'What Communications System(s) does this instance use?'
+						          'description': 'What Communications System(s) does this instance use?',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							           'dependency': "ID/Intro Key Contact"
 						        }
 						      ]
 						    },
@@ -348,15 +629,32 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						      'tasks': [
 						        {
 						          'title': 'ID/Intro Key Contact',
-						          'description': 'Who should be our mainFood and Beverage contact(s)?'
+						          'description': 'Who should be our mainFood and Beverage contact(s)?',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        },
 						        {
 						          'title': 'Assign Key Stakeholder for Responsibility(Elevate&Client)',
-						          'description': '<Setup key stakeholder within PMtool>'
+						          'description': '<Setup key stakeholder within PMtool>',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							           'dependency': "ID/Intro Key Contact"
 						        },
 						        {
 						          'title': 'IDSystem(s)(IfApplicable)',
-						          'description': 'What Concierege System does this instance use?'
+						          'description': 'What Concierege System does this instance use?',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							        'dependency': "ID/Intro Key Contact"  
 						        }
 						      ]
 						    }
@@ -366,35 +664,76 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						      'tasks': [
 						        {
 						          'title': 'Milestone-ELVT-provide url list for white labeling to IT/Security Contact',
-						          'description': 'Have we provided a list of items that will need to be digitally white labeled?'
+						          'description': 'Have we provided a list of items that will need to be digitally white labeled?',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        },
 						        {
 						          'title': 'Onsite Testing (asnecessary ONLY)',
-						          'description': 'Have we gone on site to test the app?'
+						          'description': 'Have we gone on site to test the app?',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(10, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(61, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							          'dependency': "Milestone - ELVT - provide url list for white labeling to IT/Security Contact"
 						        },
 						        {
 						          'title': 'Wi-Fi Network(1)',
-						          'description': ''
+						          'description': '',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(10, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(60, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        },
 						        {
 						          'title': 'Wi-Fi Network(2)',
-						          'description': ''
+						          'description': '',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(11, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(61, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        },
 						        {
 						          'title': 'Mobile GPS Resolution',
-						          'description': ''
+						          'description': '',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(10, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(60, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        },
 						        {
 						          'title': 'URL Access',
-						          'description': ''
+						          'description': '',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(10, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(60, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        },
 						        {
 						          'title': 'Corp Domain Access',
-						          'description': ''
+						          'description': '',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(10, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(61, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        },
 						        {
 						          'title': 'Corp EmlAccess',
-						          'description': ''
+						          'description': '',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(10, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(60, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        }
 						      ]
 						    },
@@ -402,23 +741,51 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						      'tasks': [
 						        {
 						          'title': 'Provide Instruction for UI AssetUpdating',
-						          'description': 'Have we provided instruction on how to update the user interface(UI)?'
+						          'description': 'Have we provided instruction on how to update the user interface(UI)?',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(73, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							        'dependency': "ID/Intro Key Contact"  
 						        },
 						        {
 						          'title': 'UIAssetReceivedandUploaded',
-						          'description': 'Have we received and uploaded the UI assets?'
+						          'description': 'Have we received and uploaded the UI assets?',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(72, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
+
 						        },
 						        {
 						          'title': 'Set UI Default Copy-TBD as Applicable',
-						          'description': 'Have we setup the default copy in the UI?'
+						          'description': 'Have we setup the default copy in the UI?',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(61, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(82, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
+
 						        },
 						        {
 						          'title': 'Provide Instruction for UI Copy Editing',
-						          'description': 'Have we sent instructions on how to edit the copy with in the UI?'
+						          'description': 'Have we sent instructions on how to edit the copy with in the UI?',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(61, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(86, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        },
 						        {
 						          'title': 'Milestone: VerifyAlphaUIConfigComplete',
-						          'description': 'Have we onfirmed that initial UI configuration is complete?'
+						          'description': 'Have we onfirmed that initial UI configuration is complete?',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(61, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(73, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        }
 						      ]
 						    },
@@ -427,31 +794,72 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						        'tasks': [
 						          {
 						            'title': 'ELVT: Provide Instruction Doc For HID Acct Tie-in',
-						            'description': 'Have we provided instruction on how to tie-in the HID account?'
+						            'description': 'Have we provided instruction on how to tie-in the HID account?',
+                                                            'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						          },
 						          {
 						            'title': 'Client: Begin HID Access Process',
-						            'description': 'Has this instance began the HID access process?'
+						            'description': 'Has this instance began the HID access process?',
+                                                            'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							          'dependency': "ELVT: Provide Instruction Doc For HID Acct Tie-in"
 						          },
 						          {
 						            'title': 'Client: ProvidedHIDAcctAccessPW',
-						            'description': 'Has this instance provided the HID account access password?'
+						            'description': 'Has this instance provided the HID account access password?',
+                                                            'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							         'dependency': "Client: Begin HID Access Process" 
 						          },
 						          {
 						            'title': 'ELVT-HIDAcctTie-InVerified',
-						            'description': 'Have we confirmed that theHIDaccounttie-inhasbeenverified?'
+						            'description': 'Have we confirmed that theHIDaccounttie-inhasbeenverified?',
+                                                            'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(60, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							          'dependency': "ELVT: Provide Instruction Doc For HID Acct Tie-in"
 						          },
 						          {
 						            'title': 'VerifyTestMobileIDPoolAddedtoAccount',
-						            'description': 'Have we confirmed that the sample Mobile ID Pool has been added to the account?'
+						            'description': 'Have we confirmed that the sample Mobile ID Pool has been added to the account?',
+                                                            'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(67, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							          'dependency': "ELVT - HID Acct Tie-In Verified"
+
 						          },
 						          {
 						            'title': 'VerifyTechnicalForegroundAccessActive',
-						            'description': 'Have we confirmed that the Technical Foreground Access is active?'
+						            'description': 'Have we confirmed that the Technical Foreground Access is active?',
+                                                            'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(74, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							          'dependency': "ELVT - HID Acct Tie-In Verified" 
 						          },
 						          {
 						            'title': 'Background: Begin Beacon Placement Discovery',
-						            'description': 'Where will the Beacons be placed with in this instance?'
+						            'description': 'Where will the Beacons be placed with in this instance?',
+                                                            'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(46, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(60, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						          }
 						        ]
 						      },
@@ -477,11 +885,22 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						      'tasks': [
 						        {
 						          'title': 'ELVT-F&B Management Training As Necessary',
-						          'description': ''
+						          'description': '',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(53, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
+
 						        },
 						        {
 						          'title': 'ELVT-Verify F&B Management Docs/Training Complete',
-						          'description': ''
+						          'description': '',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(46, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        }
 						      ]
 						    },
@@ -497,11 +916,21 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						      'tasks': [
 						        {
 						          'title': 'ELVT-Facilities Training as Necessary',
-						          'description': ''
+						          'description': '',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(46, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        },
 						        {
 						          'title': 'ELVT-Facilities Training/Docs Complete',
-						          'description': ''
+						          'description': '',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(53, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        }
 						      ]
 						    },
@@ -509,11 +938,21 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						      'tasks': [
 						        {
 						          'title': 'ELVT-Events Management Docs/Training Complete',
-						          'description': ''
+						          'description': '',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(46, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        },
 						        {
 						          'title': 'ELVT-Events Training as Necessary',
-						          'description': ''
+						          'description': '',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(53, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        }
 						      ]
 						    },
@@ -521,11 +960,21 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						      'tasks': [
 						        {
 						          'title': 'ELVT-Verify LLComms Training/Docs Complete',
-						          'description': ''
+						          'description': '',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(53, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        },
 						        {
 						          'title': 'ELVT-Comms Training As Necessary',
-						          'description': ''
+ 						          'description': '',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(46, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        }
 						      ]
 						    },
@@ -533,11 +982,22 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						      'tasks': [
 						        {
 						          'title': 'ELVT-Concierge Training/Docs Complete',
-						          'description': ''
+						          'description': '',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(53, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          },
+							           'dependency': "ELVT Provide Concierge Instruction (Doc(s))"
 						        },
 						        {
 						          'title': 'ELVT-Concierge Training As Necessary',
-						          'description': ''
+						          'description': '',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(46, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        }
 						      ]
 						    },
@@ -562,15 +1022,30 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						      'tasks': [
 						        {
 						          'title': 'ELVT v1 BETA Release to Client Testers-Feature Complete',
-						          'description': ''
+						          'description': '',
+                                                          'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(88, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(88, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        },
 						        {
 						          'title': 'ELVT Provide feedback/bug gathering process documentation',
-						          'description': ''
+						          'description': '',
+                                   'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(88, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(88, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        },
 						        {
 						          'title': 'Client: Provide Testing Feedback',
-						          'description': ''
+						          'description': '',
+                                    'dates': {
+							          	'type': 'Planned',
+							          	'start': moment().add(79, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+							          	'due': moment().add(89, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          }
 						        }
 						      ]
 						    },
@@ -929,13 +1404,15 @@ module.exports.createFolders = function(req, projectStructure, $root=false){
 			 var parentId = [];
 			 var scope  = "WsRoot";
 			 module.exports.savethisFolder(req, title, parentId, scope).then(rootfolderData=>{ 
-			 	title=  req.body.project_name
+			 	title=  req.body.project_nameprojectManager
        			projectManager = req.body.projectManager															       			
 				var parentId = rootfolderData._id;
 				var scope  = "WsFolder";
 				var isProject = true;
-				module.exports.savethisFolder(req, title, parentId, scope, isProject, true).then(wsfolderData=>{
-				 	async.forEachOf(projectStructure, (value, item, callback) =>{				
+				module.exports.savethisFolder(req, title, parentId, scope, isProject, true, projectManager).then(wsfolderData=>{
+				 	async.forEachSeries(projectStructure, function(value, callback){	
+				 		var item = projectStructure.indexOf(value);
+				 		console.log(item);			
 						if((typeof item === 'string')){
 							var title = item;
 							var parentId = wsfolderData._id;
@@ -945,10 +1422,14 @@ module.exports.createFolders = function(req, projectStructure, $root=false){
 								console.log("--", typeof value, wsfolderData);
 								if(typeof value == "object"){
 									if(module.exports.createsubFolders(req, value, wsfolderData)){
-										callback();
+										module.exports.sendEmails(req).then(emaildata =>{
+											callback();
+										})	
 									}
 								}else{
-									callback();
+									module.exports.sendEmails(req).then(emaildata =>{
+										callback();
+									})	
 								}	
 							});				
 						}
@@ -961,7 +1442,7 @@ module.exports.createFolders = function(req, projectStructure, $root=false){
 			var parentId = rootfolder._id;
 			var scope  = "WsFolder";
 			var isProject = true;
-			module.exports.savethisFolder(req, title, parentId, scope, isProject, true).then(wsfolderData=>{
+			module.exports.savethisFolder(req, title, parentId, scope, isProject, true, projectManager).then(wsfolderData=>{
 				//console.log("Line 1006", wsfolderData);
 				async.forEachOf(projectStructure, (value, item, callback) =>{					
 					if((typeof item === 'string')){
@@ -973,10 +1454,14 @@ module.exports.createFolders = function(req, projectStructure, $root=false){
 							// console.log("--", typeof value, wsfolderData);
 							if(typeof value == "object"){
 								if(module.exports.createsubFolders(req, value, wsfolderData)){
-									callback();
+									module.exports.sendEmails(req).then(emaildata =>{
+										callback();
+									})									
 								}
 							}else{
-								callback();
+								module.exports.sendEmails(req).then(emaildata =>{
+										callback();
+									})	
 							}	
 						});					
 					}
@@ -984,6 +1469,27 @@ module.exports.createFolders = function(req, projectStructure, $root=false){
 			});
 		}		
 	});			
+}
+
+module.exports.sendEmails = function(req){
+	return new Promise(function(resolve, reject){
+			var request = require('request');
+			request('http://elyvt.com/emailDashboard', function (error, response, body) {
+			  console.log('error:', error); // Print the error if one occurred
+			  console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+			  console.log('body:', body); // Print the HTML for the Google homepage.
+			  
+			  request('http://elyvt.com/taskReminder', function (error, response, body) {
+				  console.log('error:', error); // Print the error if one occurred
+				  console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+				  console.log('body:', body); // Print the HTML for the Google homepage.
+				  resolve(true);
+			  });
+
+
+			  
+			});
+	});
 }
 
 module.exports.createsubFolders = function(req, folderObject, wsfolderData){	
@@ -1006,7 +1512,15 @@ module.exports.createsubFolders = function(req, folderObject, wsfolderData){
 						console.log("---", taskvalue.title, taskvalue.description);
 						var title = taskvalue.title;
 						var description = taskvalue.description;
-						module.exports.createTask(req, title, description, parentId).then(wsfolderData=>{
+						var dates = {'type': 'backlog'};
+						if(taskvalue.dates){
+							var dates = taskvalue.dates;
+						}
+						var dependency = null;
+						if(taskvalue.dependency){
+							var dependency = taskvalue.dependency;
+						}						
+						module.exports.createTask(req, title, description, parentId, dates, dependency).then(wsfolderData=>{
 							callback();
 						});						
 					});
@@ -1037,36 +1551,56 @@ module.exports.createsubFolders = function(req, folderObject, wsfolderData){
 }
 
 
-module.exports.createTask = function(req, title, description, parentFolderIds){
+module.exports.createTask = function(req, title, description, parentFolderIds, dates={ 'type': 'backlog'}, dependency=null){
 	return new Promise(function(resolve, reject){
-		console.log(taskData);
-		var dependencyIds = [];
-		// if (taskData.dependencies){
-		// 	var dependencyIds = req.body.dependencies;
-		// }
+		//console.log(taskData);
+		var dependencyIds = '';
+		if(dependency != null){
+			tasks.gettaskbyTitle(dependency, function(err, content){
+				console.log(dependency, err, content);
+				if(content != null){
+					dependencyIds = content._id;
+				}
 
-		var taskentrydata = {
-			user: req.user,
-			parentFolderIds: [parentFolderIds],
-			title: title,
-			description: description,
-			createdDate: moment().format('YYYY-MM-DDTHH:mm'),
-			dates: { 'type': 'backlog'},
-			status: 'Active',
-			authorIds: [req.user],
-			dependencyIds: dependencyIds
+				var taskentrydata = {
+					user: req.user,
+					parentFolderIds: parentFolderIds,
+					title: title,
+					description: description,
+					createdDate: moment().format('YYYY-MM-DDTHH:mm'),
+					dates: dates,
+					status: 'Active',
+					authorIds: [req.user],
+					dependencyIds: dependencyIds
+				}
+				var taskData = new tasks(taskentrydata);
+				taskData.save(function(err) {
+			       console.log('Task saved');
+			       resolve(true);
+			    });
+				
+			});
 		}
-		// if(taskData.startDate){
-		// 	taskentrydata['dates'] = {
-		// 		'type': 'Planned',
-		// 		'start': taskData.startDate,
-		// 		'due': taskData.startDate,
-		// 	}
-		// }
-		var taskData = new tasks(taskentrydata);
-		taskData.save(function(err) {
-	       console.log('Task saved');
-	       resolve(true);
-	    });
+		else{
+
+			var taskentrydata = {
+				user: req.user,
+				parentFolderIds: parentFolderIds,
+				title: title,
+				description: description,
+				createdDate: moment().format('YYYY-MM-DDTHH:mm'),
+				dates: dates,
+				status: 'Active',
+				authorIds: [req.user],
+				dependencyIds: dependencyIds
+			}
+			var taskData = new tasks(taskentrydata);
+			taskData.save(function(err) {
+		       console.log('Task saved');
+		       resolve(true);
+		    });
+
+		}
+		
 	   });
 }
