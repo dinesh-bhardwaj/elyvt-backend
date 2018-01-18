@@ -1058,7 +1058,7 @@ app.get('/charts', AuthenteCheck.ensureAuthenticated, function(req, res) {
 	 //var attachmentsContents = fs.readFileSync("data/attachments.json");
 	 var userDetails = req.user;
 
-	 accounts.getaccounts(function(accountserr, accounts) {
+	 userModel.getAllUsers(function(userserr, users) {
 	 	tasks.getalltasks(function(taskserr, tasksContents){ //Get/Fetch Tasks
 			foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
 				foldersModel.getprojects(function(projectserr, projectsContents){ //Get/Fetch folders
@@ -1068,7 +1068,7 @@ app.get('/charts', AuthenteCheck.ensureAuthenticated, function(req, res) {
 								functions.taskGanntChart(moment, (tasksContents),null, (contactsContents['contactdata']), (foldersContents)).then((tasksGanttChartContents)=>{
 									res.render('theme/charts', {
 										layout: 'layout2',
-										'accounts': JSON.stringify(accounts),
+										'users': JSON.stringify(users),
 										'tasks': JSON.stringify(tasksContents), 
 										'tasksGanttChartContents': JSON.stringify(tasksGanttChartContents),
 										'folders': JSON.stringify(foldersContents),
