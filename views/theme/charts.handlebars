@@ -55,7 +55,7 @@
       }, {})
 
       var taskPerProject = projects.reduce((projects, project) => {
-        var count = tasks.reduce((acc, task) => acc + findProject(task.parentFolderIds[0])._id === project.id ? 1 : 0, 0)
+        var count = tasks.reduce((acc, task) => acc + findProject(task.parentFolderIds[0])._id === project._id ? 1 : 0, 0)
 
         projects[project.title] = count
 
