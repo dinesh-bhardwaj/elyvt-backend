@@ -18,13 +18,29 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
 
   <script>
-      
-
       var tasks = {{{tasks}}}
       var users = {{{users}}}
       var projects = {{{projects}}}
       var folders = {{{folders}}}
       var roles = {{{roles}}}
+
+      findProject(folderId) {
+        const folder = folders.find(folder => folderId === folder._id)
+
+        if (folder.isProject) return folder
+
+        else return findProject(folder.parentId)
+      }
+
+      var upcomingtasks = tasks.reduce((acc, task) => {
+        if (task.dates.type !== 'backlog') {
+          acc[findProject(task.parentFolderIds[0]).title] = 
+            acc[findProject(task.parentFolderIds[0]).title] ?
+              acc[findProject(task.parentFolderIds[0]).title] + 1 : 1
+        }
+
+        return acc;
+      }, {})
 
       $(function(){
         function randomRGBA() {
