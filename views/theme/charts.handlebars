@@ -374,9 +374,9 @@
           var data = [0, 0, 0]
 
           for (type in taskTypes) {
-            data[0] += taskTypes[task]
-            if (type === 'backlog') data[1] = taskTypes[task]
-            else data[2] = taskTypes[task]
+            data[0] += taskTypes[type]
+            if (type === 'backlog') data[1] = taskTypes[type]
+            else data[2] = taskTypes[type]
           }
 
           labels = ["Total Tasks", "Planned Tasks", "Backlog Tasks"];
