@@ -362,23 +362,20 @@
             }
           });
 
-          const unassigned = ((+data[1]/+data[0]) * 100).toFixed(2);
+          var total = +data[0]
+          var unassigned = ((+data[1]/+data[0]) * 100).toFixed(2);
 
           labels = ["Unassigned"];
           data = [unassigned];
           var colors2 = ["rgba(255,0,0,0.5)"];
 
-          console.log(assignees)
-
           for(assignee in assignees) {
             if (assignee !== 'unassigned') {
-              var count = ((+assignees[assignee]/+data[0]) * 100).toFixed(2);
+              var count = ((+assignees[assignee]/total) * 100).toFixed(2);
               labels.push(assignee);
               data.push(count);
             }
           }
-
-          console.log(data);
 
           var taskAssigne2 = new Chart(chartTasksAssigne2, {
             type: 'pie',
