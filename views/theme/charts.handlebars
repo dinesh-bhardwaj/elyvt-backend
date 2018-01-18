@@ -83,8 +83,10 @@
           var data = [0, roles.NoRoles];
 
           for (var role in roles) {
-            labels.push(role);
-            data.push(roles[role]);
+            if (role !== 'NoRoles') {
+              labels.push(role);
+              data.push(roles[role]);
+            }
             data[0] += roles[role]
           }
 
