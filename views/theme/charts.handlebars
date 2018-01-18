@@ -57,9 +57,9 @@
       var taskPerProject = projects.reduce((projects, project) => {
         var count = tasks.reduce((acc, task) => acc + findProject(task)._id === project.id ? 1 : 0, 0)
 
-        acc[project.title] = count
+        projects[project.title] = count
 
-        return acc;
+        return projects;
       }, {})
 
       var assignees = tasks.reduce((acc, task) => {
