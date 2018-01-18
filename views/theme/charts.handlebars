@@ -24,7 +24,7 @@
       var folders = {{{folders}}}
       var roles = {{{roles}}}
 
-      findProject(folderId) {
+      function findProject(folderId) {
         const folder = folders.find(folder => folderId === folder._id)
 
         if (folder.isProject) return folder
