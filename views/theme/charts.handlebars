@@ -368,6 +368,8 @@
           data = [unassigned];
           var colors2 = ["rgba(255,0,0,0.5)"];
 
+          console.log(assignees)
+
           for(assignee in assignees) {
             if (assignee !== 'unassigned') {
               var count = ((+assignees[assignee]/+data[0]) * 100).toFixed(2);
