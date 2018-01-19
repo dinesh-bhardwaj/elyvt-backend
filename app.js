@@ -240,29 +240,24 @@ app.get('/', user.can('dashboard'), function(req, res){
 				console.log("herirecy Done");
 			 	functions.folderDashboardContent(moment, (foldersContents), (tasksContents), (contactsContents['contactdata'])).then((folderDashboardData)=>{
 			 		console.log("Dashboard Done");
-			 		functions.buildMilestonesTable(moment, (foldersContents), (tasksContents), (contactsContents['contactdata']), null).then((MilestonesTableContent)=>{
-			 		 	console.log("Milestone Done");
-			 		 	res.render('theme/index', {
-		 						  layout: 'layout2',
-								  'tasks': tasksContents, 
-								  //'tasksGanttChartContents': JSON.stringify(tasksGanttChartContents),
-								  'MilestonesTableContent': MilestonesTableContent,
-								  'folders': foldersContents,
-								  'folderDashboardData': folderDashboardData, 
-								  //'foldersHeiraricalData': foldersHeiraricalData[0],
-								  'foldermenu':  foldersHeiraricalData,
-								  'workflows': workflowsContents,
-								  'accounts': accountsContents, 
-								  'contacts': contactsContents['contactdata'], 
-								  //'groups':groupsContents,
-								  //'invitations':invitationsContents,
-								  //'customfields':customfieldsContents,
-								  //'comments':commentsContents,
-								  //'timelogs':timelogsContents,
-								  //'attachments':attachmentsContents,
-								  'userDetails': userDetails
-						});
-		 			});
+			 		foldersModel.getprojects(function(projectserr, projectsContents){
+				 		functions.buildMilestonesTable(moment, (foldersContents), (tasksContents), (contactsContents['contactdata']), null).then((MilestonesTableContent)=>{
+				 		 	console.log("Milestone Done");
+				 		 	res.render('theme/index', {
+			 						  layout: 'layout2',
+									  'tasks': JSON.stringify(tasksContents),
+									  'projects': JSON.stringify(projectsContents),
+									  'MilestonesTableContent': MilestonesTableContent,
+									  'folders': JSON.stringify(foldersContents),
+									  'folderDashboardData': folderDashboardData, 
+									  'foldermenu':  foldersHeiraricalData,
+									  'workflows': workflowsContents,
+									  'accounts': accountsContents, 
+									  'contacts': contactsContents['contactdata'], 
+									  'userDetails': userDetails
+							});
+			 			});
+				 	});
 		 		});
 	 		});
 		}); // End Fetching Contacts
