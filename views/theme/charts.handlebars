@@ -191,109 +191,13 @@
             }
           });
 
-          /*
-          res.forEach(value => {
-            var startDate = value.dates__start;
-            if (value.status === "Active") {
-              var data = getData(folder, "_id__$oid", value.parentFolderIds__$oid);
-              if (data) {
-                if (data['isProject'] == "False") {
-                  var data2 = getData(folder, "_id__$oid", data.parentId);
-                  if (data2) {
-                    if (data2['isProject'] == "False") {
-                      var data3 = getData(folder, "_id__$oid", data2.parentId);
-                      if (data3) {
-                        if (data3['isProject'] == "True") {
-                          if(countProject.indexOf(data3['title']) === -1) {
-                            if (typeof(countProject[data3['title']]) === "undefined") {
-                              countProject[data3['title']] = 1;
-                            } else {
-                              countProject[data3['title']] += 1;
-                            }
-                            
-                            if (startDate) {
-                              startDate = startDate.split("/");
-                              var month = startDate[1] - 1;
-                              if(startDate[2] == year) {
-                                if (typeof(upcomingTasks[data3['title']]) === "undefined") {
-                                  upcomingTasks[data3['title']] = defaultMonth;
-                                  upcomingTasks[data3['title']][month] = 1;
-                                } else {
-                                  upcomingTasks[data3['title']][month] += 1;
-                                }
-                              }
-                            }
-                          }
-                        } else {
-                          var data4 = getData(folder, "_id__$oid", data3.parentId);
-                          if (data4) {
-                            if (data4['isProject'] == "True") {
-                              if(countProject.indexOf(data4['title']) === -1) {
-                                if (typeof(countProject[data4['title']]) === "undefined") {
-                                  countProject[data4['title']] = 1;
-                                } else {
-                                  countProject[data4['title']] += 1;
-                                }
-                              }
-
-                              if (startDate) {
-                                startDate = startDate.split("/");
-                                var month = startDate[1] - 1;
-                                if(startDate[2] == year) {
-                                  if (typeof(upcomingTasks[data4['title']]) === "undefined") {
-                                    upcomingTasks[data4['title']] = defaultMonth;
-                                    upcomingTasks[data4['title']][month] = 1;
-                                  } else {
-                                    upcomingTasks[data4['title']][month] += 1;
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            
-            if (value.authorIds__name) {
-              if (people.assigned.indexOf(value.authorIds__name) === -1) {
-                if (typeof(people.assigned[value.authorIds__name]) === "undefined") {
-                  people.assigned[value.authorIds__name] = 1;
-                } else {
-                  people.assigned[value.authorIds__name] += 1;
-                }
-                
-              }
-            } else {
-              people.unassigned += 1;
-            }
-
-            if (value.status === "Active") {
-              activeTasks += 1;
-            } else if (value.status === "Completed") {
-              completedTasks += 1;
-            }
-
-            if (value.dates__type === "Planned") {
-              plannedTasks += 1;
-            } else if (value.dates__type === "backlog") {
-              backlogTasks += 1;
-            }
-          });
-          */
-
           var datasets = [];
-
-          var counter = 0
 
           var taskcolors = [
             "#03586A", "#26B99A", "#acadac", "#03586A", "#26B99A", "#acadac"
           ]
 
-          projects.forEach((project) => {
+          projects.forEach((project, index) => {
             var title = project.title
 
             var data = []
@@ -305,7 +209,7 @@
             datasets.push({
               label: title,
               data: data,
-              backgroundColor: taskcolors[counter],
+              backgroundColor: taskcolors[index],
             });
           })
 
@@ -675,19 +579,9 @@
 
   <!-- bootstrap-daterangepicker -->
   <script src="/vendors/moment/min/moment.min.js"></script>
-  <script src="/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
 
   <!-- Custom Theme Scripts -->
   <script src="/build/js/custom.min.js"></script>
-
-  <script src="/vendors/plotly/js/plotly-latest.min.js"></script>
-  <script src="/vendors/plotly/js/numeric.min.js"></script>
-
-  <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-
-  <script type="text/javascript" src="js/snap.svg-min.js"></script>
-  <script src="/js/frappe-gantt.min.js" ></script>
-
   <script>
   // initalise variables
 

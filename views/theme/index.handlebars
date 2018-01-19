@@ -173,6 +173,9 @@
                             <div class="clearfix"></div>
                           </div>
                           <div class="x_content">
+                            <div class='milestone-chart'>
+                              <canvas id='upcomingTasks'></canvas>
+                            </div>
                             <table class="table table-bordered " id="Milestones-tables">
                               {{{MilestonesTableContent}}}
                             </table>
@@ -472,50 +475,80 @@
   <script>
   // initalise variables
   
+  var tasks = {{{tasks}}}
+  var projects = {{{projects}}}
+  var folders = {{{folders}}}
 
-/*
-  var tasksGanttChartContents = []
+  var chartUpcomingTasks = document.getElementById("upcomingTasks").getContext("2d");
 
-  var tasksgantdata = {{{tasksGanttChartContents}}}
+  function findProject(folderId) {
+    const folder = folders.find(folder => folderId === folder._id)
 
-  for (var element in tasksgantdata){
-    var task = {
-       id: tasksgantdata[element]['id'],
-      name: tasksgantdata[element]['name'],
-      start: tasksgantdata[element]['start'],
-      end: tasksgantdata[element]['end'],
-      progress: 100
-    } 
-    if(tasksgantdata[element]['dependencies']){
-      task.dependencies = tasksgantdata[element]['dependencies']
-    }
-    tasksGanttChartContents.push(task);
+    if (folder.isProject) return folder
+
+    else return findProject(folder.parentId)
   }
 
+  var upcomingTasksPerProject = tasks.reduce((acc, task) => {
+    for (var i = 0; i < 12; i++) {
+      var month = moment().month(i)
+      var monthName = month.format('MMMM')
 
-  
-   * Function getContactByID
-   *
-   * Find and Return Contact from contactList by ID
-   *
-   * @param (type): $contactID(integer)
-   * @return Contact Details: (Json Obj)
-   
-   function getContactByID($contactID){
-    for(var contactsElement in contactsData['data']){
-      if($contactID==contactsData['data'][contactsElement]['id']){
-        return contactsData['data'][contactsElement];
+      if (!acc[monthName]) acc[monthName] = {}
+
+      if (task.dates.type === 'Planned') {
+        console.log(moment(task.dates.end).format())
+        if (moment(task.dates.end).isSame(month, 'month')) {
+          var project = findProject(task.parentFolderIds[0]).title
+
+          acc[monthName][project] = acc[monthName][project] ? acc[monthName][project] + 1 : 1
+        }
       }
     }
-    return false;
-  }
+    return acc
+  }, {})
 
+  var datasets = [];
 
+  var counter = 0
 
-var gantt = new Gantt("#gantt", tasksGanttChartContents);
-gantt.change_view_mode('Week')
+  var taskcolors = [
+    "#03586A", "#26B99A", "#acadac", "#03586A", "#26B99A", "#acadac"
+  ]
 
-*/
+  projects.forEach((project, index) => {
+    var title = project.title
+
+    var data = []
+
+    for (var month in upcomingTasksPerProject) {
+      data.push(upcomingTasksPerProject[month][title] || 0)
+    }
+
+    datasets.push({
+      label: title,
+      data: data,
+      backgroundColor: taskcolors[index],
+    });
+  })
+
+  var upcomingTasks = new Chart(chartUpcomingTasks, {
+    type: 'bar',
+    data: {
+      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+      datasets: datasets
+    },
+    options: {
+      maintainAspectRatio: false,
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
 
   $(window).load(function(){
     $('#Milestones-tables').DataTable();
