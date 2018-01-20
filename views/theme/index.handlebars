@@ -492,6 +492,8 @@
   var projects = {{{projects}}}
   var folders = {{{folders}}}
 
+  let selectedProjects = projects
+
   $(window).load(function(){
     milestoneTable = $('#Milestones-tables').DataTable();
     completedTasksTable = $('#completedTaskstable').DataTable();
@@ -528,65 +530,33 @@
     return folders.filter(folder => folder.parentId === project._id)
   }
 
+  const getDatasets = (selectedProjects) => {
+    selectedProjects.reduce((acc, project, index) => {
+      var title = project.title
+
+      var data = []
+
+      for (var month in upcomingTasksPerProject) {
+        data.push(upcomingTasksPerProject[month][title] || 0)
+      }
+
+      datasets.push({
+        label: title,
+        data: data,
+        backgroundColor: taskcolors[index],
+      });
+    }, [])
+  }
+
   $(document).on('change', '#project-selector', function() {
     changeProject($(this).val())
   })
-
-  const changeProject = (projectId) => {
-    milestoneTable.clear()
-
-    const milestones = getMilestones(projectId).map(milestone => [
-      milestone.title,
-      findProject(milestone._id).title,
-      'test'
-    ])
-
-    milestoneTable.rows.add(milestones)
-    milestoneTable.draw()
-  }
-
-  var upcomingTasksPerProject = tasks.reduce((acc, task) => {
-    for (var i = 0; i < 12; i++) {
-      var month = moment().month(i)
-      var monthName = month.format('MMMM')
-
-      if (!acc[monthName]) acc[monthName] = {}
-
-      if (task.dates.type === 'Planned') {
-        console.log(moment(task.dates.end).format())
-        if (moment(task.dates.end).isSame(month, 'month')) {
-          var project = findProject(task.parentFolderIds[0]).title
-
-          acc[monthName][project] = acc[monthName][project] ? acc[monthName][project] + 1 : 1
-        }
-      }
-    }
-    return acc
-  }, {})
-
-  var datasets = [];
-
-  var counter = 0
 
   var taskcolors = [
     "#03586A", "#26B99A", "#acadac", "#03586A", "#26B99A", "#acadac"
   ]
 
-  projects.forEach((project, index) => {
-    var title = project.title
-
-    var data = []
-
-    for (var month in upcomingTasksPerProject) {
-      data.push(upcomingTasksPerProject[month][title] || 0)
-    }
-
-    datasets.push({
-      label: title,
-      data: data,
-      backgroundColor: taskcolors[index],
-    });
-  })
+  var datasets = getDatasets(projects)
 
   var upcomingTasks = new Chart(chartUpcomingTasks, {
     type: 'bar',
@@ -605,6 +575,28 @@
       }
     }
   });
+
+  const changeProject = (projectId) => {
+    milestoneTable.clear()
+
+    const milestones = getMilestones(projectId).map(milestone => [
+      milestone.title,
+      findProject(milestone._id).title,
+      'test'
+    ])
+
+    if (projectId !== 'all') {
+      const selectedProject = projects.filter(project => project._id === projectId)
+      upcomingTasks.data.datasets = getDatasets(selectedProject)
+    } else {
+      upcomingTasks.data.datasets = getDatasets(projects)
+    }
+
+    upcomingTasks.update()
+
+    milestoneTable.rows.add(milestones)
+    milestoneTable.draw()
+  }
 
   </script>
 
