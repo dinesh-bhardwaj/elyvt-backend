@@ -232,39 +232,71 @@ app.get('/', user.can('dashboard'), function(req, res){
  //var attachmentsContents = fs.readFileSync("data/attachments.json");
  var userDetails = req.user;
  
- tasks.getalltasks(function(taskserr, tasksContents){ //Get/Fetch Tasks
- 	foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
- 		contacts.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
- 			//console.log(foldersContents);
-			functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-				console.log("herirecy Done");
-			 	functions.folderDashboardContent(moment, (foldersContents), (tasksContents), (contactsContents['contactdata'])).then((folderDashboardData)=>{
-			 		console.log("Dashboard Done");
-			 		foldersModel.getprojects(function(projectserr, projectsContents){
-				 		functions.buildMilestonesTable(moment, (foldersContents), (tasksContents), (contactsContents['contactdata']), null).then((MilestonesTableContent)=>{
-				 		 	console.log("Milestone Done");
-				 		 	res.render('theme/index', {
-			 						  layout: 'layout2',
-									  'tasks': JSON.stringify(tasksContents),
-									  'projects': JSON.stringify(projectsContents),
-									  'MilestonesTableContent': MilestonesTableContent,
-									  'folders': JSON.stringify(foldersContents),
-									  'folderDashboardData': folderDashboardData, 
-									  'foldermenu':  foldersHeiraricalData,
-									  'workflows': workflowsContents,
-									  'accounts': accountsContents, 
-									  'contacts': contactsContents['contactdata'], 
-									  'userDetails': userDetails
-							});
-			 			});
-				 	});
-		 		});
-	 		});
-		}); // End Fetching Contacts
-	 }); // End Fetching folders
-  }); // End Fetching tasks
-}); // End Dashbord Function
+//  tasks.getalltasks(function(taskserr, tasksContents){ //Get/Fetch Tasks
+//  	foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
+//  		contacts.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
+//  			//console.log(foldersContents);
+// 			functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+// 				console.log("herirecy Done");
+// 			 	functions.folderDashboardContent(moment, (foldersContents), (tasksContents), (contactsContents['contactdata'])).then((folderDashboardData)=>{
+// 			 		console.log("Dashboard Done");
+// 			 		foldersModel.getprojects(function(projectserr, projectsContents){
+// 				 		functions.buildMilestonesTable(moment, (foldersContents), (tasksContents), (contactsContents['contactdata']), null).then((MilestonesTableContent)=>{
+// 				 		 	console.log("Milestone Done");
+// 				 		 	res.render('theme/index', {
+// 			 						  layout: 'layout2',
+// 									  'tasks': JSON.stringify(tasksContents),
+// 									  'projects': JSON.stringify(projectsContents),
+// 									  'MilestonesTableContent': MilestonesTableContent,
+// 									  'folders': JSON.stringify(foldersContents),
+// 									  'folderDashboardData': folderDashboardData, 
+// 									  'foldermenu':  foldersHeiraricalData,
+// 									  'workflows': workflowsContents,
+// 									  'accounts': accountsContents, 
+// 									  'contacts': contactsContents['contactdata'], 
+// 									  'userDetails': userDetails
+// 							});
+// 			 			});
+// 				 	});
+// 		 		});
+// 	 		});
+// 		}); // End Fetching Contacts
+// 	 }); // End Fetching folders
+//   }); // End Fetching tasks
+// }); // End Dashbord Function
 
+
+Promise.all([
+	tasks.getalltasks,
+	foldersModel.getfolders,
+	contacts.getcontacts,
+	functions.foldersHeierarcy(foldersContents),
+	functions.folderDashboardContent(moment, foldersContents, tasksContents, contactsContents['contactdata']),
+	foldersModel.getprojects,
+	functions.buildMilestonesTable(moment, foldersContents, tasksContents, contactsContents['contactdata'], null)
+]).then(([
+	tasksContents,
+	foldersContents,
+	contactsContents,
+	foldersHeiraricalData,
+	folderDashboardData,
+	projectsContents,
+	MilestonesTableContent
+]) => {
+		res.render('theme/index', {
+			layout: 'layout2',
+			'tasks': JSON.stringify(tasksContents),
+			'projects': JSON.stringify(projectsContents),
+			'MilestonesTableContent': MilestonesTableContent,
+			'folders': JSON.stringify(foldersContents),
+			'folderDashboardData': folderDashboardData, 
+			'foldermenu':  foldersHeiraricalData,
+			'workflows': workflowsContents,
+			'accounts': accountsContents, 
+			'contacts': contactsContents['contactdata'], 
+			'userDetails': userDetails
+		});
+	})
 
 /**
 * Function Gantt-chart
