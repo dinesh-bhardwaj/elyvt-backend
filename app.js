@@ -231,7 +231,7 @@ app.get('/', user.can('dashboard'), function(req, res) {
 						res.render('theme/index', {
 							layout: 'layout2',
 							tasks: JSON.stringify(tasksContents),
-							overdue: tasksContents.filter(task => task.dates.type === 'Planned' && moment(task.dates.due).isBefore(moment())),
+							overdue: JSON.stringify(tasksContents.filter(task => task.dates.type === 'Planned' && moment(task.dates.due).isBefore(moment()))),
 							projects: JSON.stringify(projectsContents),
 							MilestonesTableContent: MilestonesTableContent,
 							folders: JSON.stringify(foldersContents),
