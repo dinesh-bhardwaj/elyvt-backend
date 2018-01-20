@@ -549,7 +549,7 @@
   }
 
   const getDatasets = (selectedProjects) => {
-    selectedProjects.reduce((acc, project, index) => {
+    return selectedProjects.reduce((acc, project, index) => {
       var title = project.title
 
       var data = []
