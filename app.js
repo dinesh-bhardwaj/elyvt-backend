@@ -231,6 +231,7 @@ app.get('/', user.can('dashboard'), function(req, res) {
 						res.render('theme/index', {
 							layout: 'layout2',
 							tasks: JSON.stringify(tasksContents),
+							overdue: tasksContents.filter(task => task.dates.type === 'Planned' && moment(task.dates.due).isBefore(moment())),
 							projects: JSON.stringify(projectsContents),
 							MilestonesTableContent: MilestonesTableContent,
 							folders: JSON.stringify(foldersContents),
@@ -238,7 +239,7 @@ app.get('/', user.can('dashboard'), function(req, res) {
 							foldermenu:  foldersHeiraricalData,
 							workflows: workflowsContents,
 							accounts: accountsContents, 
-							contacts: contactsContents['contactdata'], 
+							contacts: JSON.stringify(contactsContents['contactdata']), 
 							userDetails: userDetails
 						});
 					})
