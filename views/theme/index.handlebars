@@ -91,10 +91,10 @@
         </div> --}}
 
         <nav aria-label="breadcrumb" role="navigation">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/">Home</a></li>
-                </ol>
-            </nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+            </ol>
+        </nav>
 
         <div class="clearfix"></div>
 
@@ -173,6 +173,13 @@
                             <div class="clearfix"></div>
                           </div>
                           <div class="x_content">
+                            <div class="form-group">
+                              <label class="control-label col-md-3 col-sm-3 col-xs-12">Select</label>
+                              <div class="col-md-9 col-sm-9 col-xs-12">
+                                <select id='project-selector' class="form-control">
+                                </select>
+                              </div>
+                            </div>
                             <div class='milestone-chart'>
                               <canvas id='upcomingTasks'></canvas>
                             </div>
@@ -481,6 +488,16 @@
   var projects = {{{projects}}}
   var folders = {{{folders}}}
 
+  var projectOptions = projects.reduce((acc, project) => {
+    return `${acc}<option value='${project._id}'>${project.title}</option>`
+  }, '')
+
+  $('#project-selector').html(projectOptions)
+
+  $(document).on('change', '#project-selector', function() {
+    console.log($(this).val())
+  })
+
   var chartUpcomingTasks = document.getElementById("upcomingTasks").getContext("2d");
 
   function findProject(folderId) {
@@ -489,6 +506,16 @@
     if (folder.isProject) return folder
 
     else return findProject(folder.parentId)
+  }
+
+  const getMilestones = (projectId) => {
+    const project = folders.find(folder => folder._id === projectId)
+
+    return folders.filter(folder => folder.parentId === project._id)
+  }
+
+  const changeProject = (projectId) => {
+
   }
 
   var upcomingTasksPerProject = tasks.reduce((acc, task) => {
@@ -553,9 +580,9 @@
   });
 
   $(window).load(function(){
-    $('#Milestones-tables').DataTable();
-    $('#completedTaskstable').DataTable();
-    $("#overdueTaskstable").DataTable();
+    var milestonTable = $('#Milestones-tables').DataTable();
+    var completedTasksTable = $('#completedTaskstable').DataTable();
+    var overdueTasksTable = $("#overdueTaskstable").DataTable();
   });
 
   </script>
