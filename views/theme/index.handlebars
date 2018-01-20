@@ -447,6 +447,8 @@
     milestoneTable = $('#Milestones-tables').DataTable();
     completedTasksTable = $('#completedTaskstable').DataTable();
     overdueTasksTable = $("#overdueTaskstable").DataTable();
+
+    changeProject('all')
   });
 
   var projectOptions = projects.reduce((acc, project) => {
