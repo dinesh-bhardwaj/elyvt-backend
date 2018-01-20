@@ -575,18 +575,18 @@
     const milestones = getMilestones(projectId).map(milestone => [
       milestone.title,
       findProject(milestone._id).title,
-      milestone.user ? `${milestone.user.firstName} ${milestone.user.lastName}` : ''
+      milestone.user && milestone.user[0] ? `${milestone.user[0].firstName || ''} ${milestone.user[0].lastName || ''}` : ''
     ])
 
     const filteredCompletedTasks = getCompletedTasks(projectId).map(task => [
       task.title,
-      'test',
+      task.authorIds && task.authorIds[0] ? `${task.authorIds[0].firstName || ''} ${task.authorIds[0].lastName || ''}` : '',
       task.status
     ])
 
     const filteredOverdueTasks = getOverdueTasks(projectId).map(task => [
       task.title,
-      'test',
+      task.authorIds && task.authorIds[0] ? `${task.authorIds[0].firstName || ''} ${task.authorIds[0].lastName || ''}` : '',
       task.status
     ])
 
