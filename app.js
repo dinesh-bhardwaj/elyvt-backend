@@ -233,7 +233,10 @@ app.get('/', user.can('dashboard'), function(req, res) {
 							tasks: JSON.stringify(tasksContents),
 							projects: JSON.stringify(projectsContents),
 							MilestonesTableContent: MilestonesTableContent,
-							folders: JSON.stringify(foldersContents),
+							folders: JSON.stringify(foldersContents.map(folder => ({
+								...folder,
+								childIds: [...(folder.childIds || [])]
+							}))),
 							folderDashboardData: folderDashboardData, 
 							foldermenu:  foldersHeiraricalData,
 							workflows: workflowsContents,
