@@ -437,9 +437,9 @@
   var projects = {{{projects}}}
   var folders = {{{folders}}}
   var contacts = {{{contacts}}}
-  var overdue = {{{overdue}}}
 
   var completedTasks = tasks.filter(task => task.status === 'Completed')
+  var overdueTasks = tasks.filter(task => task.dates.type === 'Planned' && moment(task.dates.due).isBefore(moment()))
 
   let selectedProjects = projects
 
@@ -507,6 +507,14 @@
     return completedTasks.filter(task => findProject(task.parentFolderIds[0])._id === projectId)
   }
 
+  const getOverdueTasks = (projectId) => {
+    if (projectId === 'all') {
+      return overdueTasks
+    }
+
+    return overdueTasks.filter(task => findProject(task.parentFolderIds[0])._id === projectId)
+  }
+
   const getDatasets = (selectedProjects) => {
     return selectedProjects.reduce((acc, project, index) => {
       var title = project.title
@@ -558,6 +566,7 @@
   const changeProject = (projectId) => {
     milestoneTable.clear()
     completedTasksTable.clear()
+    overdueTasksTable.clear()
 
     const milestones = getMilestones(projectId).map(milestone => [
       milestone.title,
@@ -566,6 +575,12 @@
     ])
 
     const filteredCompletedTasks = getCompletedTasks(projectId).map(task => [
+      task.title,
+      'test',
+      task.status
+    ])
+
+    const filteredOverdueTasks = getOverdueTasks(projectId).map(task => [
       task.title,
       'test',
       task.status
@@ -582,6 +597,9 @@
 
     completedTasksTable.rows.add(filteredCompletedTasks)
     completedTasksTable.draw()
+
+    overdueTasksTable.rows.add(filteredOverdueTasks)
+    overdueTasksTable.draw()
 
     milestoneTable.rows.add(milestones)
     milestoneTable.draw()
