@@ -264,33 +264,32 @@ app.get('/', user.can('dashboard'), function(req, res){
 // 	 }); // End Fetching folders
 //   }); // End Fetching tasks
 
-	Promise.all([
-		tasks.getalltasks,
-		foldersModel.getfolders,
-		contacts.getcontacts,
-		foldersModel.getprojects
-	]).then(([tasksContents, foldersContents, contactsContents, projectsContents]) => {
-		console.log([tasksContents, foldersContents, contactsContents, projectsContents])
-
-		return Promise.all([
-			functions.foldersHeierarcy(foldersContents),
-			functions.folderDashboardContent(moment, foldersContents, tasksContents, contactsContents['contactdata']),
-			functions.buildMilestonesTable(moment, foldersContents, tasksContents, contactsContents['contactdata'], null)
-		]).then(([foldersHeiraricalData, folderDashboardData, MilestonesTableContent]) => {
-			res.render('theme/index', {
-				layout: 'layout2',
-				tasks: JSON.stringify(tasksContents),
-				projects: JSON.stringify(projectsContents),
-				MilestonesTableContent: MilestonesTableContent,
-				folders: JSON.stringify(foldersContents),
-				folderDashboardData: folderDashboardData, 
-				foldermenu:  foldersHeiraricalData,
-				workflows: workflowsContents,
-				accounts: accountsContents, 
-				contacts: contactsContents['contactdata'], 
-				userDetails: userDetails
-			});
-		})	
+	tasks.getalltasks((taskserr, tasksContents) => {
+		foldersModel.getfolders((folderserr, foldersContents) => {
+			contacts.getcontacts((contactserr, contactsContents) => {
+				foldersModel.getprojects((projectserr, projectsContents) => {
+					Promise.all([
+						functions.foldersHeierarcy(foldersContents),
+						functions.folderDashboardContent(moment, foldersContents, tasksContents, contactsContents['contactdata']),
+						functions.buildMilestonesTable(moment, foldersContents, tasksContents, contactsContents['contactdata'], null)
+					]).then(([foldersHeiraricalData, folderDashboardData, MilestonesTableContent]) => {
+						res.render('theme/index', {
+							layout: 'layout2',
+							tasks: JSON.stringify(tasksContents),
+							projects: JSON.stringify(projectsContents),
+							MilestonesTableContent: MilestonesTableContent,
+							folders: JSON.stringify(foldersContents),
+							folderDashboardData: folderDashboardData, 
+							foldermenu:  foldersHeiraricalData,
+							workflows: workflowsContents,
+							accounts: accountsContents, 
+							contacts: contactsContents['contactdata'], 
+							userDetails: userDetails
+						});
+					})
+				})
+			})
+		})
 	})
 
 }); // End Dashbord Function
