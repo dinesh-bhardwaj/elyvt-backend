@@ -515,7 +515,13 @@
   }
 
   const getMilestones = (projectId) => {
-    if (projectId === 'all') return folders.filter(folder => folder.parentId && !folder.isProject)
+    if (projectId === 'all') {
+      return projects.reduce((acc, project) => {
+        const milestones = folders.filter(folder => folder.parentId === project._id)
+
+        return acc.concat(milestones)
+      }, [])
+    }
 
     const project = folders.find(folder => folder._id === projectId)
 
