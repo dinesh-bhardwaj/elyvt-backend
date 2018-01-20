@@ -494,24 +494,6 @@
 
   let selectedProjects = projects
 
-  var upcomingTasksPerProject = tasks.reduce((acc, task) => {
-    for (var i = 0; i < 12; i++) {
-      var month = moment().month(i)
-      var monthName = month.format('MMMM')
-
-      if (!acc[monthName]) acc[monthName] = {}
-
-      if (task.dates.type === 'Planned') {\
-        if (moment(task.dates.end).isSame(month, 'month')) {
-          var project = findProject(task.parentFolderIds[0]).title
-
-          acc[monthName][project] = acc[monthName][project] ? acc[monthName][project] + 1 : 1
-        }
-      }
-    }
-    return acc
-  }, {})
-
   $(window).load(function(){
     milestoneTable = $('#Milestones-tables').DataTable();
     completedTasksTable = $('#completedTaskstable').DataTable();
@@ -533,6 +515,24 @@
 
     else return findProject(folder.parentId)
   }
+
+  var upcomingTasksPerProject = tasks.reduce((acc, task) => {
+    for (var i = 0; i < 12; i++) {
+      var month = moment().month(i)
+      var monthName = month.format('MMMM')
+
+      if (!acc[monthName]) acc[monthName] = {}
+
+      if (task.dates.type === 'Planned') {
+        if (moment(task.dates.end).isSame(month, 'month')) {
+          var project = findProject(task.parentFolderIds[0]).title
+
+          acc[monthName][project] = acc[monthName][project] ? acc[monthName][project] + 1 : 1
+        }
+      }
+    }
+    return acc
+  }, {})
 
   const getMilestones = (projectId) => {
     if (projectId === 'all') {
