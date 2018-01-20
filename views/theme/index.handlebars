@@ -483,20 +483,26 @@
 
   <script>
   // initalise variables
+
+  let milestoneTable
+  let completedTaskstable
+  let overdueTasksTable
   
   var tasks = {{{tasks}}}
   var projects = {{{projects}}}
   var folders = {{{folders}}}
 
+  $(window).load(function(){
+    milestoneTable = $('#Milestones-tables').DataTable();
+    completedTasksTable = $('#completedTaskstable').DataTable();
+    overdueTasksTable = $("#overdueTaskstable").DataTable();
+  });
+
   var projectOptions = projects.reduce((acc, project) => {
     return `${acc}<option value='${project._id}'>${project.title}</option>`
-  }, '')
+  }, '<option value="all">All Projects</option>')
 
   $('#project-selector').html(projectOptions)
-
-  $(document).on('change', '#project-selector', function() {
-    console.log($(this).val())
-  })
 
   var chartUpcomingTasks = document.getElementById("upcomingTasks").getContext("2d");
 
@@ -509,13 +515,28 @@
   }
 
   const getMilestones = (projectId) => {
+    if (projectId === 'all') return folders.filter(folder.parentId && !folder.isProject)
+
     const project = folders.find(folder => folder._id === projectId)
 
     return folders.filter(folder => folder.parentId === project._id)
   }
 
-  const changeProject = (projectId) => {
+  $(document).on('change', '#project-selector', function() {
+    changeProject($(this).val())
+  })
 
+  const changeProject = (projectId) => {
+    milestoneTable.clear()
+
+    const milestones = getMilestones(projectId).map(milestone => [
+      milestone.title,
+      findProject(milestone._id).title,
+      'test'
+    ])
+
+    milestoneTable.rows.add(milestones)
+    milestoneTable.draw()
   }
 
   var upcomingTasksPerProject = tasks.reduce((acc, task) => {
@@ -577,12 +598,6 @@
         }]
       }
     }
-  });
-
-  $(window).load(function(){
-    var milestonTable = $('#Milestones-tables').DataTable();
-    var completedTasksTable = $('#completedTaskstable').DataTable();
-    var overdueTasksTable = $("#overdueTaskstable").DataTable();
   });
 
   </script>
