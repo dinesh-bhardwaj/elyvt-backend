@@ -1,9 +1,10 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcryptjs');
+mongoose.set('debug', true);
 var Schema = mongoose.Schema;
 
 var User = require('./user.js')
-var Folders = require('./folders.js')
+var folders = require('./folders.js')
 
 var tasksSchema = new Schema({
 	user: [
@@ -17,9 +18,7 @@ var tasksSchema = new Schema({
     briefDescription: {type: String},
     parentIds: Object,
     parentFolderIds: {type: String},
-    project: [
-      {type: Schema.Types.ObjectId, ref: 'Folders'}
-    ],
+    project: {type: Schema.Types.ObjectId, ref: 'folders'},
     superParentIds: Object,
     sharedIds: Object,
     responsibleIds: Object,
@@ -48,6 +47,11 @@ var tasks = module.exports = mongoose.model('tasks', tasksSchema);
 module.exports.getalltasks = function(callback){
 	var query = {};
 	tasks.find(query, callback);
+}
+
+module.exports.getTasksByProject = function($projectId, callback){
+    var query = {project: $projectId};
+    tasks.find(query, callback);
 }
 
 module.exports.gettaskbyId = function($taskID, callback){

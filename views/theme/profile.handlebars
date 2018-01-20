@@ -39,35 +39,29 @@
 
               <form method="POST">
               			<legend>My Profile</legend>
-              			<div class="col-md-6">
+              			<div class="col-md-6 col-md-offset-3">
                       <label for="text">First Name</label>
-                      <input class="form-control" type="text" name="fname" value="{{{ userDetails.firstname }}}" autofocus="autofocus"/>
+                      <input class="form-control" type="text" name="firstname" value="{{{ userDetails.firstname }}}" autofocus="autofocus"/>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="clearfix"></div>
+
+                    <div class="col-md-6  col-md-offset-3">
 
                       <label for="text">Last Name</label>
-                      <input class="form-control" type="text" name="lname" value="{{{ userDetails.lastname }}}" autofocus="autofocus"/>
+                      <input class="form-control" type="text" name="lastname" value="{{{ userDetails.lastname }}}" autofocus="autofocus"/>
                     </div>
 
-                    <div class="col-md-6">
+                     <div class="clearfix"></div>
+
+                    <div class="col-md-6  col-md-offset-3">
 
                       <label for="email">E-mail</label>
-                      <input class="form-control" type="text" name="text" value="{{{ userDetails.text }}}" autofocus="autofocus"/>
+                      <input class="form-control" type="text" name="email" value="{{{ userDetails.email }}}" autofocus="autofocus"/>
                     </div>
-                      <div class="col-md-6">
-                      <label for="text">Roles</label>
-                      <input class="form-control" type="text" name="roles" value="{{{ userDetails.roles }}}" autofocus="autofocus"/>
-                    </div>
-					<div class="col-md-6">
-                      <label for="text">Title</label>
-                      <input class="form-control" type="text" name="title" value="{{{ userDetails.title }}}" autofocus="autofocus"/>
-                    </div>
-					<div class="col-md-6">
-					<label for="text">Type</label>
-                      <input class="form-control" type="text" name="type" value="{{{ userDetails.type }}}" autofocus="autofocus"/>
-					</div>
 
+                    <div class="clearfix"></div>
+                      
               			<button class="btn btn-primary" type="submit">Update</button>
               		</form>
 
@@ -106,7 +100,7 @@
 
 
   <!-- jQuery -->
-  http://elyvt.com
+  <!-- http://elyvt.com -->
   <!-- Bootstrap -->
   <script src="/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
 

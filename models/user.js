@@ -19,6 +19,7 @@ var UserSchema = mongoose.Schema({
 	type: { type: String},
 	phone:{type:String},
 	roles: { type: String},
+	types: { type: String},
 	avatarUrl: { type: String},
 	deleted: {type: String},
 	resetPasswordToken: String,
@@ -50,7 +51,10 @@ module.exports.getUserByUsername = function(username, callback){
 	var query = {username: username};
 	User.findOne(query, callback);
 }
-
+module.exports.getcontacts = function(callback){
+	var query = {};
+	User.find(query, callback);
+}
 module.exports.getAllUser = function(callback){
 	var query = {};
 	User.find(query, callback);
@@ -58,7 +62,7 @@ module.exports.getAllUser = function(callback){
 
 module.exports.getUserID = function(id, callback){
 	var query = {_id: id};
-	User.find(query, callback);
+	User.findOne(query, callback);
 }
 
 module.exports.getUserById = function(id, callback){

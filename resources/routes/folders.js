@@ -500,7 +500,7 @@ router.get('/folders', function(req, res){
 	var folderId = req.query.id
  	var foldersContents = fs.readFileSync("data/folders.json");
  	var tasksContents = fs.readFileSync("data/tasks.json");
- 	var contactsContents = fs.readFileSync("data/contacts.json");
+ 	var contactsContents = fs.readFileSync("data/user.json");
  	var userDetails = req.user
  	functions.foldersHeierarcy(foldersContents, folderId).then((foldersHeiraricalData)=>{
 		functions.foldersDetails(moment, tasksContents, foldersContents, contactsContents, folderId).then((folderDetailsData)=>{
