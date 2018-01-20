@@ -184,7 +184,11 @@
                               <canvas id='upcomingTasks'></canvas>
                             </div>
                             <table class="table table-bordered " id="Milestones-tables">
-                              {{{MilestonesTableContent}}}
+                              <tr>
+                                <th>Milestone</th>
+                                <th>Project</th>
+                                <th>Project Manager</th>
+                              </tr>
                             </table>
                           </div>
                         </div>
@@ -225,7 +229,11 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                {{{folderDashboardData.upcomingTaskHTML}}}
+                                <tr>
+                                  <th>Milestone</th>
+                                  <th>Project</th>
+                                  <th>Project Manager</th>
+                                </tr>
                               </tbody>
                             </table>
                           </div>
@@ -257,8 +265,11 @@
                           </div>
                           <div class="x_content">
                             <table class="table table-bordered" id="completedTaskstable">
-                              <!-- Completed Tasks Table Body -->
-                              {{{folderDashboardData.completedTasksHTML}}}
+                              <tr>
+                                <th>Milestone</th>
+                                <th>Project</th>
+                                <th>Project Manager</th>
+                              </tr>
                             </table>
                           </div>
                         </div>
@@ -267,7 +278,7 @@
                         <!--Risk Report-->
                         <div class="x_panel">
                           <div class="x_title">
-                            <h2>Risk Report <small>small text</small></h2>
+                            <h2>Risk Report</h2>
                             <ul class="nav navbar-right panel_toolbox">
                               <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                               </li>
@@ -288,7 +299,11 @@
                           <div class="x_content">
                             <table class="table table-bordered" id="overdueTaskstable">
                               <!-- Risk Report / Overdue Table body -->
-                              {{{folderDashboardData.overdueTasksHTML}}}
+                              <tr>
+                                <th>Milestone</th>
+                                <th>Project</th>
+                                <th>Project Manager</th>
+                              </tr>
                             </table>
                           </div>
                         </div>
@@ -502,6 +517,8 @@
     milestoneTable = $('#Milestones-tables').DataTable();
     completedTasksTable = $('#completedTaskstable').DataTable();
     overdueTasksTable = $("#overdueTaskstable").DataTable();
+
+    changeProject('all')
   });
 
   var projectOptions = projects.reduce((acc, project) => {
