@@ -270,6 +270,8 @@ app.get('/', user.can('dashboard'), function(req, res){
 		contacts.getcontacts,
 		foldersModel.getprojects
 	]).then(([tasksContents, foldersContents, contactsContents, projectsContents]) => {
+		console.log([tasksContents, foldersContents, contactsContents, projectsContents])
+
 		return Promise.all([
 			functions.foldersHeierarcy(foldersContents),
 			functions.folderDashboardContent(moment, foldersContents, tasksContents, contactsContents['contactdata']),
@@ -277,16 +279,16 @@ app.get('/', user.can('dashboard'), function(req, res){
 		]).then(([foldersHeiraricalData, folderDashboardData, MilestonesTableContent]) => {
 			res.render('theme/index', {
 				layout: 'layout2',
-				'tasks': JSON.stringify(tasksContents),
-				'projects': JSON.stringify(projectsContents),
-				'MilestonesTableContent': MilestonesTableContent,
-				'folders': JSON.stringify(foldersContents),
-				'folderDashboardData': folderDashboardData, 
-				'foldermenu':  foldersHeiraricalData,
-				'workflows': workflowsContents,
-				'accounts': accountsContents, 
-				'contacts': contactsContents['contactdata'], 
-				'userDetails': userDetails
+				tasks: JSON.stringify(tasksContents),
+				projects: JSON.stringify(projectsContents),
+				MilestonesTableContent: MilestonesTableContent,
+				folders: JSON.stringify(foldersContents),
+				folderDashboardData: folderDashboardData, 
+				foldermenu:  foldersHeiraricalData,
+				workflows: workflowsContents,
+				accounts: accountsContents, 
+				contacts: contactsContents['contactdata'], 
+				userDetails: userDetails
 			});
 		})	
 	})
