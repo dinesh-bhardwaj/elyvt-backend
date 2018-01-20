@@ -558,11 +558,13 @@
         data.push(upcomingTasksPerProject[month][title] || 0)
       }
 
-      datasets.push({
+      acc.push({
         label: title,
         data: data,
         backgroundColor: taskcolors[index],
       });
+
+      return acc;
     }, [])
   }
 
