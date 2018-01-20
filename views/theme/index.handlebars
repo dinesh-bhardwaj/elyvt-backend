@@ -492,6 +492,8 @@
   var projects = {{{projects}}}
   var folders = {{{folders}}}
 
+  var completedTasks = tasks.filter(task => task.status === 'Completed')
+
   let selectedProjects = projects
 
   $(window).load(function(){
@@ -548,6 +550,14 @@
     return folders.filter(folder => folder.parentId === project._id)
   }
 
+  const getCompletedTasks = (projectId) => {
+    if (projectId === 'all') {
+      return completedTasks
+    }
+
+    return completedTasks.filter(task => findProject(task.parentFolderIds[0])._id === projectId)
+  }
+
   const getDatasets = (selectedProjects) => {
     return selectedProjects.reduce((acc, project, index) => {
       var title = project.title
@@ -598,11 +608,18 @@
 
   const changeProject = (projectId) => {
     milestoneTable.clear()
+    completedTasksTable.clear()
 
     const milestones = getMilestones(projectId).map(milestone => [
       milestone.title,
       findProject(milestone._id).title,
       'test'
+    ])
+
+    const filteredCompletedTasks = getCompletedTasks(projectId).map(task => [
+      task.title,
+      'test',
+      task.status
     ])
 
     if (projectId !== 'all') {
@@ -613,6 +630,9 @@
     }
 
     upcomingTasks.update()
+
+    completedTasksTable.rows.add(filteredCompletedTasks)
+    completedTasksTable.draw()
 
     milestoneTable.rows.add(milestones)
     milestoneTable.draw()
