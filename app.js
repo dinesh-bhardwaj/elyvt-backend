@@ -263,8 +263,6 @@ app.get('/', user.can('dashboard'), function(req, res){
 // 		}); // End Fetching Contacts
 // 	 }); // End Fetching folders
 //   }); // End Fetching tasks
-// }); // End Dashbord Function
-
 
 Promise.all([
 	tasks.getalltasks,
@@ -297,6 +295,9 @@ Promise.all([
 			'userDetails': userDetails
 		});
 	})
+
+}); // End Dashbord Function
+
 
 /**
 * Function Gantt-chart
