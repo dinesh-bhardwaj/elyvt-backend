@@ -184,11 +184,15 @@
                               <canvas id='upcomingTasks'></canvas>
                             </div>
                             <table class="table table-bordered " id="Milestones-tables">
-                              <tr>
-                                <th>Milestone</th>
-                                <th>Project</th>
-                                <th>Project Manager</th>
-                              </tr>
+                              <thead>
+                                <tr>
+                                  <th>Milestone</th>
+                                  <th>Project</th>
+                                  <th>Project</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                              </tbody>
                             </table>
                           </div>
                         </div>
@@ -229,11 +233,7 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr>
-                                  <th>Milestone</th>
-                                  <th>Project</th>
-                                  <th>Project Manager</th>
-                                </tr>
+                                {{{folderDashboardData.upcomingTaskHTML}}}
                               </tbody>
                             </table>
                           </div>
@@ -265,11 +265,16 @@
                           </div>
                           <div class="x_content">
                             <table class="table table-bordered" id="completedTaskstable">
-                              <tr>
-                                <th>Milestone</th>
-                                <th>Project</th>
-                                <th>Project Manager</th>
-                              </tr>
+                              <!-- Completed Tasks Table Body -->
+                              <thead>
+                                <tr>
+                                  <th>Milestone</th>
+                                  <th>Project</th>
+                                  <th>Project</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                              </tbody>
                             </table>
                           </div>
                         </div>
@@ -278,7 +283,7 @@
                         <!--Risk Report-->
                         <div class="x_panel">
                           <div class="x_title">
-                            <h2>Risk Report</h2>
+                            <h2>Risk Report <small>small text</small></h2>
                             <ul class="nav navbar-right panel_toolbox">
                               <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                               </li>
@@ -299,11 +304,15 @@
                           <div class="x_content">
                             <table class="table table-bordered" id="overdueTaskstable">
                               <!-- Risk Report / Overdue Table body -->
-                              <tr>
-                                <th>Milestone</th>
-                                <th>Project</th>
-                                <th>Project Manager</th>
-                              </tr>
+                              <thead>
+                                <tr>
+                                  <th>Milestone</th>
+                                  <th>Project</th>
+                                  <th>Project</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                              </tbody>
                             </table>
                           </div>
                         </div>
@@ -320,46 +329,6 @@
                         <!--right col-->
                         <div class="col-md-12 col-xs-12  col-lg-2">
                           <div class="row">
-                           {{!--  <div class="x_panel widget ">
-                              <div class="x_title" style="  ">
-                                <ul class="nav navbar-right panel_toolbox" style="margin-right:-7px; */  min-width: 50px;">
-                                  <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                  </li>
-
-                                  <li><a class="close-link"><i class="fa fa-close"></i></a>
-                                  </li>
-                                </ul>
-                                <div class="title_tast">Links to Files on Box.com</div>
-
-                                <div class="clearfix"></div>
-                              </div>
-                              <div class="x_content">
-
-
-
-
-                                <div >
-                                  <p style=" border-bottom: 1px solid #ECECEC; padding-bottom: 10px">
-                                    <span><span class="glyphicon glyphicon-link"></span></span>
-                                    <span style="padding-right: 5px;  font-size: 14px; color:#696565;"><a href="#">Convene NDA</a></span>
-
-                                  </p>
-                                  <p style=" border-bottom: 1px solid #ECECEC; padding-bottom: 10px">
-                                    <span><span class="glyphicon glyphicon-link"></span></span>
-                                    <span style="padding-right: 5px;  font-size: 14px; color:#696565;"><a href="#" class="">Meeting Minutes Template</a></span>
-                                  </p>
-                                  <p style=" border-bottom: 1px solid #ECECEC; padding-bottom: 10px">
-                                    <span><span class="glyphicon glyphicon-link"></span></span>
-                                    <span style="padding-right: 5px;  font-size: 14px; color:#696565;"><a href="#">Link text 3</a></span>
-                                  </p>
-                                  <p style=" border-bottom: 1px solid #ECECEC; padding-bottom: 10px">
-                                    <span><span class="glyphicon glyphicon-link"></span></span>
-                                    <span style="padding-right: 5px;  font-size: 14px; color:#696565;"><a href="#">Link text 4</a></span>
-                                  </p>
-                                </div>
-                              </div>
-                            </div> --}}
-
                             <div class="x_panel  widget">
                               <div class="x_title" style="  ">
                                 <ul class="nav navbar-right panel_toolbox" style="margin-right:-7px; */  min-width: 50px;">
@@ -374,50 +343,11 @@
                                 <div class="clearfix"></div>
                               </div>
                               <div class="x_content">
-
-
-
-
                                 <div >
                                   {{{folderDashboardData.folderDashboardRightShortcutHTML}}}
                                 </div>
                               </div>
                             </div>
-
-
-
-
-                            
-
-
-                            {{!-- <div class="x_panel widget ">
-                              <div class="x_title" style="  ">
-                                <ul class="nav navbar-right panel_toolbox" style="margin-right:-7px;  min-width: 50px;">
-                                  <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                  </li>
-
-                                  <li><a class="close-link"><i class="fa fa-close"></i></a>
-                                  </li>
-                                </ul>
-                                <div class="title_tast">Legend</div>
-
-                                <div class="clearfix"></div>
-                              </div>
-                              <div class="x_content">
-
-
-
-
-                                <div>
-                                  <p style=" padding-bottom:5px">
-                                    <span style="font-weight: bold;  font-size: 14px; color: red;">Red Text</span>
-                                    <span style="padding-left: 5px;  font-size: 14px; color:#696565;">- Task is past end date and needs to be addressed as completed or at risk</span>
-
-                                  </p>
-
-                                </div>
-                              </div>
-                            </div> --}}
 
                           </div>
                         </div>
@@ -517,8 +447,6 @@
     milestoneTable = $('#Milestones-tables').DataTable();
     completedTasksTable = $('#completedTaskstable').DataTable();
     overdueTasksTable = $("#overdueTaskstable").DataTable();
-
-    changeProject('all')
   });
 
   var projectOptions = projects.reduce((acc, project) => {
