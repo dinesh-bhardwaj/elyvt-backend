@@ -231,15 +231,15 @@ app.get('/', user.can('dashboard'), function(req, res){
 foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
 	userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
 		foldersModel.getprojects(function(folderserr, projectContents){ //Get/Fetch folders
-			console.log('get Contacts');
+			//console.log('get Contacts');
 			 functions.getTaskByFolder(moment, contactsContents, projectId).then((tasksContents)=>{ //Get/Fetch Tasks
-	 			console.log('tasksContents');
+	 			//console.log('tasksContents');
 				functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-					console.log("herirecy Done");
+					//console.log("herirecy Done");
 				 	functions.folderDashboardContent(moment, (foldersContents), (tasksContents), (contactsContents)).then((folderDashboardData)=>{
-				 		console.log("Dashboard Done");
+				 		//console.log("Dashboard Done");
 				 		functions.buildMilestonesTable(moment, (foldersContents), (tasksContents), (contactsContents), projectId).then((MilestonesTableContent)=>{
-				 		 	console.log("Milestone Done");
+				 		 	//console.log("Milestone Done");
 
 				 		 	projectsDropdown = '';
 				 		 	    projectsDropdown = '<option value="null">All Project</option>'
