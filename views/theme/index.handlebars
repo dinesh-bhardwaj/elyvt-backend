@@ -436,6 +436,10 @@
   <script>
   // initalise variables
 
+  function dashboardRedirect(value){
+    window.location.href="/?id="+value;
+  }
+
   let milestoneTable
   let completedTaskstable
   let overdueTasksTable
@@ -474,10 +478,6 @@
   });
 
 
-  function dashboardRedirect(value){
-    window.location.href="/?id="+value;
-  }
-
   var projectOptions = projects.reduce((acc, project) => {
     return `${acc}<option value='${project._id}'>${project.title}</option>`
   }, '<option value="all">All Projects</option>')
@@ -495,6 +495,8 @@
 
     else return findProject(folder.parentId)
   }
+
+
 
   var upcomingTasksPerProject = tasks.reduce((acc, task) => {
     for (var i = 0; i < 12; i++) {
