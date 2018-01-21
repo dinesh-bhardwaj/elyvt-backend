@@ -542,8 +542,8 @@
 
     const milestones = getMilestones(projectId).map(milestone => [
       milestone.title,
-      findProject(milestone._id).title,
-      milestone.user && milestone.user[0] ? `${milestone.user[0].firstname || ''} ${milestone.user[0].lastname || ''}` : ''
+      findProject(milestone.parentFolderIds[0]).title,
+      task.authorIds && task.authorIds[0] ? `${task.authorIds[0].firstname || ''} ${task.authorIds[0].lastname || ''}` : '',
     ])
 
     const filteredCompletedTasks = getCompletedTasks(projectId).map(task => [
