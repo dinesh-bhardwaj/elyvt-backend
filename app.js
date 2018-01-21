@@ -218,57 +218,59 @@ app.get('/getData', AuthenteCheck.ensureAuthenticated, function(req, res){
 */
 app.get('/', user.can('dashboard'), function(req, res){
 
-	////console.log("==============", req);
-
- // Get content from file
- //var tasksContents = fs.readFileSync("data/tasks.json");
- //var foldersContents = fs.readFileSync("data/folders.json");
  var workflowsContents = fs.readFileSync("data/workflows.json");
  var accountsContents = fs.readFileSync("data/accounts.json");
- //var contactsContents = fs.readFileSync("data/contacts.json");
- //var groupsContents = fs.readFileSync("data/groups.json");
- //var invitationsContents = fs.readFileSync("data/invitations.json");
- //var customfieldsContents = fs.readFileSync("data/customfields.json");
- //var commentsContents = fs.readFileSync("data/comments.json");
- //var timelogsContents = fs.readFileSync("data/timelogs.json");
- //var attachmentsContents = fs.readFileSync("data/attachments.json");
  var userDetails = req.user;
- 
- tasks.getalltasks(function(taskserr, tasksContents){ //Get/Fetch Tasks
- 	foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
- 		userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
- 			////console.log(foldersContents);
-			functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-				//console.log("herirecy Done");
-			 	functions.folderDashboardContent(moment, (foldersContents), (tasksContents), (contactsContents)).then((folderDashboardData)=>{
-			 		console.log("Dashboard Done");
-			 		functions.buildMilestonesTable(moment, (foldersContents), (tasksContents), (contactsContents), null).then((MilestonesTableContent)=>{
-			 		 	console.log("Milestone Done");
-			 		 	res.render('theme/index', {
-		 						  layout: 'layout2',
-								  'tasks': tasksContents, 
-								  //'tasksGanttChartContents': JSON.stringify(tasksGanttChartContents),
-								  'MilestonesTableContent': MilestonesTableContent,
-								  'folders': foldersContents,
-								  'folderDashboardData': folderDashboardData, 
-								  //'foldersHeiraricalData': foldersHeiraricalData[0],
-								  'foldermenu':  foldersHeiraricalData,
-								  'workflows': workflowsContents,
-								  'accounts': accountsContents, 
-								  'contacts': contactsContents, 
-								  //'groups':groupsContents,
-								  //'invitations':invitationsContents,
-								  //'customfields':customfieldsContents,
-								  //'comments':commentsContents,
-								  //'timelogs':timelogsContents,
-								  //'attachments':attachmentsContents,
-								  'userDetails': userDetails
-						});
-		 			});
+ var projectId = req.query.id;
+ if(projectId=="undefined"){
+ 	projectId = null;
+ }
+ if(projectId == "null"){
+ 	projectId = null;
+ }
+foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
+	userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
+		foldersModel.getprojects(function(folderserr, projectContents){ //Get/Fetch folders
+			console.log('get Contacts');
+			 functions.getTaskByFolder(moment, contactsContents, projectId).then((tasksContents)=>{ //Get/Fetch Tasks
+	 			console.log('tasksContents');
+				functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+					console.log("herirecy Done");
+				 	functions.folderDashboardContent(moment, (foldersContents), (tasksContents), (contactsContents)).then((folderDashboardData)=>{
+				 		console.log("Dashboard Done");
+				 		functions.buildMilestonesTable(moment, (foldersContents), (tasksContents), (contactsContents), projectId).then((MilestonesTableContent)=>{
+				 		 	console.log("Milestone Done");
+
+				 		 	projectsDropdown = '';
+				 		 	    projectsDropdown = '<option value="null">All Project</option>'
+				 		 	for(var item in projectContents){
+				 		 		projectsDropdown += '<option value="'+projectContents[item]['_id']+'"';
+				 		 		if(projectContents[item]['_id'] == projectId){
+				 		 			projectsDropdown += ' selected';
+				 		 		}
+				 		 		projectsDropdown += '>'+projectContents[item]['title']+'</option>';
+				 		 	}
+
+				 		 	res.render('theme/index', {
+			 						  layout: 'layout2',
+									  'tasks': tasksContents, 
+									  'MilestonesTableContent': MilestonesTableContent,
+									  'folders': foldersContents,
+									  'projects': projectContents,
+									  'projectsDropdown': projectsDropdown,
+									  'folderDashboardData': folderDashboardData, 
+									  'foldermenu':  foldersHeiraricalData,
+									  'workflows': workflowsContents,
+									  'accounts': accountsContents, 
+									  'contacts': contactsContents, 
+									  'userDetails': userDetails
+							});
+			 			});
+			 		});
 		 		});
-	 		});
-		}); // End Fetching Contacts
-	 }); // End Fetching folders
+			}); // End Fetching Contacts
+		 }); // End Fetching folders
+	}); // End Fetching Projects
   }); // End Fetching tasks
 }); // End Dashbord Function
 
@@ -761,8 +763,8 @@ app.post('/task/createquestions', AuthenteCheck.ensureAuthenticated,  function(r
 										  'answerLink': answerLink,
 										  'taskLink': taskLink
 										  },  function(err, list){
-											////console.log(list);							
-											const sgMail = require('@sendgrid/mail');
+											  ////console.log(list);							
+											  const sgMail = require('@sendgrid/mail');
 										      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 										      const msg = {
 										        //to: userDetails.email,

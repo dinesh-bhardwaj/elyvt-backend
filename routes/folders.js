@@ -1704,7 +1704,6 @@ module.exports.createTask = function(req, title, description, parentFolderIds, d
 			});
 		}
 		else{
-
 			var taskentrydata = {
 				user: req.user,
 				parentFolderIds: parentFolderIds,
@@ -1712,7 +1711,7 @@ module.exports.createTask = function(req, title, description, parentFolderIds, d
 				description: description,
 				createdDate: moment().format('YYYY-MM-DDTHH:mm'),
 				dates: dates,
-				status: 'Active',
+				status: status,
 				authorIds: [req.user],
 				dependencyIds: dependencyIds,
 				project: ProjectId

@@ -1,6 +1,7 @@
 var request = require('request');
 const util = require('util');
 var folders = require('../models/folders');
+var taskModel = require('../models/tasks');
 var async = require('async');
 
 module.exports = {
@@ -208,6 +209,25 @@ return new Promise(function (resolve, reject) {
 });
 
 },
+
+getTaskByFolder: function(moment, $contactsData, projectId){
+	return new Promise(function(resolve, reject){
+		taskArr = [];
+		//console.log('projectId:', projectId);
+		if(projectId != null){
+			//console.log('projectId not null :', projectId);
+			taskModel.getTasksByProject(projectId, function(taskserr, tasksContents){
+				//console.log("tasksContents", tasksContents);
+				resolve(tasksContents);
+			})
+		}else{
+			taskModel.getalltasks(function(taskserr, tasksContents){
+				resolve(tasksContents);
+			})
+		}
+	});
+},
+
 getProjects: function(moment, $foldersData, $contactsData){
 	return new Promise(function (resolve, reject) {
 		var foldersArr = []
@@ -243,7 +263,7 @@ getProjects: function(moment, $foldersData, $contactsData){
 					$foldersData[folderElement]['projectManager'] = contact;
 				}
 				foldersTableHTML += "<tr>\
-				<td><a href='/folders/?id="+$foldersData[folderElement]['_id']+"'>"+$foldersData[folderElement]['title']+"</a></td>\
+				<td><a href='/?id="+$foldersData[folderElement]['_id']+"'>"+$foldersData[folderElement]['title']+"</a></td>\
 				<td>"+startDate+"</td>\
 				<td>"+endDate+"</td>\
 				<td>"+contactName+"</td>\
@@ -267,37 +287,37 @@ getProjects: function(moment, $foldersData, $contactsData){
 getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr=[], ganttTasks=[]){
 	return new Promise(function (resolve, reject) {
 		tasks = '';
-           for(var taskindex in $tasksData){
-	    		if($tasksData[taskindex]['parentFolderIds'].length>0){
-	               if($tasksData[taskindex]['parentFolderIds'].indexOf($folderId) > -1){
-		    				console.log('folder Found');
-		    				tasksArr.push($tasksData[taskindex]);
-		    				tasks += '<tr><td>#</td>'; 
-		    				tasks += '<td><a href="/task/?id='+$tasksData[taskindex]['_id']+'">'+$tasksData[taskindex]['title']+'</a><br />';
-		    				var d = moment($tasksData[taskindex]['createdDate'],'YYYY-MM-DDTHH:mm:ssZ');
-		    				tasks += '<small>Created '+d.format('DD MMM,  YYYY')+'</small</td>'
-		    				var contact = module.exports.getContactByID($contactsData, $tasksData[taskindex]['authorIds'])
-		    				if (contact != false){
-		    					tasks += '<td>'+contact['firstName']+' '+contact['lastName']+'</td>'
-		    				}
-		    				//tasks += '<td>'+$tasksData[taskindex]['accountId']+'</td>'
-		    				if ($tasksData[taskindex]['status']=='Completed'){
-		    					tasks += '<td><button class="btn btn-success btn-xs">'+$tasksData[taskindex]['status']+'</button></td>'
-		    				}else{
-		    					tasks += '<td>'+$tasksData[taskindex]['status']+'</td>'
-		    				}
-		    				tasks += '</tr>';
-		    			}		    		
-	    		}
-	    		else{
+      //      for(var taskindex in $tasksData){
+	    	// 	if($tasksData[taskindex]['parentFolderIds'].length>0){
+	     //           if($tasksData[taskindex]['parentFolderIds'].indexOf($folderId) > -1){
+		    // 				console.log('folder Found');
+		    // 				tasksArr.push($tasksData[taskindex]);
+		    // 				tasks += '<tr><td>#</td>'; 
+		    // 				tasks += '<td><a href="/task/?id='+$tasksData[taskindex]['_id']+'">'+$tasksData[taskindex]['title']+'</a><br />';
+		    // 				var d = moment($tasksData[taskindex]['createdDate'],'YYYY-MM-DDTHH:mm:ssZ');
+		    // 				tasks += '<small>Created '+d.format('DD MMM,  YYYY')+'</small</td>'
+		    // 				var contact = module.exports.getContactByID($contactsData, $tasksData[taskindex]['authorIds'])
+		    // 				if (contact != false){
+		    // 					tasks += '<td>'+contact['firstName']+' '+contact['lastName']+'</td>'
+		    // 				}
+		    // 				//tasks += '<td>'+$tasksData[taskindex]['accountId']+'</td>'
+		    // 				if ($tasksData[taskindex]['status']=='Completed'){
+		    // 					tasks += '<td><button class="btn btn-success btn-xs">'+$tasksData[taskindex]['status']+'</button></td>'
+		    // 				}else{
+		    // 					tasks += '<td>'+$tasksData[taskindex]['status']+'</td>'
+		    // 				}
+		    // 				tasks += '</tr>';
+		    // 			}		    		
+	    	// 	}
+	    	// 	else{
 	    			
-	    		}
-	    	}
-	      returnResponse = {
-	    		'tasks': tasks,
-	    		'tasksArr': tasksArr
-	    	}
-	    	resolve(returnResponse)
+	    	// 	}
+	    	// }
+	     //  returnResponse = {
+	    	// 	'tasks': tasks,
+	    	// 	'tasksArr': tasksArr
+	    	// }
+	    	// resolve(returnResponse)
                  taskModel.gettaskbyParentId($folderId, function(err, data){
 	    				if(data.length>0){
 		    					$i=0;
@@ -407,6 +427,155 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
     	}
     },
 
+    getProjectStatus: function($folderId){
+    	return new Promise(function(resolve, reject){
+    	var MilestoneStatus = 'Complete';
+    	$complete = false;
+    	$upcoming = false;
+    	$active = false;
+	    	
+    	taskModel.getTasksByProject($folderId, function(err, data){
+    		console.log("getProjectStatus Function Line 438: ", data);
+			if(data.length>0){
+				$milestoneIncrement=0;
+				async.forEachSeries(data, function(wsdatavalue, callback){
+					$milestoneIncrement++;
+					if((wsdatavalue['status']=='Active')){
+						console.log('Line 444: Status-Active: ');
+						$active = true;
+					}
+					if(wsdatavalue['status']=='Upcoming'){
+						$upcoming = true;
+					}								
+					if($milestoneIncrement == data.length){
+						if($active){
+							resolve('Active');
+						}else if($upcoming){
+							resolve('Upcoming');
+						}else{
+							resolve('Complete');
+						}
+						
+					}
+					callback();								
+				});
+			}else{
+				resolve(MilestoneStatus)
+			}
+		});
+				
+		});
+    },
+
+    getfolderStatus: function($folderId, $wsData2DataIncrement=0, $active=false, $upcoming=false, $complete=false){
+    	return new Promise(function(resolve, reject){
+	    	var MilestoneStatus = 'Complete';
+	    
+	    	folders.getfolderbyId($folderId, function(err, wsData){
+	    		taskModel.gettaskbyParentId($folderId, function(err, data){
+		    		console.log("getFolderStatus Function Line 438: ", wsData.title);
+					if(data.length>0){
+						$milestoneIncrement=0;
+						async.forEachSeries(data, function(wsdatavalue, callback){
+							console.log("--483--", $milestoneIncrement, data.length, wsdatavalue['status']);
+							$milestoneIncrement++;
+							if((wsdatavalue['status']=='Active')){
+								console.log('Line 485: Status-Active: ');
+								$active = true;
+							}
+							if(wsdatavalue['status']=='Upcoming'){
+								$upcoming = true;
+							}								
+							if($milestoneIncrement == data.length){
+
+								folders.getfolderbyParentId($folderId, function(err, data2){
+									console.log("--495--", data2);
+									if(data2.length>0){
+										console.log("Line 498", $wsData2DataIncrement, data2.length);
+										async.forEachSeries(data2, function(wsdata2value, callback2){
+											$wsData2DataIncrement++;
+											module.exports.getfolderStatus(wsdata2value['_id'], 0, $complete, $active, $upcoming).then(($data3)=>{
+												console.log("Line 501",data3);
+												if($data3=='Active'){
+													$active = true;
+												}else if($data3=='Upcoming'){
+													$upcoming = true;
+												}
+												console.log("Line 507",$wsData2DataIncrement, data2.length);
+												if($wsData2DataIncrement==data2.length){
+													if($active){
+														resolve('Active');
+													}else if($upcoming){
+														resolve('Upcoming');
+													}else{
+														resolve('Complete');
+													}
+												}
+												callback2()
+
+											});
+										});
+									}else{
+										if($active){
+											resolve('Active');
+										}else if($upcoming){
+											resolve('Upcoming');
+										}else{
+											resolve('Complete');
+										}
+									}
+									callback()
+
+								})
+								
+							}else{
+								callback()
+							}					
+						});
+					}else{
+						folders.getfolderbyParentId($folderId, function(err, data2){
+
+									if(data2.length>0){
+										async.forEachSeries(data2, function(wsdata2value, callback2){
+											console.log("--544--",$wsData2DataIncrement, data2.length);
+											$wsData2DataIncrement++;
+											module.exports.getfolderStatus(wsdata2value['_id'], 0).then(($data3)=>{
+
+												if($data3=='Active'){
+													$active = true;
+												}else if($data3=='Upcoming'){
+													$upcoming = true;
+												}
+												console.log("Line 553",$wsData2DataIncrement, data2.length);
+												if($wsData2DataIncrement==data2.length){
+													if($active){
+														resolve('Active');
+													}else if($upcoming){
+														resolve('Upcoming');
+													}else{
+														resolve('Complete');
+													}
+												}
+												callback2()
+											});
+										});
+									}else{
+										if($active){
+											resolve('Active');
+										}else if($upcoming){
+											resolve('Upcoming');
+										}else{
+											resolve('Complete');
+										}
+									}
+
+								})
+					}
+				});
+	    	});	    		
+		});
+    },
+
     getTaskFolder: function($tasksData, $foldersData, $taskId){
     	folders = []
     	foldersHtml = ''
@@ -442,23 +611,21 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
     	return foldersHtml;
     },
 
-    getMilestones: function(moment, $contactsData, $folderTitle, $projectName, $authorIds){
+    getMilestones: function(moment, $contactsData,$projectId, $folderTitle, $projectName, $authorIds){
     	return new Promise( function(resolve, reject){
-    		tasksbody = ''    	
-			tasksbody += '<tr style="height:28px">';
-			//tasksbody += '<td style="width: 10%;">'+$projectName+'</td>';
-			tasksbody += '<td bgcolor="#FFFFFF" style="font-family:Helvetica,Arial,sans-serif;font-size:14px">'+$folderTitle+'</td>';
-			tasksbody += '<td bgcolor="#FFFFFF" style="font-family:Helvetica,Arial,sans-serif;font-size:14px">'+$projectName+'</td>';
-			var contact = module.exports.getContactByID($contactsData, $authorIds)
-	         tasksbody += '<td bgcolor="#FFFFFF" style="font-family:Helvetica,Arial,sans-serif;font-size:14px">';
-	        if (contact != false){
-	          tasksbody += contact['firstname']+' '+contact['lastname'];
-	        }
-	        tasksbody += ''
-			//tasksbody += '<td style="width: 10%;">'+$foldersData[folderElement]['title']+'</td>';
-			tasksbody += '</tr>'
-	    		
-	    	resolve(tasksbody)
+    		module.exports.getfolderStatus($projectId).then((milestoneStatus)=>{
+	    		tasksbody = ''    	
+				tasksbody += '<tr style="height:28px">';
+				//tasksbody += '<td style="width: 10%;">'+$projectName+'</td>';
+				tasksbody += '<td bgcolor="#FFFFFF" style="font-family:Helvetica,Arial,sans-serif;font-size:14px">'+$folderTitle+'</td>';
+				tasksbody += '<td bgcolor="#FFFFFF" style="font-family:Helvetica,Arial,sans-serif;font-size:14px">'+$projectName+'</td>';
+				tasksbody += '<td bgcolor="#FFFFFF" style="font-family:Helvetica,Arial,sans-serif;font-size:14px">';
+		        tasksbody += milestoneStatus;	        
+		        tasksbody += ''
+				//tasksbody += '<td style="width: 10%;">'+$foldersData[folderElement]['title']+'</td>';
+				tasksbody += '</tr>';	    		
+		    	resolve(tasksbody)
+		    });
     	})    	
     },
 
@@ -469,10 +636,41 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 						<tr>\
 						<th style="width: 30%;">Milestone</th>\
 		              <th style="width: 40%;">Project</th>\
-		              <th >Assignee</th>\
+		              <th >Status</th>\
 		              </tr>'
-		    taskbody = '<tbody>'
-		    folders.getprojects(function(err, ProjectsData){
+		    taskbody = '<tbody>';
+		    if($folderID != null){
+		    	console.log("Line 646: ", $folderID);
+		    	folders.getfolderbyId($folderID, function(value, ProjectData){
+	    			$parentFolderId = ProjectData._id;
+		    		$projectName = ProjectData.title;
+		    		$authorIds = ProjectData.user;
+	    			folders.getfolderbyParentId($parentFolderId, function(err, wsfolder){
+		    			if(wsfolder != null){
+		    				$j=0;
+			    			async.forEachSeries(wsfolder, function(wsfoldervalue, callback2){
+			    				$j++;
+			    				//console.log("Line 386", wsfoldervalue.title, wsfolder.length );
+				    			$folderTitle = wsfoldervalue.title;	
+				    			module.exports.getMilestones(moment, $contactsData, $parentFolderId, $folderTitle, $projectName, $authorIds).then(milestoneData => {
+				    				console.log($j);
+				    				taskbody += milestoneData 
+				    				if($j==wsfolder.length){
+				    					console.log('resolving');
+				    					resolve(taskshead+taskbody)
+				    				}
+				    				callback2()
+			    				});
+			    			});
+			    		}else{
+					    	resolve(taskbody)
+					    }
+		    		});
+	    		})
+
+		    }else{
+
+		    	folders.getprojects(function(err, ProjectsData){
 		    	console.log("Line 382", ProjectsData.length);
 		    	console.log("");
 		    	if(ProjectsData != 'undefined'){
@@ -491,7 +689,7 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 					    				$j++;
 					    				console.log("Line 386", wsfoldervalue.title);
 						    			$folderTitle = wsfoldervalue.title;	
-						    			module.exports.getMilestones(moment, $contactsData, $folderTitle, $projectName, $authorIds).then(milestoneData => {
+						    			module.exports.getMilestones(moment, $contactsData, $parentFolderId, $folderTitle, $projectName, $authorIds).then(milestoneData => {
 						    				taskbody += milestoneData;
 						    				console.log("Line 496", $projectIncrement, ProjectsData.length , $j, wsfolder.length);
 						    				if($projectIncrement==ProjectsData.length && $j==wsfolder.length){
@@ -516,6 +714,10 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 				    }
 			    }		    	
 		    });
+
+
+		    }
+		    
 			
 		});
     },
@@ -538,7 +740,7 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 			    				$j++;
 			    				//console.log("Line 386", wsfoldervalue.title, wsfolder.length );
 				    			$folderTitle = wsfoldervalue.title;	
-				    			module.exports.getMilestones(moment, $contactsData, $folderTitle, $projectName, $authorIds).then(milestoneData => {
+				    			module.exports.getMilestones(moment, $contactsData, $parentFolderId, $folderTitle, $projectName, $authorIds).then(milestoneData => {
 				    				console.log($j);
 				    				taskbody += milestoneData 
 				    				if($j==wsfolder.length){
@@ -676,7 +878,7 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
     		var now = moment(d);
     		var currentDate = moment(d);
     		console.log("moment();",currentDate);
-			  var monthsLists = []
+			  //var monthsLists = []
 			  var activetaskList = []
 			  var completedtaskList = []
 			  var upcomingTaskList = []
@@ -696,24 +898,24 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
     		 var taskTypes = {'Backlog':0, 'Milestone':0, 'Planned':0}
 
     		$totalElement = 0;
-    		for($i=0; $i<6;$i++){
-    			if($i==0){
-    				monthsLists[0] = now.format('MMM YYYY');
-    			}else{
-    				monthsLists[$i] = now.subtract(1, 'months').format('MMM YYYY');
-    			}
+    		//for($i=0; $i<6;$i++){
+    			// if($i==0){
+    			// 	monthsLists[0] = now.format('MMM YYYY');
+    			// }else{
+    			// 	monthsLists[$i] = now.subtract(1, 'months').format('MMM YYYY');
+    			// }
     			$rtl = 0;
     			for(var Element in $tasksData){
     				$totalElement++;
     				var d = moment($tasksData[Element]['createdDate'],'YYYY-MM-DDTHH:mm:ssZ');
-    				if(monthsLists[$i] == d.format('MMM YYYY')){
+    				//if(monthsLists[$i] == d.format('MMM YYYY')){
     					if($tasksData[Element]['status']=="Completed"){
     						completedtaskList.push($tasksData[Element])
     					}
     					if($tasksData[Element]['status']=="Active"){
     						activetaskList.push($tasksData[Element])
     					}
-    				}
+    				//}
 
     				var month = d.format('M');
     				var year = d.format('YYYY');
@@ -743,14 +945,14 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 				          }
 				      }
 				  }
-				}
+				//}
 
-				monthsLists.reverse()
+				//monthsLists.reverse()
 				activetaskList.reverse()
 				completedtaskList.reverse()
 				overdueTasks.reverse()
 
-				 completedTasksHTML = '<thead><tr><th>Tasks</th><th>Assignee</th><th>Status</th></tr></thead></tbody>'
+				 completedTasksHTML = '<thead><tr><th>Tasks</th><th>Assignee</th><th>Date Completed</th><th>Status</th></tr></thead></tbody>'
 			      $completedTasks = 0;
 
 			      for(var item in completedtaskList){
@@ -774,6 +976,13 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 			          completedTasksHTML += contact['firstname']+' '+contact['lastname'];
 			        }
 			        completedTasksHTML += '</td>';
+			        completedTasksHTML += '<td bgcolor="#FFFFFF" style="font-family:Helvetica,Arial,sans-serif;font-size:14px">';
+				  	if(completedtaskList[item]['dates']['due']){
+				  		var endDateObj = moment(completedtaskList[item]['dates']['due'],'YYYY-MM-DDTHH:mm:ssZ');
+						endDate = endDateObj.format('DD MMM YYYY');
+						completedTasksHTML += endDate;
+				  	}
+					completedTasksHTML +='</td>';
 			        completedTasksHTML += '<td>'+completedtaskList[item]['status']+'</td>'
 			        completedTasksHTML += '</tr>'
 			      }
@@ -819,12 +1028,6 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 		    					}
 			    				folderDashboardleftMenuHTML += '<div class="x_panel widget">\
 						          <div class="x_title" style="  ">\
-						          <ul class="nav navbar-right panel_toolbox" style="margin-right:-7px; */  min-width: 50px;">\
-						          <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>\
-						          </li>\
-						          <li><a class="close-link"><i class="fa fa-close"></i></a>\
-						          </li>\
-						          </ul>\
 						          <div class="title_tast">\
 						          	<a href="/folders/?id='+$foldersData[folderElement]['_id']+'">'+$foldersData[folderElement]['title']+'</a>\
 						          </div>\
@@ -833,10 +1036,10 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 						          <div class="x_content">\
 						          <div style="text-align:right">\
 						          <p style=" border-bottom: 1px solid #ECECEC; padding-bottom: 10px;">\
-						          <span style="padding-right: 5px;  font-size: 14px; color:#696565; font-weight: bold">Opening Date:  </span>\
+						          <span style="padding-right: 5px;  font-size: 14px; color:#696565; font-weight: bold">Start Date:  </span>\
 						          <span style="float:right"><button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-calendar"></span>'+startDate.format("DD MMM YYYY")+'</button></span>\
 						          <div class="clearfix"></div>\
-						          <span style="padding-right: 5px;  font-size: 14px; color:#696565; font-weight: bold">Launch :  </span>\
+						          <span style="padding-right: 5px;  font-size: 14px; color:#696565; font-weight: bold">End Date:  </span>\
 						          <span style="float:right"><button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-calendar"></span>'+endDate.format("DD MMM YYYY")+'</button></span>\
 						          <div class="clearfix"></div>\
 						          </p>\
@@ -851,7 +1054,7 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 						          folderDashboardRightShortcutHTML += '<p style=" border-bottom: 1px solid #ECECEC; padding-bottom: 10px">\
 								                                    <span><span class="fa fa-file-o"></span></span>\
 								                                    <span style="padding-left: 5px;  font-size: 14px; color:#696565;">\
-								                                    <a href="/folders/?id='+$foldersData[folderElement]['_id']+'">'+$foldersData[folderElement]['title']+'</a>\
+								                                    <a href="/?id='+$foldersData[folderElement]['_id']+'">'+$foldersData[folderElement]['title']+'</a>\
 								                                    </span>\
 								                                  </p>'
 							}
@@ -1076,7 +1279,7 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 		  var contactsData = $contacts
 
 		  var now = moment();
-		  var monthsLists = []
+		  //var monthsLists = []
 		  var activetaskList = []
 		  var completedtaskList = []
 		  var upcomingTaskList = []
@@ -1089,24 +1292,24 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 		  var taskTypes = {'Backlog':0, 'Milestone':0, 'Planned':0}
 
     		$totalElement = 0;
-    		for($i=0; $i<6;$i++){
-    			if($i==0){
-    				monthsLists[0] = now.format('MMM YYYY');
-    			}else{
-    				monthsLists[$i] = now.subtract(1, 'months').format('MMM YYYY');
-    			}
+    		// for($i=0; $i<6;$i++){
+    		// 	if($i==0){
+    		// 		monthsLists[0] = now.format('MMM YYYY');
+    		// 	}else{
+    		// 		monthsLists[$i] = now.subtract(1, 'months').format('MMM YYYY');
+    		// 	}
     			$rtl = 0;
     			for(var Element in tasksData){
     				$totalElement++;
     				var d = moment(tasksData[Element]['createdDate'],'YYYY-MM-DDTHH:mm:ssZ');
-    				if(monthsLists[$i] == d.format('MMM YYYY')){
+    				//if(monthsLists[$i] == d.format('MMM YYYY')){
     					if(tasksData[Element]['status']=="Completed"){
     						completedtaskList.push(tasksData[Element])
     					}
     					if(tasksData[Element]['status']=="Active"){
     						activetaskList.push(tasksData[Element])
     					}
-    				}
+    				//}
 
     				var month = d.format('M');
     				var year = d.format('YYYY');
@@ -1135,9 +1338,9 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 				          }
 				      }
 				  }
-				}
+				//}
 
-				monthsLists.reverse()
+				//monthsLists.reverse()
 				activetaskList.reverse()
 				completedtaskList.reverse()
 				overdueTasks.reverse()
@@ -1201,6 +1404,13 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 		  	}else{
 				  		completedTasksHTML += '<td bgcolor="#FFFFFF" style="font-family:Helvetica,Arial,sans-serif;font-size:14px"></td>'
 				  	}
+		  	completedTasksHTML += '<td bgcolor="#FFFFFF" style="font-family:Helvetica,Arial,sans-serif;font-size:14px">';
+		  	if(completedtaskList[item]['dates']['due']){
+		  		var endDateObj = moment(completedtaskList[item]['dates']['due'],'YYYY-MM-DDTHH:mm:ssZ');
+				endDate = endDateObj.format('DD MMM YYYY');
+				completedTasksHTML += endDate;
+		  	}
+			completedTasksHTML +='</td>';
 		  	completedTasksHTML += '<td bgcolor="#FFFFFF" style="font-family:Helvetica,Arial,sans-serif;font-size:14px">'+completedtaskList[item]['status']+'</td>'
 		  	completedTasksHTML += '</tr>'
 
