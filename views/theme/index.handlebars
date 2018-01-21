@@ -558,6 +558,8 @@
 
     const percentFinished = (filteredCompletedTasks.length / planned.length) * 100
 
+    console.log(percentFinished, filteredCompletedTasks.length, planned.length)
+
     if (percentFinished < 25) progressStatus = 'progress-bar-danger'
     else if (percentFinished < 50) progressStatus = 'progress-bar-warning'
 
