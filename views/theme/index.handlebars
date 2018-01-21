@@ -558,7 +558,7 @@
 
     const percentFinished = (filteredCompletedTasks.length / planned.length) * 100
 
-    if (percentFinished < 25) progressStatus = 'progress-bar-alert'
+    if (percentFinished < 25) progressStatus = 'progress-bar-danger'
     else if (percentFinished < 50) progressStatus = 'progress-bar-warning'
 
     const filteredOverdueTasks = getOverdueTasks(projectId).map(task => [
@@ -574,7 +574,7 @@
       upcomingTasks.data.datasets = getDatasets(projects)
     }
 
-    $('#ms-progress').css('width', `${percentFinished}%`).removeClass('progress-bar-success progress-bar-alert progress-bar-warning').addClass(progressStatus)
+    $('#ms-progress').css('width', `${percentFinished}%`).removeClass('progress-bar-success progress-bar-alert progress-bar-warning').addClass(progressStatus).html(`${percentFinished.toFixed(2)}%`)
 
     upcomingTasks.update()
 
