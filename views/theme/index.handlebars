@@ -536,6 +536,8 @@
   });
 
   const changeProject = (projectId) => {
+    var progressStatus = 'progress-bar-success'
+
     milestoneTable.clear()
     completedTasksTable.clear()
     overdueTasksTable.clear()
@@ -546,11 +548,18 @@
       task.authorIds && task.authorIds[0] ? `${task.authorIds[0].firstname || ''} ${task.authorIds[0].lastname || ''}` : '',
     ])
 
+    const planned = milestones.filter(task => task.dates.type === 'Planned')
+
     const filteredCompletedTasks = getCompletedTasks(projectId).map(task => [
       task.title,
       task.authorIds && task.authorIds[0] ? `${task.authorIds[0].firstname || ''} ${task.authorIds[0].lastname || ''}` : '',
       task.status
     ])
+
+    const percentFinished = (filteredCompletedTasks.length / planned.length) * 100
+
+    if (percentFinished < 25) progressStatus = 'progress-bar-alert'
+    else if (percentFinished < 50) progressStatus = 'progress-bar-warning'
 
     const filteredOverdueTasks = getOverdueTasks(projectId).map(task => [
       task.title,
@@ -564,6 +573,8 @@
     } else {
       upcomingTasks.data.datasets = getDatasets(projects)
     }
+
+    $('#ms-progress').css('width', `${percentFinished}%`).removeClass('progress-bar-success progress-bar-alert progress-bar-warning').addClass(progressStatus)
 
     upcomingTasks.update()
 
