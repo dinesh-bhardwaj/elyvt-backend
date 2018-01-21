@@ -630,8 +630,10 @@
     if (projectId !== 'all') {
       const selectedProject = projects.filter(project => project._id === projectId)
       upcomingTasks.data.datasets = getDatasets(selectedProject)
+      activeTasksChart.data.datasets[0].data = getActiveChartsData(selectedProject)
     } else {
       upcomingTasks.data.datasets = getDatasets(projects)
+      activeTasksChart.data.datasets[0].data = getActiveChartsData(projects)
     }
 
     $('#ms-progress').css('width', `${percentFinished}%`).removeClass('progress-bar-success progress-bar-alert progress-bar-warning').addClass(progressStatus).html(progressText)
