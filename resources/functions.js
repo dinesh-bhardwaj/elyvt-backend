@@ -1235,7 +1235,6 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 	    })
     },
 
-
     taskReminderEmailTable: function(moment, tasksData, contactsData){
     	return new Promise(function (resolve, reject) {
 	    	var A_WEEK_later = moment().add(7, 'days').startOf('day');
@@ -1268,7 +1267,18 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 			  });
 			  
 		});
+    },
 
+    buildUserRoleData(users) {
+    	return users.reduce((acc, user) => {
+    		if (user.roles) {
+    			acc[user.roles] = acc[user.roles] ? acc[user.roles] + 1 : 1
+    		} else {
+    			acc.NoRoles += 1
+    		}
+
+    		return acc
+    	}, { NoRoles: 0 })
     },
 
     tasksEmailContent: function(moment, $folders, $tasks, $contacts){
