@@ -126,9 +126,11 @@
                                 <canvas id='upcomingTasks'></canvas>
                               </div>
                               <div class='col-lg-6 col-md-6 col-sm-12 col-xs-12 small-chart'>
+                                <h4>Number Of Tasks (Active or Completed)</h4>
                                 <canvas id='activeTasks'></canvas>
                               </div>
                               <div class='col-lg-6 col-md-6 col-sm-12 col-xs-12 small-chart'>
+                                <h4>Number Of Tasks (Planned or Backlog)</h4>
                                 <canvas id='taskTypes'></canvas>
                               </div>
                             </div>
@@ -388,6 +390,8 @@
   var contacts = ({{{contacts}}}).data
 
   var completedTasks = tasks.filter(task => task.status === 'Completed')
+  var activeTasks = tasks.filter(task => task.status === 'Active')
+
   var overdueTasks = tasks.filter(task => task.dates.type === 'Planned' && task.status === 'Active' && moment(task.dates.due).isBefore(moment()))
 
   const getTasksPerType = (projectId) => {
@@ -469,6 +473,14 @@
     return completedTasks.filter(task => findProject(task.parentFolderIds[0])._id === projectId)
   }
 
+  const getActiveTasks = (projectId) => {
+    if (projectId === 'all') {
+      return activeTasks
+    }
+
+    return activeTasks.filter(task => findProject(task.parentFolderIds[0])._id === projectId)
+  }
+
   const getOverdueTasks = (projectId) => {
     if (projectId === 'all') {
       return overdueTasks
@@ -495,6 +507,19 @@
 
       return acc;
     }, [])
+  }
+
+  const getActiveChartsData = (selectedProjects) => {
+    return selectedProjects.reduce((acc, project, index) => {
+      var completeCount = getCompletedTasks(project._id).length
+      var activeCount = getActiveTasks(project._id).length
+
+      acc[0] += (completeCount + activeCount)
+      acc[1] += activeCount
+      acc[2] += completeCount
+
+      return acc;
+    }, [0, 0, 0])
   }
 
   $(document).on('change', '#project-selector', function() {
@@ -535,6 +560,30 @@
     }
   });
 
+  var activeTasksChart = new Chart(chartTasksAC, {
+      type: 'horizontalBar',
+      data: {
+        labels: ["Total Tasks", "Active Tasks", "Completed Tasks"],
+        datasets: [{
+          label: "Number of Tasks",
+          data: getActiveChartsData(projects),
+          backgroundColor: [
+            "#03586A", "#26B99A", "#acadac", "#03586A", "#26B99A", "#acadac"
+          ]
+        }]
+      },
+      options: {
+        maintainAspectRatio: false,
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    });
+
   const changeProject = (projectId) => {
     var progressStatus = 'progress-bar-success'
 
@@ -548,13 +597,17 @@
       task.authorIds && task.authorIds[0] ? `${task.authorIds[0].firstname || ''} ${task.authorIds[0].lastname || ''}` : '',
     ])
 
-    const planned = getMilestones(projectId).filter(task => task.dates.type === 'Planned')
+    const alltasks = getMilestones(projectId)
+    const planned = alltasks.filter(task => task.dates.type === 'Planned')
+    const backlog = alltasks.filter(task => task.dates.type === 'Backlog')
 
     const filteredCompletedTasks = getCompletedTasks(projectId).map(task => [
       task.title,
       task.authorIds && task.authorIds[0] ? `${task.authorIds[0].firstname || ''} ${task.authorIds[0].lastname || ''}` : '',
       task.status
     ])
+
+    const incompleteTasks = getActiveTasks(projectId)
 
     const percentFinished = planned.length ? (filteredCompletedTasks.length / planned.length) * 100 : 100
 
