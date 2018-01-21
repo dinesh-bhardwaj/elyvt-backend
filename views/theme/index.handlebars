@@ -180,8 +180,24 @@
                                 </select>
                               </div>
                             </div>
-                            <div class='milestone-chart'>
-                              <canvas id='upcomingTasks'></canvas>
+                            <div class='row'>
+                              <div class='col-md-12 col-sm-12 col-xs-12'>
+                                <div class='col-md-3 col-sm-3 col-xs-3'>
+                                  Progress
+                                </div>
+                                <div class='col-md-9 col-sm-9 col-xs-9'>
+                                  <div class="progress-bar progress-bar-success" data-transitiongoal="95" style="width: 95%;" aria-valuenow="95">95%</div>
+                                  </div>
+                                </div>
+                              <div class='col-md-12 col-sm-12 col-xs-12 milestone-chart'>
+                                <canvas id='upcomingTasks'></canvas>
+                              </div>
+                              <div class='col-lg-6 col-md-6 col-sm-12 col-xs-12 small-chart'>
+                                <canvas id='activeTasks'></canvas>
+                              </div>
+                              <div class='col-lg-6 col-md-6 col-sm-12 col-xs-12 small-chart'>
+                                <canvas id='taskTypes'></canvas>
+                              </div>
                             </div>
                             <table class="table table-bordered " id="Milestones-tables">
                               <thead>
@@ -441,6 +457,17 @@
   var completedTasks = tasks.filter(task => task.status === 'Completed')
   var overdueTasks = tasks.filter(task => task.dates.type === 'Planned' && task.status === 'Active' && moment(task.dates.due).isBefore(moment()))
 
+  const getTasksPerType = (projectId) => {
+    const subset = projectId === 'all' ? tasks :
+      tasks.filter(task => findProject(task.parentFolderIds[0])._id === projectId)
+
+    return subset.reduce((acc, task) => {
+      acc[task.dates.type] = acc[task.dates.type] ? acc[task.dates.type] + 1 : 1
+
+      return acc;
+    }, {})
+  }
+
   let selectedProjects = projects
 
   $(window).load(() => {
@@ -624,7 +651,11 @@
   <style>
     .milestone-chart {
       height: 200px;
-      padding-bottom: 30px;
+      padding-bottom: 40px;
+    }
+
+    .small-chart {
+      height: 150px;
     }
   </style>
 
