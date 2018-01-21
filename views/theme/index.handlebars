@@ -548,7 +548,7 @@
       task.authorIds && task.authorIds[0] ? `${task.authorIds[0].firstname || ''} ${task.authorIds[0].lastname || ''}` : '',
     ])
 
-    const planned = milestones.filter(task => task.dates.type === 'Planned')
+    const planned = getMilestones(projectId).filter(task => task.dates.type === 'Planned')
 
     const filteredCompletedTasks = getCompletedTasks(projectId).map(task => [
       task.title,
