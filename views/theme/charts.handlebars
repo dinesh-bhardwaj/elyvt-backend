@@ -7,130 +7,6 @@
 }
 </style>
 <body class="nav-md">
-  <!-- Container -->
-  <div class="container body">
-    <!-- Main Container -->
-    <div class="main_container_db">
-
-      <!-- Sidebar -->
-      {{> sidebar }}
-      <!-- /Sidebar -->
-
-      <!-- page content -->
-      <div class="right_col_db page_content" role="main">
-
-       <!-- top navigation ! -->
-       {{> topbar }}
-       <!-- /top navigation -->
-
-
-       <!-- main cont -->
-       <div class="main_cont">
-         <nav aria-label="breadcrumb" role="navigation">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Charts</li>
-                </ol>
-            </nav>
-       
-
-        <section class="login_content">
-
-    <div>
-                     <img src="../build/images/logo_elevate.png" style="border: 0; width: 296px;">
-                              </div>
-
-                <div id="myDiv">
-                  Number Of Projects
-                  <canvas id="numberProjects"></canvas>
-                </div>
-                <div id="myDiv">
-                  Remaining Tasks
-                  <canvas id="remainingTasks"></canvas>
-                </div>
-                <div id="myDiv">
-                  Upcoming Tasks (2018)
-                  <canvas id="upcomingTasks"></canvas>
-                </div>
-                <div id="myDiv">
-                  Number Of Tasks (Active or Completed)
-                  <canvas id="tasksAC"></canvas>
-                </div>
-                <div id="myDiv">
-                  Number Of Tasks (Planned or Backlog)
-                  <canvas id="tasksPB"></canvas>
-                </div>
-                <div id="myDiv">
-                  Progress Of Tasks (%)
-                  <canvas id="progressTasks"></canvas>
-                </div>
-                <div id="myDiv">
-                  Tasks Assigne
-                  <canvas id="tasksAssigne"></canvas>
-                </div>
-                <div id="myDiv">
-                  Tasks Assigne (%)
-                  <canvas id="taskAssigne2"></canvas>
-                </div>
-                <div id="myDiv">
-                  User Roles
-                  <canvas id="userRoles"></canvas>
-                </div>
-
-              </section>
-
-
-
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-            
-            
-
-            </div>
-          </div>
-
-          <!-- footer content -->
-          <footer>
-            <div class="pull-right">
-              &copy; elyvt.com
-            </div>
-            <div class="clearfix"></div>
-          </footer>
-          <!-- /footer content -->
-        </div>
-        <!-- /main cont -->
-      </div>
-      <!-- /page content -->
-    </div>
-    <!-- /Main Container -->
-  </div>
-  <!-- /Container --> 
-
-
-  <!-- jQuery -->
-  <!-- http://elyvt.com -->
-  <!-- Bootstrap -->
-  <script src="/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
-
-  <!-- bootstrap-daterangepicker -->
-  <script src="/vendors/moment/min/moment.min.js"></script>
-  <script src="/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
-
-  <!-- Custom Theme Scripts -->
-  <script src="/build/js/custom.min.js"></script>
-
-  <script src="/vendors/plotly/js/plotly-latest.min.js"></script>
-  <script src="/vendors/plotly/js/numeric.min.js"></script>
-
-  <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-
-  <script type="text/javascript" src="js/snap.svg-min.js"></script>
-  <script src="/js/frappe-gantt.min.js" ></script>
-
-
   <script>
   if (jQuery("body").width() < 760) {
     $('body').addClass('nav-sm');
@@ -138,6 +14,7 @@
   }
   </script>
 
+  <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
 
   <script>
@@ -555,57 +432,140 @@
       });
     </script>
   
-
-  
+		
+		
+<body class="nav-md">
 
   <script>
-  // initalise variables
-  
-
-/*
-  var tasksGanttChartContents = []
-
-  var tasksgantdata = {{{tasksGanttChartContents}}}
-
-  for (var element in tasksgantdata){
-    var task = {
-       id: tasksgantdata[element]['id'],
-      name: tasksgantdata[element]['name'],
-      start: tasksgantdata[element]['start'],
-      end: tasksgantdata[element]['end'],
-      progress: 100
-    } 
-    if(tasksgantdata[element]['dependencies']){
-      task.dependencies = tasksgantdata[element]['dependencies']
-    }
-    tasksGanttChartContents.push(task);
+  if (jQuery("body").width() < 760) {
+    $('body').addClass('nav-sm');
+    $('body').removeClass('nav-md')
   }
+  </script>
+
+  <!-- Container -->
+  <div class="container body">
+    <!-- Main Container -->
+    <div class="main_container_db">
+
+      <!-- Sidebar -->
+      {{> sidebar }}
+      <!-- /Sidebar -->
+
+      <!-- page content -->
+      <div class="right_col_db page_content" role="main">
+
+       <!-- top navigation ! -->
+       {{> topbar }}
+       <!-- /top navigation -->
 
 
-  
-   * Function getContactByID
-   *
-   * Find and Return Contact from contactList by ID
-   *
-   * @param (type): $contactID(integer)
-   * @return Contact Details: (Json Obj)
-   
-   function getContactByID($contactID){
-    for(var contactsElement in contactsData['data']){
-      if($contactID==contactsData['data'][contactsElement]['id']){
-        return contactsData['data'][contactsElement];
-      }
-    }
-    return false;
-  }
+       <!-- main cont -->
+       <div class="main_cont">
+         <nav aria-label="breadcrumb" role="navigation">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Charts</li>
+                </ol>
+            </nav>
+       
+
+        <section class="login_content">
+
+    <div>
+                     <img src="../build/images/logo_elevate.png" style="border: 0; width: 296px;">
+                              </div>
+
+                <div id="myDiv">
+                  Number Of Projects
+                  <canvas id="numberProjects"></canvas>
+                </div>
+                <div id="myDiv">
+                  Remaining Tasks
+                  <canvas id="remainingTasks"></canvas>
+                </div>
+                <div id="myDiv">
+                  Upcoming Tasks (2018)
+                  <canvas id="upcomingTasks"></canvas>
+                </div>
+                <div id="myDiv">
+                  Number Of Tasks (Active or Completed)
+                  <canvas id="tasksAC"></canvas>
+                </div>
+                <div id="myDiv">
+                  Number Of Tasks (Planned or Backlog)
+                  <canvas id="tasksPB"></canvas>
+                </div>
+                <div id="myDiv">
+                  Progress Of Tasks (%)
+                  <canvas id="progressTasks"></canvas>
+                </div>
+                <div id="myDiv">
+                  Tasks Assigne
+                  <canvas id="tasksAssigne"></canvas>
+                </div>
+                <div id="myDiv">
+                  Tasks Assigne (%)
+                  <canvas id="taskAssigne2"></canvas>
+                </div>
+                <div id="myDiv">
+                  User Roles
+                  <canvas id="userRoles"></canvas>
+                </div>
+
+              </section>
 
 
 
-var gantt = new Gantt("#gantt", tasksGanttChartContents);
-gantt.change_view_mode('Week')
 
-*/
+                    </div>
+                  </div>
+                </div>
+              </div>
+            
+            
 
+            </div>
+          </div>
+
+          <!-- footer content -->
+          <footer>
+            <div class="pull-right">
+              &copy; elyvt.com
+            </div>
+            <div class="clearfix"></div>
+          </footer>
+          <!-- /footer content -->
+        </div>
+        <!-- /main cont -->
+      </div>
+      <!-- /page content -->
+    </div>
+    <!-- /Main Container -->
+  </div>
+  <!-- /Container --> 
+
+
+  <!-- jQuery -->
+  http://elyvt.com
+  <!-- Bootstrap -->
+  <script src="/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+
+  <!-- bootstrap-daterangepicker -->
+  <script src="/vendors/moment/min/moment.min.js"></script>
+  <script src="/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+
+  <!-- Custom Theme Scripts -->
+  <script src="/build/js/custom.min.js"></script>
+
+  <script src="/vendors/plotly/js/plotly-latest.min.js"></script>
+  <script src="/vendors/plotly/js/numeric.min.js"></script>
+
+  <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
+  <script type="text/javascript" src="js/snap.svg-min.js"></script>
+  <script src="/js/frappe-gantt.min.js" ></script>
+<script>
   $(window).on('load', function(){
     $('#completedTaskstable').DataTable();
     $("#overdueTaskstable").DataTable();
