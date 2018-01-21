@@ -33,8 +33,8 @@ router.post('/register', function(req, res){
   var title = req.body.title;
   //var type = req.body.type;
   var roles = req.body.roles;
-  //var avatarUrl = req.body.avatarUrl;
-  //var deleted = req.body.deleted;
+  var avatarUrl = req.body.avatarUrl;
+  var phone = req.body.phone;
 	var email = req.body.email;
 	var username = req.body.username;
 	var password = req.body.password;
@@ -47,7 +47,7 @@ router.post('/register', function(req, res){
   //req.checkBody('Type', 'Type is required').notEmpty();
   req.checkBody('roles', 'Roles field is required').notEmpty();
   //req.checkBody('avatarUrl', 'AvatarUrl is required').notEmpty();
-	//req.checkBody('email', 'Email is required').notEmpty();
+	req.checkBody('phone', 'Phone number is required').notEmpty();
 	req.checkBody('email', 'Email is not valid').isEmail();
 	req.checkBody('username', 'Username is required').notEmpty();
 	req.checkBody('password', 'Password is required').notEmpty();
@@ -64,6 +64,8 @@ router.post('/register', function(req, res){
 			firstname: firstname,
       lastname: lastname,
       title: title,
+      phone: phone,
+
       type: 'person',
       roles: roles,
       deleted: false,

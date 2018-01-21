@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+mongoose.set('debug', true);
 var bcrypt = require('bcryptjs');
 var Schema = mongoose.Schema;
 
@@ -29,6 +30,8 @@ module.exports.getfolders = function( callback){
 }
 
 module.exports.getfolderbyId = function(folderid, callback){
+	console.log("*********************fodler", folderid, typeof(folderid));
+
 	var query = {_id: folderid};
 	folder.findOne(query, callback);
 }

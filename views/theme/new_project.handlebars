@@ -72,114 +72,35 @@
                               </div>
                             </div>
 
-                            <div class="form-group row col-md-12   ">
+                           <div class="form-group row col-md-12   ">
                               <label for="project_name" class="pull-left col-form-label col-md-2 text-right">Roles</label>
                               <div class="col-sm-6">
-                                <input type="text" class="form-control" name="roles" id="roles" placeholder="admin, Security, manager">
+                                {{#each roles as |role roleId|}}
+                                    <input type="checkbox" value="{{{role._id}}}" name="roles"> {{{role.title}}}
+                                {{/each}}
                               </div>
                             </div>
                             
                             <div class="col-md-12">
-                              <h2 class="well well-sm text-center">Components</h2>
+                              <h2 class="well well-sm "><div class="col-md-offset-4">Components</div></h2>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-16 col-md-offset-3">
                               <div class="col-md-2">
-                                <label>Features</label>
                                 <div class="clearfix"></div>
-                                <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Communication"> Communication</label></div>
-                                <div class="clearfix"></div>
-                                <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Conceirge"> Conceirge</label></div>
-                                <div class="clearfix"></div>
-                                <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Events"> Events</label></div>
-                                <div class="clearfix"></div>
-                                <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Facility Booking"> Facility Booking</label></div>
-                                <div class="clearfix"></div>
-                                <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="F&B"> F&B</label></div>
-                                <div class="clearfix"></div>
-                                <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Security"> Security</label></div>
-                                <div class="clearfix"></div>
-                                <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="UI Config"> UI Config</label></div>
-                              </div>
-                              <div class="col-md-3">
-                                <label>Discovery</label>
-                                <div class="clearfix"></div>
-                                <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Communication Environment Assessment"> Communication Environment Assessment</label>
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Landlord"> Landlord</label></div>
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Tenant"> Tenant</label></div>
-                                </div>
-                                <div class="clearfix"></div>
-                                <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Concierge Environment Assessment"> Concierge Environment Assessment</label>
-
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Landlord Concierge Needs"> Landlord Concierge Needs</label></div>
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Tenant Concierge Needs"> Tenant Concierge Needs</label></div>
-
-                                </div>
-                                <div class="clearfix"></div>
-                                <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Events Environment Assessment"> Events Environment Assessment</label>
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Landlord Concierge Needs"> Landlord Event Needs</label></div>
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Tenant Concierge Needs"> Tenant Event Needs</label></div>
-
-
-                                </div>
-                                <div class="clearfix"></div>
-                                <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Facilities Booking Environment Assessment"> Facilities Booking Environment Assessment</label>
-
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Landlord Concierge Needs"> Landlord ID Booking System</label></div>
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Tenant Concierge Needs"> Tenant ID Booking System</label></div>
-                                </div>
-                                <div class="clearfix"></div>
-                                <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="F&B Environment Assessment"> F&B Environment Assessment</label>
-
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Landlord Concierge Needs"> Landlord F&B Workflow Structure/Walkthrough</label></div>
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Tenant Concierge Needs"> Landlord ID POS/Inventory Management System(s) (IMS)</label></div>
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Landlord Concierge Needs"> Tenant F&B Workflow Structure/Walkthrough</label></div>
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Tenant Concierge Needs"> Tenant ID POS/Inventory Management System(s) (IMS)</label></div>
-
-                                </div>
-                                <div class="clearfix"></div>
-                                <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="IT Environment Assessment"> IT Environment Assessment</label>
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="ID Corp ISP & WiFi Environments"> Landlord ID Corp ISP & WiFi Environments</label></div>
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Tenant Concierge Needs"> Landlord ID POS/Inventory Management System(s) (IMS)</label></div>
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Landlord ID Mobile Carrier & Device(s)">Landlord ID Mobile Carrier & Device(s)</label></div>
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Onsite Testing (?)"> Onsite Testing (?)</label></div>
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Tenant: ID Corp Eml Environment"> Tenant: ID Corp Eml Environment</label></div>
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Tenant: ID Corp ISP & WiFi Environments"> Tenant: ID Corp ISP & WiFi Environments</label></div>
-                                </div>
-                                <div class="clearfix"></div>
-                                <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Security Environment Assessment"> Security Environment Assessment</label>
-
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Tenant: ID Mobile Carrier & Devices"> Tenant: ID Mobile Carrier & Devices</label></div>
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Landlord ID ACS System"> Landlord ID ACS System</label></div>
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Landlord  ID VMS System">Landlord  ID VMS System</label></div>
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Tenant: ID ACS System"> Tenant: ID ACS System</label></div>
-                                </div>
-                                <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="UI Custom Config"> UI Custom Config</label>
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Landlord  ID VMS System">Tenant  ID VMS System</label></div>
-                                  <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Tenant: ID ACS System"> Request: BB Bldg Imagery</label></div>
-                                </div>
-                              </div>
-                              <div class="col-md-2">
-                                <label>Alpha</label>
-                                <div class="clearfix"></div>
-                                <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Alpha Setup"> Alpha Setup</label></div>
-                                <div class="clearfix"></div>
-                                <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Alpha Testing"> Alpha Testing</label></div>
-                                <div class="clearfix"></div>
-                                <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Alpha Update to Beta"> Alpha Update to Beta</label></div>
-                              </div>
-                              <div class="col-md-2">
-                                <label>Beta</label>
-                                <div class="clearfix"></div>
-                                <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Beta Setup"> Beta Setup</label></div>
-                                <div class="clearfix"></div>
-                                <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Beta Testing"> Beta Testing</label></div>
-                                <div class="clearfix"></div>
-                                <div class="padding-left"><label> -<input type="checkbox" style="display:none" name="Beta Update to Release"> Beta Update to Release</label></div>
-                              </div>
-                              <div class="col-md-2">
-                                <label>Release</label>
+                                <div class="padding-left"><label> -<input type="checkbox" name="Communication" checked="true"> Communication</label></div>
                                 
-                              </div>
+                                <div class="padding-left"><label> -<input type="checkbox"  name="Conceirge" checked="true"> Concierge</label></div>
+                                
+                                <div class="padding-left"><label> -<input type="checkbox"  name="Events" checked="true"> Events</label></div>
+                                
+                                <div class="padding-left"><label> -<input type="checkbox"  name="Facility_Booking" checked="true"> Facility Booking</label></div>
+                                
+                                <div class="padding-left"><label> -<input type="checkbox" name="f_B" checked="true"> F&B</label></div>
+                               
+                                <div class="padding-left"><label> -<input type="checkbox"  name="Security" checked="true"> Security</label></div>
+                                
+                                <div class="padding-left"><label> -<input type="checkbox" name="UI_Config" checked="true"> UI Config</label></div>
+                              </div>                              
                             </div>
                             <div class="clearfix"></div>
                             <div class="col-md-12 text-center">
@@ -220,7 +141,7 @@
 
 
   <!-- jQuery -->
-  http://elyvt.com
+  <!-- http://elyvt.com -->
   <!-- Bootstrap -->
   <script src="/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
 

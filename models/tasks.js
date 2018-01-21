@@ -1,9 +1,10 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcryptjs');
+mongoose.set('debug', true);
 var Schema = mongoose.Schema;
 
 var User = require('./user.js')
-var Folders = require('./folders.js')
+var folders = require('./folders.js')
 
 var tasksSchema = new Schema({
 	user: [
@@ -16,12 +17,8 @@ var tasksSchema = new Schema({
     description: {type: String},
     briefDescription: {type: String},
     parentIds: Object,
-    parentFolderIds: [
-      {type: Schema.Types.ObjectId, ref: 'Folders'}
-    ],
-    project: [
-      {type: Schema.Types.ObjectId, ref: 'Folders'}
-    ],
+    parentFolderIds: {type: String},
+    project: {type: Schema.Types.ObjectId, ref: 'folders'},
     superParentIds: Object,
     sharedIds: Object,
     responsibleIds: Object,
@@ -52,9 +49,24 @@ module.exports.getalltasks = function(callback){
 	tasks.find(query, callback);
 }
 
+module.exports.getTasksByProject = function($projectId, callback){
+    var query = {project: $projectId};
+    tasks.find(query, callback);
+}
+
 module.exports.gettaskbyId = function($taskID, callback){
 	var query = {_id: $taskID};
 	tasks.findOne(query, callback);
+}
+
+module.exports.gettaskbyTitle = function($taskTitle, callback){
+    var query = {title: $taskTitle};
+    tasks.findOne(query, callback);
+}
+
+module.exports.gettaskbyParentId = function($taskID, callback){
+    var query = {parentFolderIds: $taskID};
+    tasks.find(query, callback);
 }
 
 module.exports.deletetask = function($taskID, callback){

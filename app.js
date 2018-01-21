@@ -12,6 +12,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
 var nodemailer = require('nodemailer');
+var async = require('async');
 
 
 var request = require('request');
@@ -26,7 +27,8 @@ var schedule = require('node-schedule');
 var userModel = require('./models/user');
 var tasks = require('./models/tasks');
 var foldersModel = require('./models/folders');
-var contacts = require('./models/contacts');
+
+
 var accounts = require('./models/accounts');
 var workflows = require('./models/workflows');
 var invitations = require('./models/invitations');
@@ -139,8 +141,8 @@ user.use(function (req, action) {
   //if (req.user.role === 'admin') {
     //return true;
   //}
-  console.log(req.user.roles);
-  //console.log(AuthenteCheck.ensureAuthenticated);
+  //console.log(req.user.roles);
+  ////console.log(AuthenteCheck.ensureAuthenticated);
   return true
 });
 
@@ -154,7 +156,7 @@ app.use('/folders', folders);
 //     description: 'Security Role',
 // });
 // rolesData.save(function(err){
-//    console.log('Roles Data saved');
+//    //console.log('Roles Data saved');
 // });
 
 // function AuthenteCheck.ensureAuthenticated(req, res, next){
@@ -189,7 +191,7 @@ app.get('/authorize', AuthenteCheck.ensureAuthenticated, function (req, res) {
 			$token = body
 			$parsedToken = JSON.parse($token)
 			//var getAccountPromise = data.getAccount($parsedToken)
-			//console.log(getAccountPromise);
+			////console.log(getAccountPromise);
 			Resources.load(require('./resources/api.js')).then(resources => {
 				resources.fetchData($parsedToken).then(() => {
 					resources.get('tasks').toFile('Wrike_data.HTML', '/');
@@ -216,57 +218,59 @@ app.get('/getData', AuthenteCheck.ensureAuthenticated, function(req, res){
 */
 app.get('/', user.can('dashboard'), function(req, res){
 
-	//console.log("==============", req);
-
- // Get content from file
- //var tasksContents = fs.readFileSync("data/tasks.json");
- //var foldersContents = fs.readFileSync("data/folders.json");
  var workflowsContents = fs.readFileSync("data/workflows.json");
  var accountsContents = fs.readFileSync("data/accounts.json");
- //var contactsContents = fs.readFileSync("data/contacts.json");
- //var groupsContents = fs.readFileSync("data/groups.json");
- //var invitationsContents = fs.readFileSync("data/invitations.json");
- //var customfieldsContents = fs.readFileSync("data/customfields.json");
- //var commentsContents = fs.readFileSync("data/comments.json");
- //var timelogsContents = fs.readFileSync("data/timelogs.json");
- //var attachmentsContents = fs.readFileSync("data/attachments.json");
  var userDetails = req.user;
- 
- tasks.getalltasks(function(taskserr, tasksContents){ //Get/Fetch Tasks
- 	foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
- 		contacts.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
- 			//console.log(foldersContents);
-			functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-				console.log("herirecy Done");
-			 	functions.folderDashboardContent(moment, (foldersContents), (tasksContents), (contactsContents['contactdata'])).then((folderDashboardData)=>{
-			 		console.log("Dashboard Done");
-			 		functions.buildMilestonesTable(moment, (foldersContents), (tasksContents), (contactsContents['contactdata']), null).then((MilestonesTableContent)=>{
-			 		 	console.log("Milestone Done");
-			 		 	res.render('theme/index', {
-		 						  layout: 'layout2',
-								  'tasks': tasksContents, 
-								  //'tasksGanttChartContents': JSON.stringify(tasksGanttChartContents),
-								  'MilestonesTableContent': MilestonesTableContent,
-								  'folders': foldersContents,
-								  'folderDashboardData': folderDashboardData, 
-								  //'foldersHeiraricalData': foldersHeiraricalData[0],
-								  'foldermenu':  foldersHeiraricalData,
-								  'workflows': workflowsContents,
-								  'accounts': accountsContents, 
-								  'contacts': contactsContents['contactdata'], 
-								  //'groups':groupsContents,
-								  //'invitations':invitationsContents,
-								  //'customfields':customfieldsContents,
-								  //'comments':commentsContents,
-								  //'timelogs':timelogsContents,
-								  //'attachments':attachmentsContents,
-								  'userDetails': userDetails
-						});
-		 			});
+ var projectId = req.query.id;
+ if(projectId=="undefined"){
+ 	projectId = null;
+ }
+ if(projectId == "null"){
+ 	projectId = null;
+ }
+foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
+	userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
+		foldersModel.getprojects(function(folderserr, projectContents){ //Get/Fetch folders
+			//console.log('get Contacts');
+			 functions.getTaskByFolder(moment, contactsContents, projectId).then((tasksContents)=>{ //Get/Fetch Tasks
+	 			//console.log('tasksContents');
+				functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+					//console.log("herirecy Done");
+				 	functions.folderDashboardContent(moment, (foldersContents), (tasksContents), (contactsContents)).then((folderDashboardData)=>{
+				 		//console.log("Dashboard Done");
+				 		functions.buildMilestonesTable(moment, (foldersContents), (tasksContents), (contactsContents), projectId).then((MilestonesTableContent)=>{
+				 		 	//console.log("Milestone Done");
+
+				 		 	projectsDropdown = '';
+				 		 	    projectsDropdown = '<option value="null">All Project</option>'
+				 		 	for(var item in projectContents){
+				 		 		projectsDropdown += '<option value="'+projectContents[item]['_id']+'"';
+				 		 		if(projectContents[item]['_id'] == projectId){
+				 		 			projectsDropdown += ' selected';
+				 		 		}
+				 		 		projectsDropdown += '>'+projectContents[item]['title']+'</option>';
+				 		 	}
+
+				 		 	res.render('theme/index', {
+			 						  layout: 'layout2',
+									  'tasks': tasksContents, 
+									  'MilestonesTableContent': MilestonesTableContent,
+									  'folders': foldersContents,
+									  'projects': projectContents,
+									  'projectsDropdown': projectsDropdown,
+									  'folderDashboardData': folderDashboardData, 
+									  'foldermenu':  foldersHeiraricalData,
+									  'workflows': workflowsContents,
+									  'accounts': accountsContents, 
+									  'contacts': contactsContents, 
+									  'userDetails': userDetails
+							});
+			 			});
+			 		});
 		 		});
-	 		});
-		}); // End Fetching Contacts
-	 }); // End Fetching folders
+			}); // End Fetching Contacts
+		 }); // End Fetching folders
+	}); // End Fetching Projects
   }); // End Fetching tasks
 }); // End Dashbord Function
 
@@ -276,25 +280,26 @@ app.get('/', user.can('dashboard'), function(req, res){
 * Return Void
 */
 app.get('/gantt-chart',  AuthenteCheck.ensureAuthenticated, function(req, res){
-	var projectId = req.query.id
+	 var projectId = req.query.id;
 	 var accountsContents = fs.readFileSync("data/accounts.json");
 	 var userDetails = req.user;
-
+   ////console.log("narendra yadav", projectId);
 	 tasks.getalltasks(function(taskserr, tasksContents){ //Get/Fetch Tasks
 	 	foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
 	 		foldersModel.getprojects(function(projectserr, projectContents){ //Get/Fetch folders
 	 			var projectDropdown = '';
 	 			projectDropdown += "<option value=\"null\">Select Project</option>";
-	 			for(var item in projectContents){
+	 			 for(var item in projectContents){
 	 				projectDropdown += '<option value="'+projectContents[item]['_id']+'"';
-	 				if(projectId == projectContents[item]['_id']){
+	 				 if(projectId == projectContents[item]['_id']){
 	 					projectDropdown += 'selected'
 	 				}
 	 				projectDropdown += '>'+projectContents[item]['title']+'</option>';
 	 			}
-	 			contacts.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
+	 			userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
 					 functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-				 	    functions.taskGanntChart(moment, (tasksContents), projectId, (contactsContents['contactdata']), (foldersContents)).then((tasksGanttChartContents)=>{
+					 	////console.log("projectId", req.query.id);
+				 	    functions.taskGanntChart(moment, (tasksContents), req.query.id, (contactsContents), (foldersContents)).then((tasksGanttChartContents)=>{
 				 		 	
 				 	    	//console.log("tasksGanttChartContents Line 294", tasksGanttChartContents);
 				 		 	res.render('theme/gantt_chart', {
@@ -304,7 +309,7 @@ app.get('/gantt-chart',  AuthenteCheck.ensureAuthenticated, function(req, res){
 							  'folders': foldersContents,
 							  'foldermenu':  foldersHeiraricalData,
 							  'accounts': accountsContents, 
-							  'contacts': contactsContents['contactdata'], 
+							  'contacts': contactsContents, 
 							  'userDetails': userDetails,
 							  'projectDropdown': projectDropdown
 							});
@@ -325,17 +330,17 @@ app.get('/projects', AuthenteCheck.ensureAuthenticated, function(req, res){
 	 var userDetails = req.user;
 
 	 foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
- 		contacts.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
+ 		userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
 			 functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-				 functions.getProjects(moment, (foldersContents), (contactsContents['contactdata'])).then((projectsData)=>{
-				 	console.log(JSON.stringify(projectsData));
+				 functions.getProjects(moment, (foldersContents), (contactsContents)).then((projectsData)=>{
+				 	////console.log(JSON.stringify(projectsData));
 				 	res.render('theme/projects', {
 				 		layout: 'layout2',
 				 		'folders': foldersContents,
 						'foldermenu':  foldersHeiraricalData,
 						'projectsData': projectsData,
 						'accounts': accountsContents, 
-						'contacts': contactsContents['contactdata'], 
+						'contacts': contactsContents, 
 						'userDetails': userDetails
 				 	})
 				 });
@@ -353,29 +358,33 @@ app.get('/edit/project/', AuthenteCheck.ensureAuthenticated, function(req, res){
 	 var userDetails = req.user;
 
 	 foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
- 		contacts.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
+ 		userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
 			 functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
 				foldersModel.getfolderbyId(projectId, function(err, projectData){
+					roles.getallroles(function(roleErr, rolesDetails){
 
-					contactsDropdownHTML = '<option value="">Select</option>';
-					for(var item in contactsContents['contactdata']['data']){
-						contactsDropdownHTML += '<option value="'+contactsContents['contactdata']['data'][item]['id']+'"';
-						if((projectData["projectManager"]) && contactsContents['contactdata']['data'][item]['id']){
-									if(projectData['projectManager'].indexOf(contactsContents['contactdata']['data'][item]['id']) != -1)
-									{
-										contactsDropdownHTML += " selected";
+						contactsDropdownHTML = '<option value="">Select</option>';
+						for(var item in contactsContents){
+							contactsDropdownHTML += '<option value="'+contactsContents[item]['_id']+'"';
+							if((projectData["projectManager"]) && contactsContents[item]['_id']){
+										if(projectData['projectManager'].indexOf(contactsContents[item]['_id']) != -1)
+										{
+											contactsDropdownHTML += " selected";
+										}
 									}
-								}
-						contactsDropdownHTML += '>'+contactsContents['contactdata']['data'][item]['firstName']+' '+contactsContents['contactdata']['data'][item]['lastName']+'('+contactsContents['contactdata']['data'][item]['title']+')</option>';
-					}
-					
-					res.render('theme/edit_project', {
-								layout: 'layout2',
-								'foldermenu':  foldersHeiraricalData,
-								'userDetails': userDetails,
-								'contactsDropdownHTML': contactsDropdownHTML,
-								'projectData': projectData
-							});
+							contactsDropdownHTML += '>'+contactsContents[item]['email']+' '+contactsContents[item]['title']+')</option>';
+						}
+						
+						res.render('theme/edit_project', {
+									layout: 'layout2',
+									'foldermenu':  foldersHeiraricalData,
+									'userDetails': userDetails,
+									'contactsDropdownHTML': contactsDropdownHTML,
+									'projectData': projectData,
+									'roles': rolesDetails ,
+								});
+
+					});
 
 				});
 			 });
@@ -394,10 +403,15 @@ app.post('/edit/project/', AuthenteCheck.ensureAuthenticated, function(req, res)
 		  var myquery = { _id: projectId };
 		  var newvalues = {
 		  	title: req.body.project_name,
-   			projectManager: req.body.projectManager
+   			projectManager: req.body.projectManager,
+   			project : {
+		        "status" : "Green",
+		        "startDate" : req.body.startDate,
+		        "endDate" : req.body.endDate
+		    },
    		};
 		  foldersModel.updateFolder(myquery, newvalues, function(err, data){
-		  	console.log(data);			
+		  	//console.log(data);			
 		 });
 	}
 
@@ -431,10 +445,10 @@ app.get('/tasks', AuthenteCheck.ensureAuthenticated, function(req, res){
  
  tasks.getalltasks(function(taskserr, tasksContents){ //Get/Fetch Tasks
  	foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
- 		contacts.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
+ 		userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
 			functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-			 	functions.folderDashboardContent(moment, (foldersContents), (tasksContents), (contactsContents['contactdata'])).then((folderDashboardData)=>{
-			 		functions.taskGanntChart(moment, (tasksContents),null, (contactsContents['contactdata']), (foldersContents)).then((tasksGanttChartContents)=>{
+			 	functions.folderDashboardContent(moment, (foldersContents), (tasksContents), (contactsContents)).then((folderDashboardData)=>{
+			 		functions.taskGanntChart(moment, (tasksContents),null, (contactsContents), (foldersContents)).then((tasksGanttChartContents)=>{
 			 		 	res.render('theme/tasks', {
 		 						  layout: 'layout2',
 								  'tasks': tasksContents, 
@@ -445,7 +459,7 @@ app.get('/tasks', AuthenteCheck.ensureAuthenticated, function(req, res){
 								  'foldermenu':  foldersHeiraricalData,
 								  'workflows': workflowsContents,
 								  'accounts': accountsContents, 
-								  'contacts': contactsContents['contactdata'], 
+								  'contacts': contactsContents, 
 								  //'groups':groupsContents,
 								  //'invitations':invitationsContents,
 								  //'customfields':customfieldsContents,
@@ -472,7 +486,7 @@ app.get('/settings', AuthenteCheck.ensureAuthenticated, function(req, res){
  	foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
 	 	functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
 	 		mail_settings.get_mail_settings(function(err, mailSettingsData){
-	 			console.log(mailSettingsData);
+	 			//console.log(mailSettingsData);
 
 	 			var day_of_week_arr = {
 	 				"0": "Sunday",
@@ -530,7 +544,7 @@ app.post('/settings', AuthenteCheck.ensureAuthenticated, function(req, res){
 		});
 
 		mailSettings.save(function(err) {
-	       console.log('mail settings saved')
+	       //console.log('mail settings saved')
 	    });
 
 		req.flash('success_msg', 'Settings Successfully Saved');
@@ -540,12 +554,13 @@ app.post('/settings', AuthenteCheck.ensureAuthenticated, function(req, res){
 
 app.get('/task', AuthenteCheck.ensureAuthenticated, function(req, res){
 	var taskID = req.query.id;
+
  	var userDetails = req.user;
  	tasks.getalltasks(function(taskserr, tasksContents){ //Get/Fetch Tasks
 
 	tasks.gettaskbyId(taskID, function(taskserr, taskdetails){ //Get/Fetch Tasks
 		foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
-	 		contacts.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
+	 		userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
 				functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
 					question_answer.getQuestionAnswers(taskID, function(err, QuestionAnswersData){ 
 						roles.getallroles(function(roleErr, rolesDetails){
@@ -556,12 +571,19 @@ app.get('/task', AuthenteCheck.ensureAuthenticated, function(req, res){
 								if(taskdetails.status=="Active"){
 										taskStatusOptions += 'selected';
 					            }
-								taskStatusOptions += '>Active</option>\
+								taskStatusOptions += '>In Progress</option>\
+													<option value="Upcoming"';
+								if(taskdetails.status=="Upcoming"){
+										taskStatusOptions += 'selected';
+					            }
+								taskStatusOptions += '>Upcoming</option>\
 										              <option value="Completed"';
 								if(taskdetails.status=="Completed"){
 										taskStatusOptions += 'selected';
 					            }
 								taskStatusOptions += '>Completed</option>';
+
+
 
 								var attachents = '';
 								if(taskdetails['attachents'] != '' && taskdetails['attachents']){
@@ -570,18 +592,18 @@ app.get('/task', AuthenteCheck.ensureAuthenticated, function(req, res){
 							
 							
 							
-							//console.log(taskdetails['attachents'], typeof(attachents), attachents.title)
+							////console.log(taskdetails['attachents'], typeof(attachents), attachents.title)
 							
 							contactsDropdownHTML = '<option value="">Select</option>';
-							for(var item in contactsContents['contactdata']['data']){
-								contactsDropdownHTML += '<option value="'+contactsContents['contactdata']['data'][item]['id']+'"';
-								if((taskdetails["authorIds"]) && contactsContents['contactdata']['data'][item]['id']){
-									if(taskdetails['authorIds'].indexOf(contactsContents['contactdata']['data'][item]['id']) != -1)
+							for(var item in contactsContents){
+								contactsDropdownHTML += '<option value="'+contactsContents[item]['id']+'"';
+								if((taskdetails["authorIds"]) && contactsContents[item]['id']){
+									if(taskdetails['authorIds'].indexOf(contactsContents[item]['id']) != -1)
 									{
 										contactsDropdownHTML += " selected";
 									}
 								}
-								contactsDropdownHTML += '>'+contactsContents['contactdata']['data'][item]['firstName']+' '+contactsContents['contactdata']['data'][item]['lastName']+'('+contactsContents['contactdata']['data'][item]['title']+')</option>';
+								contactsDropdownHTML += '>'+contactsContents[item]['firstname']+' '+contactsContents[item]['lastname']+'('+contactsContents[item]['title']+')</option>';
 							}
 
 							dependenciesDropdownHtml = '<option value="">Select</option>';
@@ -597,13 +619,13 @@ app.get('/task', AuthenteCheck.ensureAuthenticated, function(req, res){
 							}
 							}
 
-							console.log(taskdetails);
+							//console.log(taskdetails);
 
 							res.render('theme/taskdetails', {
 								layout: 'layout2',
 								'taskdetails':  taskdetails,
 								'taskID': taskID,
-								'contacts':  contactsContents['contactdata'],
+								'contacts':  contactsContents,
 								'contactsDropdownHTML': contactsDropdownHTML,
 								'dependenciesDropdownHtml': dependenciesDropdownHtml,
 								'taskStatusOptions': taskStatusOptions,
@@ -624,7 +646,7 @@ app.get('/task', AuthenteCheck.ensureAuthenticated, function(req, res){
 
 app.post('/task/update', AuthenteCheck.ensureAuthenticated, function(req, res){
 	var taskId = req.body.taskId;
-	//console.log("Line 459,,,,,,,,,,,,", req.body.roles,req.body.dependencies, JSON.parse(req.body.attachement));
+	////console.log("Line 459,,,,,,,,,,,,", req.body.roles,req.body.dependencies, JSON.parse(req.body.attachement));
 	// if (typeof req.body.dependencies === 'string') {
 	// 	var dependencyIds = [req.body.dependencies];
 	// }else{
@@ -647,10 +669,11 @@ app.post('/task/update', AuthenteCheck.ensureAuthenticated, function(req, res){
 		}
 	}
 
+
 	tasks.findOneAndUpdate({_id: taskId}, taskentrydata, function(err, taskentrydata) {
 	  
 	  tasks.findOne({dependencyIds: taskId}, function(err, dependecydata) {
-	  	console.log('dependecydata',dependecydata);
+	  	//console.log('dependecydata',dependecydata);
 	  	if(dependecydata != null){
 		  	if(req.body.startDate){
 				dependecydata['dates'] = {
@@ -659,15 +682,15 @@ app.post('/task/update', AuthenteCheck.ensureAuthenticated, function(req, res){
 					'due': dependecydata['dates']['due']
 				}
 				tasks.findOneAndUpdate({_id: dependecydata['_id']}, dependecydata, function(err, dependencyUpdatesdata) {
-					console.log("Task Updated");
+					//console.log("Task Updated");
 		  			res.redirect('/task/?id='+taskId);
 				});
 			}else{
-				console.log("Task Updated");
+				//console.log("Task Updated");
 		  		res.redirect('/task/?id='+taskId);
 			}
 		}else{
-				console.log("Task Updated");
+				//console.log("Task Updated");
 		  		res.redirect('/task/?id='+taskId);
 			}
 
@@ -691,19 +714,19 @@ app.get('/task/answer', function(req, res){
 	var questionID = req.query.id
 	var username = req.query.user;
 	var taskId = req.query.taskId;
-	console.log(username);
+	//console.log(username);
 	 	var userDetails = req.user
 	 	foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
-		 		contacts.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
+		 		userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
 					functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
 						question_answer.getQuestionbyId(questionID, function(questionserr, questiondetails){ //Get/Fetch Tasks
-							console.log(questiondetails);
+							//console.log(questiondetails);
 							res.render('theme/question_answers', {
 													layout: 'layout2',
 													'taskId': taskId,
 													'questionID': questionID,
 													'questiondetails': questiondetails,
-													'contacts':  contactsContents['contactdata'],
+													'contacts':  contactsContents,
 													'foldermenu':  foldersHeiraricalData,
 													'userDetails': userDetails
 												});
@@ -717,7 +740,7 @@ app.get('/task/answer', function(req, res){
 
 
 app.post('/task/createquestions', AuthenteCheck.ensureAuthenticated,  function(req, res){
-	console.log(req.body);
+	//console.log(req.body);
 	var newQuestionAnswer = new question_answer({
 		user: req.user,
 		taskid: req.body.taskId,
@@ -725,7 +748,7 @@ app.post('/task/createquestions', AuthenteCheck.ensureAuthenticated,  function(r
 		answer: req.body.answer
 	});
 	newQuestionAnswer.save(function(err, data) {
-       console.log('Task Question saved', data);
+       //console.log('Task Question saved', data);
        answerLink = hostUrl+'/task/answer/?id='+data._id+'&taskId='+req.body.taskId;
        taskLink = hostUrl+'/task/?id='+req.body.taskId;
        answerLink = hostUrl+'/users/emailRedirect?username=user1&url='+answerLink;
@@ -740,8 +763,8 @@ app.post('/task/createquestions', AuthenteCheck.ensureAuthenticated,  function(r
 										  'answerLink': answerLink,
 										  'taskLink': taskLink
 										  },  function(err, list){
-											//console.log(list);							
-											const sgMail = require('@sendgrid/mail');
+											  ////console.log(list);							
+											  const sgMail = require('@sendgrid/mail');
 										      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 										      const msg = {
 										        //to: userDetails.email,
@@ -774,7 +797,7 @@ app.post('/task/updatequestions',  function(req, res){
 		answer: req.body.answer
 	};
 	question_answer.findOneAndUpdate({_id: questionId}, newQuestionAnswerData, function(err, questionentrydata) {
-	  console.log("Question Updated");
+	  //console.log("Question Updated");
 	  req.flash('success_msg', 'Question has been Answered Successfully.');
 	  res.redirect('/task/?id='+taskId);
 	})
@@ -813,13 +836,15 @@ app.get('/contacts', AuthenteCheck.ensureAuthenticated, function(req, res){
  	//var foldersContents = fs.readFileSync("data/folders.json");
  	var userDetails = req.user;
 
- 	foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
-	 	contacts.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
-		 	functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-		 		functions.contactsHTML(contactsContents['contactdata']).then((contactsHTML)=>{
+ 	foldersModel.getfolders(function(folderserr, foldersContents){
+    //contacts.getcontacts(function(contactserr, contactsContents){	//Get/Fetch folders
+	userModel.getAllUser(function(contactserr, userdata){
+	////console.log('=============userdata line 820==========', userdata);
+	 	 functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+		 		functions.getcontacts(userdata).then((contactsHTML)=>{
 					res.render('theme/contacts', {
 						layout: 'layout2',
-						'contacts':  contactsContents['contactdata'],
+						//'contacts':  contactsContents['contactdata'],
 						'contactsHTML': contactsHTML,
 						'foldermenu':  foldersHeiraricalData,
 						'userDetails': userDetails
@@ -828,15 +853,15 @@ app.get('/contacts', AuthenteCheck.ensureAuthenticated, function(req, res){
 			});
 		}); // End Fetching Contacts
 	}); // End Fetching folders
-
 });
+
 
 
 app.get('/kanban', AuthenteCheck.ensureAuthenticated, function(req, res){
 	var userDetails = req.user;
 	var kanbanHTML = '';
 	foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
-	 	contacts.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
+	 	userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
 		 	functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
 				//res.render('partials/sidebar',{'foldermenu':  foldersHeiraricalData,}, function (err, sidebardata){
 					//kanbanHTML += sidebardata;
@@ -920,14 +945,104 @@ app.get('/emailDashboard', function(req, res){
 
 	mail_settings.get_mail_settings(function(err, mailSettingsData){
 	 var from_email = mailSettingsData.from_email;
+	 
+ 	foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
+ 		userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
+ 			functions.getProjects(moment, (foldersContents), (contactsContents)).then((projectsData)=>{
+			 	$projectsDataloop = 0;
+			 	async.forEachSeries(projectsData['foldersArr'], function(value, callback){
+			 		$projectsDataloop++;
+			 		var item = projectsData['foldersArr'].indexOf(value);
+			 		projectId  = value['_id'];
+			 		tasksContents = [];
+			 		tasksContentData = [];
+			 		MilestonesTableContent = [];
+			 		tasks.getTasksByProject(projectId, function(taskserr, tasksContents){ //Get/Fetch Tasks
+						functions.tasksEmailContent(moment, foldersContents, tasksContents, contactsContents).then((tasksContentData)=>{
+					 	    //console.log("====", projectsData['foldersArr'][item]['_id'], tasksContents);					 	
+						 	functions.buildMilestonesEmailTable(moment, (foldersContents), (tasksContents), (contactsContents), value['_id']).then((MilestonesTableContent)=>{
+						 		console.log('milestone finishpro');
+						 		var dueDate = moment(value['project']['endDate'],'YYYY-MM-DDTHH:mm:ssZ');
+	    						var daysLeft = dueDate.diff(moment(), 'days');
+	    						var launchDate = dueDate.format('DD MMM, YYYY');
+		    					if (daysLeft<0){
+		    						daysLeftText = "overdue "+daysLeft+" days"
+		    					}else{
+		    						daysLeftText = daysLeft
+		    					}
+		    					if(value['projectManager']){
+									var projectManager = value['projectManager']['profiles'][0]['firstname']+' '+value['projectManager']['profiles'][0]['lastname'];
+			    					var projectManagerEmail = value['projectManager']['profiles'][0]['email'];
+						 		}else{
+			    					var projectManager = value['user'][0]['firstname']+' '+value['user'][0]['lastname'];
+			    					var projectManagerEmail = value['user'][0]['email'];
+						 		}
+		    					console.log("projectManagerEmail", projectManagerEmail);
+						 		res.render('theme/email/dashboard', {
+					 						  layout: 'layout2',
+											  'tasks': tasksContentData, 
+											  'MilestonesTableContent': MilestonesTableContent,
+											  'project': value['title'],
+											  'daysLeft': daysLeft,
+											  'launchDate': launchDate,
+											  'projectManager': projectManager,
+											  'projectManagerEmail': projectManagerEmail
+
+											  },  
+											  function(err, list){
+												////console.log(list);							
+												const sgMail = require('@sendgrid/mail');
+											      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+											      //console.log(process.env.SENDGRID_API_KEY);
+											      const msg = {
+											        //to: projectManagerEmail,
+											        to: 'aswing@accesselevate.com',
+											        //to: 'dinesh829269@gmail.com',
+											        //from: 'info@elyvt.com',
+											        from: projectManagerEmail,
+											        //cc: 'alexandra.volkova2017@gmail.com',
+											        //cc: 'dinesh829269@gmail.com',
+											        subject: 'Elevate Weekly Dashboard: '+ value['title']+' , '+moment().format('DD MMM, YYYY'),
+											        text: 'Elevate Weekly Dashboard: '+ value['title']+' , '+moment().format('DD MMM, YYYY')+'.\n',
+											        html: list
+											      };
+											      emailResponse = sgMail.send(msg); 
+											     console.log($projectsDataloop, projectsData['foldersArr'].length, emailResponse)
+											     if($projectsDataloop == projectsData['foldersArr'].length){
+											     	res.send('list')
+											     }
+											     callback()											      
+											});
+						 			});
+						 		});
+
+				 			});						 	
+						 });
+						 
+						 
+					 
+				});
+	 		});
+	 	});
+	});
+});
+	
+
+
+/**
+* Email Dashboard
+*/
+app.get('/taskReminder', function(req, res){
+	mail_settings.get_mail_settings(function(err, mailSettingsData){
+	 var from_email = mailSettingsData.from_email;
 	 tasks.getalltasks(function(taskserr, tasksContents){ //Get/Fetch Tasks
 	 	foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
-	 		contacts.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
-	 			functions.tasksEmailContent(moment, foldersContents, tasksContents, contactsContents['contactdata']).then((tasksContentData)=>{
-				 	functions.getProjects(moment, (foldersContents), (contactsContents['contactdata'])).then((projectsData)=>{
+	 		userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
+	 			functions.tasksEmailContent(moment, foldersContents, tasksContents, contactsContents).then((tasksContentData)=>{
+				 	functions.getProjects(moment, (foldersContents), (contactsContents)).then((projectsData)=>{
 					 	for(var item in projectsData['foldersArr']){
-					 		console.log("====", projectsData['foldersArr'][item], tasksContents);					 	
-						 	functions.buildMilestonesEmailTable(moment, (foldersContents), (tasksContents), (contactsContents['contactdata']), projectsData['foldersArr'][item]['_id']).then((MilestonesTableContent)=>{
+					 		////console.log("====", projectsData['foldersArr'][item], tasksContents);					 	
+						 	functions.taskReminderEmailTable(moment, tasksContents, (contactsContents['contactdata'])).then((taskReminderTableContent)=>{
 						 		var dueDate = moment(projectsData['foldersArr'][item]['project']['endDate'],'YYYY-MM-DDTHH:mm:ssZ');
 	    						var daysLeft = dueDate.diff(moment(), 'days');
 	    						var launchDate = dueDate.format('DD MMM, YYYY');
@@ -943,11 +1058,11 @@ app.get('/emailDashboard', function(req, res){
 			    					var projectManager = projectsData['foldersArr'][item]['user'][0]['firstname']+' '+projectsData['foldersArr'][item]['user'][0]['lastname'];
 			    					var projectManagerEmail = projectsData['foldersArr'][item]['user'][0]['email'];
 						 		}
-		    					console.log("projectManagerEmail", projectManagerEmail);
-						 		res.render('theme/email/dashboard', {
+		    					//console.log("projectManagerEmail", projectManagerEmail);
+						 		res.render('theme/email/task_reminder', {
 					 						  layout: 'layout2',
 											  'tasks': tasksContentData, 
-											  'MilestonesTableContent': MilestonesTableContent,
+											  'taskReminderTableContent': taskReminderTableContent,
 											  'project': projectsData['foldersArr'][item]['title'],
 											  'daysLeft': daysLeft,
 											  'launchDate': launchDate,
@@ -956,27 +1071,28 @@ app.get('/emailDashboard', function(req, res){
 
 											  },  
 											  function(err, list){
-												//console.log(list);							
+												////console.log(list);							
 												const sgMail = require('@sendgrid/mail');
 											      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+											      //console.log(process.env.SENDGRID_API_KEY);
 											      const msg = {
-											        to: projectManagerEmail,
-											        //to: 'aswing@accesselevate.com',
+											        //to: projectManagerEmail,
+											        to: 'aswing@accesselevate.com',
 											        //to: 'dinesh829269@gmail.com',
 											        //from: 'info@elyvt.com',
-											        from: from_email,
+											        from: projectManagerEmail,
 											        //cc: 'alexandra.volkova2017@gmail.com',
 											        //cc: 'dinesh829269@gmail.com',
-											        subject: 'Elevate Weekly Dashboard: '+ projectsData['foldersArr'][item]['title']+' , '+moment().format('DD MMM, YYYY'),
-											        text: 'Elevate Weekly Dashboard: '+ projectsData['foldersArr'][item]['title']+' , '+moment().format('DD MMM, YYYY')+'.\n',
+											        subject: 'Elevate Task Reminder: '+ projectsData['foldersArr'][item]['title']+' , '+moment().format('DD MMM, YYYY'),
+											        text: 'Elevate Task Reminder: '+ projectsData['foldersArr'][item]['title']+' , '+moment().format('DD MMM, YYYY')+'.\n',
 											        html: list
 											      };
 											      emailResponse = sgMail.send(msg); 
-											     // console.log(userDetails.email)
-											      res.send('list')
+											      ////console.log(emailResponse)											      
 											});
-						 		});
+						 		});						 	
 						 }
+						 res.send('list')
 					 });
 
 				 	});
@@ -992,8 +1108,8 @@ app.get('/emailDashboard', function(req, res){
 Mail Cron Schedular
 **/
 mail_settings.get_mail_settings(function(err, mailSettingsData){
-	console.log('Cron Started');
-	console.log(mailSettingsData);
+	//console.log('Cron Started');
+	//console.log(mailSettingsData);
 	if(mailSettingsData != null){
 		if(mailSettingsData.from_email != null){
 			var from_email = mailSettingsData.from_email;
@@ -1015,53 +1131,113 @@ mail_settings.get_mail_settings(function(err, mailSettingsData){
 		rule.minute = minute_of_hour;
 
 		var j = schedule.scheduleJob(rule, function(){
-			console.log('The answer to life, the universe, and everything!');
+			//console.log('The answer to life, the universe, and everything!');
 
 			var request = require('request');
 			request('http://elyvt.com/emailDashboard', function (error, response, body) {
-			  console.log('error:', error); // Print the error if one occurred
-			  console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-			  console.log('body:', body); // Print the HTML for the Google homepage.
+			  //console.log('error:', error); // Print the error if one occurred
+			  //console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+			  //console.log('body:', body); // Print the HTML for the Google homepage.
 			});
 
 		});
 	}
-//console.log('The answer to life, the universe, and everything!');
+////console.log('The answer to life, the universe, and everything!');
 });
 
 
 app.get('/profile', AuthenteCheck.ensureAuthenticated, function(req, res){
-	var userDetails = req.user;
-	foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
+	var UserId = req.user;
+	foldersModel.getfolders(function(folderserr, foldersContents){ 
+	userModel.getUserID(UserId, function(err, userDetails){//Get/Fetch folders
 		functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
 			res.render('theme/profile', {
 					layout: 'layout2',
 					'foldermenu':  foldersHeiraricalData,
 					'userDetails': userDetails,
 				});
+			});
 		});
 	});
-});
+	});
 
 app.get('/charts', AuthenteCheck.ensureAuthenticated, function(req, res) {
     res.render('theme/charts', {
-		layout: 'layout2'
+		layout: 'layout3'
 	});
 });
 
-app.post('/profile', AuthenteCheck.ensureAuthenticated, function(req, res){
+app.get('/data/json/users.json', function(req, res) {
+    var usersData = fs.readFileSync("data/json/users.json");
+    res.send(usersData);
+});
+
+
+app.get('/data/json/tasks.json', function(req, res) {
+    var tasksData = fs.readFileSync("data/json/tasks.json");
+    res.send(tasksData);
+});
+
+app.get('/addcontacts', AuthenteCheck.ensureAuthenticated, function(req, res){
+        res.render('theme/contactregister');
+
+
+});
+app.get('/edit/updatecontact', AuthenteCheck.ensureAuthenticated, function(req, res){
+	////console.log("-------narendra yadav------",req.query.id);
+	var UserId = req.query.id;
+	
+		////console.log("-----narendra",alluserdetails);
+	foldersModel.getfolders(function(folderserr, foldersContents){
+	userModel.getUserID(UserId, function(err,alluserdetails){ //Get/Fetch folders
+		functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+			res.render('theme/updatecontact', {
+					layout: 'layout2',
+					'foldermenu':  foldersHeiraricalData,
+					'alluserdetails': alluserdetails,
+				});
+			});
+		});
+	});
+	});
+app.post('/edit/updatecontact/', AuthenteCheck.ensureAuthenticated, function(req, res){
+	//console.log("------narendra---",req.body._id);
+	var userID = req.query.id;
 	var email = req.body.email;
-	var fname = req.body.fname;
-	var lname = req.body.lname;
+	var fname = req.body.firstname;
+	var lname = req.body.lastname;
 	var title = req.body.title;
-	var userDetails = req.user;
+	var email = req.body.email;
+	var phone = req.body.phone;
+	var username = req.body.username;
+	//var userDetails = req.user;
 	var updateData = {
 		'firstname': fname,
 		'lastname': lname,
-		'title': title
+		'title': title,
+		'email': email,
+		'phone': phone,
+		'username': username
+
+	}
+	userModel.findOneAndUpdate({_id: userID}, updateData, function(err, userData) {
+	  //console.log("User Updated: ",userID, updateData, userData);
+	  res.redirect('/contacts')
+	});
+});
+app.post('/profile', AuthenteCheck.ensureAuthenticated, function(req, res){
+	var email = req.body.email;
+	var fname = req.body.firstname;
+	var lname = req.body.lastname;
+	var email = req.body.email;
+    var userDetails = req.user;
+	var updateData = {
+		'firstname': fname,
+		'lastname': lname,
+		'email' :email
 	}
 	userModel.findOneAndUpdate({_id: userDetails._id}, updateData, function(err, userData) {
-	  console.log("User Updated: ",userDetails._id, updateData, userData);
+	  //console.log("User Updated: ",userDetails._id, updateData, userData);
 	  res.redirect('/profile')
 	});
 });
@@ -1072,7 +1248,7 @@ app.post('/profile', AuthenteCheck.ensureAuthenticated, function(req, res){
 app.set('port', (process.env.PORT || 3000));
 
 app.listen(app.get('port'), function(){
-	console.log('Server started on port '+app.get('port'));
+	//console.log('Server started on port '+app.get('port'));
 });
 
 

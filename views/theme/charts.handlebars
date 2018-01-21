@@ -434,9 +434,6 @@
   
 		
 		
-		
-		
-		
 <body class="nav-md">
 
   <script>
@@ -568,56 +565,8 @@
 
   <script type="text/javascript" src="js/snap.svg-min.js"></script>
   <script src="/js/frappe-gantt.min.js" ></script>
-
-  <script>
-  // initalise variables
-  
-
-/*
-  var tasksGanttChartContents = []
-
-  var tasksgantdata = {{{tasksGanttChartContents}}}
-
-  for (var element in tasksgantdata){
-    var task = {
-       id: tasksgantdata[element]['id'],
-      name: tasksgantdata[element]['name'],
-      start: tasksgantdata[element]['start'],
-      end: tasksgantdata[element]['end'],
-      progress: 100
-    } 
-    if(tasksgantdata[element]['dependencies']){
-      task.dependencies = tasksgantdata[element]['dependencies']
-    }
-    tasksGanttChartContents.push(task);
-  }
-
-
-  
-   * Function getContactByID
-   *
-   * Find and Return Contact from contactList by ID
-   *
-   * @param (type): $contactID(integer)
-   * @return Contact Details: (Json Obj)
-   
-   function getContactByID($contactID){
-    for(var contactsElement in contactsData['data']){
-      if($contactID==contactsData['data'][contactsElement]['id']){
-        return contactsData['data'][contactsElement];
-      }
-    }
-    return false;
-  }
-
-
-
-var gantt = new Gantt("#gantt", tasksGanttChartContents);
-gantt.change_view_mode('Week')
-
-*/
-
-  $(window).load(function(){
+<script>
+  $(window).on('load', function(){
     $('#completedTaskstable').DataTable();
     $("#overdueTaskstable").DataTable();
     $("#upcomingTaskstable").DataTable();
