@@ -204,10 +204,10 @@ app.get('/', AuthenteCheck.ensureAuthenticated, function(req, res){
 			 		functions.buildMilestonesTable(moment, (foldersContents), (tasksContents), (contactsContents['contactdata']), null).then((MilestonesTableContent)=>{
 			 		 	res.render('theme/index', {
 		 						  layout: 'layout2',
-								  'tasks': tasksContents, 
+								  'tasks': JSON.stringify(tasksContents), 
 								  //'tasksGanttChartContents': JSON.stringify(tasksGanttChartContents),
 								  'MilestonesTableContent': MilestonesTableContent,
-								  'folders': foldersContents,
+								  'folders': JSON.stringify(foldersContents),
 								  'folderDashboardData': folderDashboardData, 
 								  //'foldersHeiraricalData': foldersHeiraricalData[0],
 								  'foldermenu':  foldersHeiraricalData,

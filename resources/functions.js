@@ -894,6 +894,18 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId){
 	    })
     },
 
+    buildUserRoleData(users) {
+    	return users.reduce((acc, user) => {
+    		if (user.roles) {
+    			acc[user.roles] = acc[user.roles] ? acc[user.roles] + 1 : 1
+    		} else {
+    			acc.NoRoles += 1
+    		}
+
+    		return acc
+    	}, { NoRoles: 0 })
+    },
+
     tasksEmailContent: function(moment, $folders, $tasks, $contacts){
     	return new Promise(function (resolve, reject) {
 

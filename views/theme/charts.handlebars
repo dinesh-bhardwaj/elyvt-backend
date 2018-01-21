@@ -16,8 +16,85 @@
 
   <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
 
   <script>
+      var tasks = {{{tasks}}}
+      var users = {{{users}}}
+      var projects = {{{projects}}}
+      var folders = {{{folders}}}
+      var roles = {{{roles}}}
+
+      function findProject(folderId) {
+        const folder = folders.find(folder => folderId === folder._id)
+
+        if (folder.isProject) return folder
+
+        else return findProject(folder.parentId)
+      }
+
+      var upcomingtasks = tasks.reduce((acc, task) => {
+        if (task.dates.type !== 'backlog') {
+          acc[findProject(task.parentFolderIds[0]).title] = 
+            acc[findProject(task.parentFolderIds[0]).title] ?
+              acc[findProject(task.parentFolderIds[0]).title] + 1 : 1
+        }
+
+        return acc;
+      }, {})
+
+      var taskTypes = tasks.reduce((acc, task) => {
+        acc[task.dates.type] = acc[task.dates.type] ? acc[task.dates.type] + 1 : 1
+
+        return acc;
+      }, {})
+
+      var taskStatus = tasks.reduce((acc, task) => {
+        acc[task.status] = acc[task.status] ? acc[task.status] + 1 : 1
+
+        return acc;
+      }, {})
+
+      var taskPerProject = projects.reduce((projects, project) => {
+        var count = tasks.reduce((acc, task) => acc + (findProject(task.parentFolderIds[0])._id === project._id ? 1 : 0), 0)
+
+        projects[project.title] = count
+
+        return projects;
+      }, {})
+
+      var assignees = tasks.reduce((acc, task) => {
+        if (task.user && task.user[0]) {
+          var assignee = users.find(user => user._id === task.user[0])
+          assignee = `${assignee.firstname} ${assignee.lastname}`
+
+          acc[assignee] = acc[assignee] ? acc[assignee] + 1 : 1
+        } else {
+          acc.unassigned += 1
+        }
+
+        return acc
+      }, { unassigned: 0 })
+
+      var upcomingTasksPerProject = tasks.reduce((acc, task) => {
+        for (var i = 0; i < 12; i++) {
+          var month = moment().month(i)
+          var monthName = month.format('MMMM')
+
+          if (!acc[monthName]) acc[monthName] = {}
+
+          if (task.dates.type === 'Planned') {
+            console.log(moment(task.dates.end).format())
+            if (moment(task.dates.end).isSame(month, 'month')) {
+              var project = findProject(task.parentFolderIds[0]).title
+
+              acc[monthName][project] = acc[monthName][project] ? acc[monthName][project] + 1 : 1
+            }
+          }
+        }
+        return acc
+      }, {})
+
       $(function(){
         function randomRGBA() {
           var o = Math.round, r = Math.random, s = 255;
@@ -54,90 +131,56 @@
         var chartRemainingTasks = document.getElementById("remainingTasks").getContext("2d");
         var chartUpcomingTasks = document.getElementById("upcomingTasks").getContext("2d");
 
-        $.getJSON("data/json/users.json", function(result){
-          var res = result;
-          totalUsers = res.length - 1;
+        var labels = ["Total Users", "Has No Roles"];
+        var data = [0, roles.NoRoles];
 
-          res.forEach(value => {
-            if (value.roles) {
-              if (user.hasRoles.indexOf(value.roles) === -1) {
-                if (typeof(user.hasRoles[value.roles]) === "undefined") {
-                  user.hasRoles[value.roles] = 1;
-                } else {
-                  user.hasRoles[value.roles] += 1;
-                }
-                
-              }
-            } else {
-              user.hasNoRoles += 1;
-            }
-          });
-
-          var labels = ["Total Users", "Has No Roles"];
-          var data = [totalUsers, user.hasNoRoles];
-          var colors = [randomRGBA(), randomRGBA()];
-
-          for(var name in user['hasRoles']) {
-            labels.push(name);
-            data.push(user['hasRoles'][name]);
-            colors.push(randomRGBA());
+        for (var role in roles) {
+          if (role !== 'NoRoles') {
+            labels.push(role);
+            data.push(roles[role]);
           }
+          data[0] += roles[role]
+        }
 
-          var userRoles = new Chart(chartUserRoles, {
-            type: 'bar',
-            data: {
-              labels: labels,
-              datasets: [{
-                label: "Users",
-                data: data,
-                backgroundColor: colors,
+        var userRoles = new Chart(chartUserRoles, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: "Users",
+              data: data,
+              backgroundColor: [
+                "#03586A", "#26B99A", "#acadac", "#03586A", "#26B99A", "#acadac"
+              ],
+            }]
+          },
+          options: {
+            maintainAspectRatio: false,
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true
+                }
               }]
-            },
-            options: {
-              scales: {
-                yAxes: [{
-                  ticks: {
-                    beginAtZero: true
-                  }
-                }]
-              }
             }
-          });
+          }
         });
 
         $.getJSON("data/json/tasks.json", function(result){
-          var res = result;
-          var folder = {};
-          var project = [];
-          var countProject = [];
-          var upcomingTasks = [];
-          var defaultMonth = [0,0,0,0,0,0,0,0,0,0,0,0];
-          var year = new Date().getFullYear();
-          totalTasks = res.length - 1;
-
-          $.getJSON("data/json/folders.json", function(result){
-            localStorage.setItem('folder', JSON.stringify(result));
-          });
-
-          folder = JSON.parse(localStorage.getItem('folder'));
-
-          folder.forEach(value => {
-            if(value.isProject === "True") {
-              project.push(value);
-            }
-          });
-
           var numberProjects = new Chart(chartNumberProjects, {
-            type: 'bar',
+            type: 'horizontalBar',
             data: {
               labels: ["Number of Projects"],
               datasets: [{
                 label: "Projects",
-                data: [project.length],
-                backgroundColor: [randomRGBA()],
+                data: [projects.length],
+                backgroundColor: [
+                  "#03586A", "#26B99A", "#acadac", "#03586A", "#26B99A", "#acadac"
+                ],
               }]
             },
             options: {
+              maintainAspectRatio: false,
               scales: {
                 yAxes: [{
                   ticks: {
@@ -145,110 +188,30 @@
                   }
                 }]
               }
-            }
-          });
-
-          res.forEach(value => {
-            var startDate = value.dates__start;
-            if (value.status === "Active") {
-              var data = getData(folder, "_id__$oid", value.parentFolderIds__$oid);
-              if (data) {
-                if (data['isProject'] == "False") {
-                  var data2 = getData(folder, "_id__$oid", data.parentId);
-                  if (data2) {
-                    if (data2['isProject'] == "False") {
-                      var data3 = getData(folder, "_id__$oid", data2.parentId);
-                      if (data3) {
-                        if (data3['isProject'] == "True") {
-                          if(countProject.indexOf(data3['title']) === -1) {
-                            if (typeof(countProject[data3['title']]) === "undefined") {
-                              countProject[data3['title']] = 1;
-                            } else {
-                              countProject[data3['title']] += 1;
-                            }
-                            
-                            if (startDate) {
-                              startDate = startDate.split("/");
-                              var month = startDate[1] - 1;
-                              if(startDate[2] == year) {
-                                if (typeof(upcomingTasks[data3['title']]) === "undefined") {
-                                  upcomingTasks[data3['title']] = defaultMonth;
-                                  upcomingTasks[data3['title']][month] = 1;
-                                } else {
-                                  upcomingTasks[data3['title']][month] += 1;
-                                }
-                              }
-                            }
-                          }
-                        } else {
-                          var data4 = getData(folder, "_id__$oid", data3.parentId);
-                          if (data4) {
-                            if (data4['isProject'] == "True") {
-                              if(countProject.indexOf(data4['title']) === -1) {
-                                if (typeof(countProject[data4['title']]) === "undefined") {
-                                  countProject[data4['title']] = 1;
-                                } else {
-                                  countProject[data4['title']] += 1;
-                                }
-                              }
-
-                              if (startDate) {
-                                startDate = startDate.split("/");
-                                var month = startDate[1] - 1;
-                                if(startDate[2] == year) {
-                                  if (typeof(upcomingTasks[data4['title']]) === "undefined") {
-                                    upcomingTasks[data4['title']] = defaultMonth;
-                                    upcomingTasks[data4['title']][month] = 1;
-                                  } else {
-                                    upcomingTasks[data4['title']][month] += 1;
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            
-            if (value.authorIds__name) {
-              if (people.assigned.indexOf(value.authorIds__name) === -1) {
-                if (typeof(people.assigned[value.authorIds__name]) === "undefined") {
-                  people.assigned[value.authorIds__name] = 1;
-                } else {
-                  people.assigned[value.authorIds__name] += 1;
-                }
-                
-              }
-            } else {
-              people.unassigned += 1;
-            }
-
-            if (value.status === "Active") {
-              activeTasks += 1;
-            } else if (value.status === "Completed") {
-              completedTasks += 1;
-            }
-
-            if (value.dates__type === "Planned") {
-              plannedTasks += 1;
-            } else if (value.dates__type === "backlog") {
-              backlogTasks += 1;
             }
           });
 
           var datasets = [];
 
-          for(var name in countProject) {
+          var taskcolors = [
+            "#03586A", "#26B99A", "#acadac", "#03586A", "#26B99A", "#acadac"
+          ]
+
+          projects.forEach((project, index) => {
+            var title = project.title
+
+            var data = []
+
+            for (var month in upcomingTasksPerProject) {
+              data.push(upcomingTasksPerProject[month][title] || 0)
+            }
+
             datasets.push({
-              label: name,
-              data: upcomingTasks[name],
-              backgroundColor: randomRGBA(),
+              label: title,
+              data: data,
+              backgroundColor: taskcolors[index],
             });
-          }
+          })
 
           var upcomingTasks = new Chart(chartUpcomingTasks, {
             type: 'bar',
@@ -257,6 +220,7 @@
               datasets: datasets
             },
             options: {
+              maintainAspectRatio: false,
               scales: {
                 yAxes: [{
                   ticks: {
@@ -269,25 +233,26 @@
 
           var labels = [];
           var data = [];
-          var colors = [];
 
-          for(var name in countProject) {
-            labels.push(name);
-            data.push(countProject[name]);
-            colors.push(randomRGBA());
+          for(var project in taskPerProject) {
+            labels.push(project);
+            data.push(taskPerProject[project]);
           }
 
           var remainingTasks = new Chart(chartRemainingTasks, {
-            type: 'bar',
+            type: 'horizontalBar',
             data: {
               labels: labels,
               datasets: [{
                 label: "Tasks",
                 data: data,
-                backgroundColor: colors,
+                backgroundColor: [
+                  "#03586A", "#26B99A", "#acadac", "#03586A", "#26B99A", "#acadac"
+                ],
               }]
             },
             options: {
+              maintainAspectRatio: false,
               scales: {
                 yAxes: [{
                   ticks: {
@@ -299,26 +264,30 @@
           });
 
           var labels = ["Total Tasks", "Unassigned"];
-          var data = [totalTasks, people.unassigned];
-          var colors = ["rgba(0,0,255,0.5)","rgba(255,0,0,0.5)"];
+          var data = [assignees.unassigned, assignees.unassigned];
 
-          for(var name in people['assigned']) {
-            labels.push(name);
-            data.push(people['assigned'][name]);
-            colors.push(randomRGBA());
+          for (var assignee in assignees) {
+            if (assignee !== 'unassigned') {
+              labels.push(assignee)
+              data.push(assignees[assignee])
+              data[0] += assignees[assignee]
+            } 
           }
 
           var tasksAssigne = new Chart(chartTasksAssigne, {
-            type: 'bar',
+            type: 'horizontalBar',
             data: {
               labels: labels,
               datasets: [{
                 label: "Tasks",
                 data: data,
-                backgroundColor: colors,
+                backgroundColor: [
+                  "#03586A", "#26B99A", "#acadac", "#03586A", "#26B99A", "#acadac"
+                ],
               }]
             },
             options: {
+              maintainAspectRatio: false,
               scales: {
                 yAxes: [{
                   ticks: {
@@ -329,17 +298,19 @@
             }
           });
 
-          people.unassigned = ((people.unassigned/totalTasks) * 100).toFixed(2);
+          var total = +data[0]
+          var unassigned = ((+data[1]/+data[0]) * 100).toFixed(2);
 
           labels = ["Unassigned"];
-          data = [people.unassigned];
+          data = [unassigned];
           var colors2 = ["rgba(255,0,0,0.5)"];
 
-          for(var name in people['assigned']) {
-            var count = ((people['assigned'][name]/totalTasks) * 100).toFixed(2);
-            labels.push(name);
-            data.push(count);
-            colors2.push(randomRGBA());
+          for(assignee in assignees) {
+            if (assignee !== 'unassigned') {
+              var count = ((+assignees[assignee]/total) * 100).toFixed(2);
+              labels.push(assignee);
+              data.push(count);
+            }
           }
 
           var taskAssigne2 = new Chart(chartTasksAssigne2, {
@@ -348,29 +319,40 @@
               labels: labels,
               datasets: [{
                 data: data,
-                backgroundColor: colors2,
+                backgroundColor: [
+                  "#03586A", "#26B99A", "#acadac", "#03586A", "#26B99A", "#acadac"
+                ],
               }]
+            },
+            options: {
+              maintainAspectRatio: false
             }
           });
 
+          var data = [0, 0, 0]
+
+          for (type in taskTypes) {
+            data[0] += taskTypes[type]
+            if (type === 'backlog') data[1] = taskTypes[type]
+            else data[2] = taskTypes[type]
+          }
+
           labels = ["Total Tasks", "Planned Tasks", "Backlog Tasks"];
-          data = [totalTasks, plannedTasks, backlogTasks];
 
           var tasksPB = new Chart(chartTasksPB, {
-            type: 'bar',
+            type: 'horizontalBar',
             data: {
               labels: labels,
               datasets: [{
                 label: "Number of Tasks",
                 data: data,
                 backgroundColor: [
-                  "rgba(0,0,255,0.5)",
-                  "rgba(255,0,0,0.5)",
-                  "rgba(0,255,0,0.5)"
+                  "#03586A", "#26B99A", "#acadac", "#03586A", "#26B99A", "#acadac"
                 ]
               }]
             },
             options: {
+              maintainAspectRatio: false,
               scales: {
                 yAxes: [{
                   ticks: {
@@ -382,23 +364,28 @@
           });
 
           labels = ["Total Tasks", "Active Tasks", "Completed Tasks"];
-          data = [totalTasks, activeTasks, completedTasks];
+          data = [0, 0, 0];
+
+          for (type in taskStatus) {
+            data[0] += taskStatus[type]
+            if (type === 'Active') data[1] = taskStatus[type]
+            else data[2] = taskStatus[type]
+          }
 
           var tasksAC = new Chart(chartTasksAC, {
-            type: 'bar',
+            type: 'horizontalBar',
             data: {
               labels: labels,
               datasets: [{
                 label: "Number of Tasks",
                 data: data,
                 backgroundColor: [
-                  "rgba(0,0,255,0.5)",
-                  "rgba(255,0,0,0.5)",
-                  "rgba(0,255,0,0.5)"
+                  "#03586A", "#26B99A", "#acadac", "#03586A", "#26B99A", "#acadac"
                 ]
               }]
             },
             options: {
+              maintainAspectRatio: false,
               scales: {
                 yAxes: [{
                   ticks: {
@@ -409,8 +396,8 @@
             }
           });
 
-          activeTasks = ((activeTasks/totalTasks) * 100).toFixed(2);
-          completedTasks = ((completedTasks/totalTasks) * 100).toFixed(2);
+          activeTasks = ((data[1]/data[0]) * 100).toFixed(2);
+          completedTasks = ((data[2]/data[0]) * 100).toFixed(2);
 
           labels = ["Active Tasks", "Completed Tasks"];
           data = [activeTasks, completedTasks];
@@ -422,10 +409,12 @@
               datasets: [{
                 data: data,
                 backgroundColor: [
-                  "rgba(255,0,0,0.5)",
-                  "rgba(0,255,0,0.5)"
+                  "#03586A", "#26B99A", "#acadac", "#03586A", "#26B99A", "#acadac"
                 ]
               }]
+            },
+            options: {
+              maintainAspectRatio: false
             }
           });
         });
@@ -475,48 +464,82 @@
 
         <section class="login_content">
 
-    <div>
-                     <img src="../build/images/logo_elevate.png" style="border: 0; width: 296px;">
-                              </div>
+          <div class="row">
+            <div class="task-visuals col-md-12 col-sm-12 col-xs-12">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>Tasks</h2>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                  <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                      <h4>Number of Projects</h4>
+                      <div>
+                        <canvas id="numberProjects"></canvas>
+                      </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                      <h4>Remaining Tasks</h4>
+                      <div>
+                        <canvas id="remainingTasks"></canvas>
+                      </div>
+                    </div>
+                    <div class="upcoming col-md-12 col-sm-12 col-xs-12">
+                      <h4>Upcoming tasks (2018)</h4>
+                      <div>
+                        <canvas id="upcomingTasks"></canvas>
+                      </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                      <h4>Number Of Tasks (Active or Completed)</h4>
+                      <div><canvas id="tasksAC"></canvas></div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                      <h4>Number Of Tasks (Planned or Backlog)</h4>
+                      <div><canvas id="tasksPB"></canvas></div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                      <h4>Progress Of Tasks (%)</h4>
+                      <div><canvas id="progressTasks"></canvas></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-                <div id="myDiv">
-                  Number Of Projects
-                  <canvas id="numberProjects"></canvas>
+          <div class="row">
+            <div class="task-visuals col-md-12 col-sm-12 col-xs-12">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>Users</h2>
+                  <div class="clearfix"></div>
                 </div>
-                <div id="myDiv">
-                  Remaining Tasks
-                  <canvas id="remainingTasks"></canvas>
+                <div class="x_content">
+                  <div class="row">
+                    <div class="col-md-8 col-sm-8 col-xs-8">
+                      <h4>User Roles</h4>
+                      <div><canvas id="userRoles"></canvas></div>
+                    </div>
+                    <div class="col-md-4 col-sm-4 col-xs-4">
+                      <h4>Tasks Assigned (%)</h4>
+                      <div><canvas id="taskAssigne2"></canvas></div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                      <h4>Tasks Assigned</h4>
+                      <div><canvas id="tasksAssigne"></canvas></div>
+                    </div>
+                  </div>
                 </div>
-                <div id="myDiv">
-                  Upcoming Tasks (2018)
-                  <canvas id="upcomingTasks"></canvas>
-                </div>
-                <div id="myDiv">
-                  Number Of Tasks (Active or Completed)
-                  <canvas id="tasksAC"></canvas>
-                </div>
-                <div id="myDiv">
-                  Number Of Tasks (Planned or Backlog)
-                  <canvas id="tasksPB"></canvas>
-                </div>
-                <div id="myDiv">
-                  Progress Of Tasks (%)
-                  <canvas id="progressTasks"></canvas>
-                </div>
-                <div id="myDiv">
-                  Tasks Assigne
-                  <canvas id="tasksAssigne"></canvas>
-                </div>
-                <div id="myDiv">
-                  Tasks Assigne (%)
-                  <canvas id="taskAssigne2"></canvas>
-                </div>
-                <div id="myDiv">
-                  User Roles
-                  <canvas id="userRoles"></canvas>
-                </div>
+              </div>
+            </div>
+          </div>
 
-              </section>
+          <div>
+            <img src="../build/images/logo_elevate.png" style="border: 0; width: 296px;">
+          </div>
+        </section>
 
 
 
@@ -556,22 +579,11 @@
 
   <!-- bootstrap-daterangepicker -->
   <script src="/vendors/moment/min/moment.min.js"></script>
-  <script src="/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
 
   <!-- Custom Theme Scripts -->
   <script src="/build/js/custom.min.js"></script>
-
-  <script src="/vendors/plotly/js/plotly-latest.min.js"></script>
-  <script src="/vendors/plotly/js/numeric.min.js"></script>
-
-  <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-
-  <script type="text/javascript" src="js/snap.svg-min.js"></script>
-  <script src="/js/frappe-gantt.min.js" ></script>
-
   <script>
   // initalise variables
-  
 
 /*
   var tasksGanttChartContents = []
@@ -624,6 +636,39 @@ gantt.change_view_mode('Week')
   });
 
   </script>
+
+  <style>
+    .task-visuals .col-md-8 > div, .task-visuals .col-lg-8 > div, .task-visuals .col-sm-8 > div,
+    .task-visuals .col-md-4 > div, .task-visuals .col-lg-4 > div, .task-visuals .col-sm-4 > div,
+    .ppp .col-md-8, .ppp .col-lg-8, .ppp .col-sm-8 {
+      height: 250px;
+      margin-bottom: 40px;
+    }
+
+    .upcoming > div {
+      height: 250px;
+      margin-bottom: 40px;
+    }
+
+    .ppp .col-md-8, .ppp .col-lg-8, .ppp .col-sm-8 {
+      width: 200px;
+      margin-bottom: 40px;
+    }
+
+    .task-visuals .col-md-6 > div, .task-visuals .col-lg-6 > div, .task-visuals .col-sm-6 > div {
+      height: 150px;
+      margin-bottom: 40px;
+    }
+
+    .square {
+      vertical-align: middle;
+      display: inline-block;
+      background: blue;
+      width: 15px;
+      height: 15px;
+      margin-right: 1px;
+    }
+ </style>
 
 </body>
 </html>

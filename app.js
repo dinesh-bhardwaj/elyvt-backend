@@ -214,60 +214,38 @@ app.get('/getData', AuthenteCheck.ensureAuthenticated, function(req, res){
 /**
 *  Dashboard
 */
-app.get('/', user.can('dashboard'), function(req, res){
+app.get('/', user.can('dashboard'), function(req, res) {
+	var workflowsContents = fs.readFileSync("data/workflows.json");
+	var accountsContents = fs.readFileSync("data/accounts.json");
+	var userDetails = req.user;
 
-	//console.log("==============", req);
-
- // Get content from file
- //var tasksContents = fs.readFileSync("data/tasks.json");
- //var foldersContents = fs.readFileSync("data/folders.json");
- var workflowsContents = fs.readFileSync("data/workflows.json");
- var accountsContents = fs.readFileSync("data/accounts.json");
- //var contactsContents = fs.readFileSync("data/contacts.json");
- //var groupsContents = fs.readFileSync("data/groups.json");
- //var invitationsContents = fs.readFileSync("data/invitations.json");
- //var customfieldsContents = fs.readFileSync("data/customfields.json");
- //var commentsContents = fs.readFileSync("data/comments.json");
- //var timelogsContents = fs.readFileSync("data/timelogs.json");
- //var attachmentsContents = fs.readFileSync("data/attachments.json");
- var userDetails = req.user;
- 
- tasks.getalltasks(function(taskserr, tasksContents){ //Get/Fetch Tasks
- 	foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
- 		contacts.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
- 			//console.log(foldersContents);
-			functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-				console.log("herirecy Done");
-			 	functions.folderDashboardContent(moment, (foldersContents), (tasksContents), (contactsContents['contactdata'])).then((folderDashboardData)=>{
-			 		console.log("Dashboard Done");
-			 		functions.buildMilestonesTable(moment, (foldersContents), (tasksContents), (contactsContents['contactdata']), null).then((MilestonesTableContent)=>{
-			 		 	console.log("Milestone Done");
-			 		 	res.render('theme/index', {
-		 						  layout: 'layout2',
-								  'tasks': tasksContents, 
-								  //'tasksGanttChartContents': JSON.stringify(tasksGanttChartContents),
-								  'MilestonesTableContent': MilestonesTableContent,
-								  'folders': foldersContents,
-								  'folderDashboardData': folderDashboardData, 
-								  //'foldersHeiraricalData': foldersHeiraricalData[0],
-								  'foldermenu':  foldersHeiraricalData,
-								  'workflows': workflowsContents,
-								  'accounts': accountsContents, 
-								  'contacts': contactsContents['contactdata'], 
-								  //'groups':groupsContents,
-								  //'invitations':invitationsContents,
-								  //'customfields':customfieldsContents,
-								  //'comments':commentsContents,
-								  //'timelogs':timelogsContents,
-								  //'attachments':attachmentsContents,
-								  'userDetails': userDetails
+	tasks.getalltasks((taskserr, tasksContents) => {
+		foldersModel.getfolders((folderserr, foldersContents) => {
+			contacts.getcontacts((contactserr, contactsContents) => {
+				foldersModel.getprojects((projectserr, projectsContents) => {
+					Promise.all([
+						functions.foldersHeierarcy(foldersContents),
+						functions.folderDashboardContent(moment, foldersContents, tasksContents, contactsContents['contactdata']),
+						functions.buildMilestonesTable(moment, foldersContents, tasksContents, contactsContents['contactdata'], null)
+					]).then(([foldersHeiraricalData, folderDashboardData, MilestonesTableContent]) => {
+						res.render('theme/index', {
+							layout: 'layout2',
+							tasks: JSON.stringify(tasksContents),
+							projects: JSON.stringify(projectsContents),
+							MilestonesTableContent: MilestonesTableContent,
+							folders: JSON.stringify(foldersContents),
+							folderDashboardData: folderDashboardData, 
+							foldermenu:  foldersHeiraricalData,
+							workflows: workflowsContents,
+							accounts: accountsContents, 
+							contacts: JSON.stringify(contactsContents['contactdata']), 
+							userDetails: userDetails
 						});
-		 			});
-		 		});
-	 		});
-		}); // End Fetching Contacts
-	 }); // End Fetching folders
-  }); // End Fetching tasks
+					})
+				})
+			})
+		})
+	})
 }); // End Dashbord Function
 
 
@@ -1044,9 +1022,57 @@ app.get('/profile', AuthenteCheck.ensureAuthenticated, function(req, res){
 });
 
 app.get('/charts', AuthenteCheck.ensureAuthenticated, function(req, res) {
-    res.render('theme/charts', {
-		layout: 'layout2'
-	});
+	// Get content from file
+	 //var tasksContents = fs.readFileSync("data/tasks.json");
+	 //var foldersContents = fs.readFileSync("data/folders.json");
+	 var workflowsContents = fs.readFileSync("data/workflows.json");
+	 var accountsContents = fs.readFileSync("data/accounts.json");
+	 //var contactsContents = fs.readFileSync("data/contacts.json");
+	 //var groupsContents = fs.readFileSync("data/groups.json");
+	 //var invitationsContents = fs.readFileSync("data/invitations.json");
+	 //var customfieldsContents = fs.readFileSync("data/customfields.json");
+	 //var commentsContents = fs.readFileSync("data/comments.json");
+	 //var timelogsContents = fs.readFileSync("data/timelogs.json");
+	 //var attachmentsContents = fs.readFileSync("data/attachments.json");
+	 var userDetails = req.user;
+
+	 userModel.getAllUsers(function(userserr, users) {
+	 	tasks.getalltasks(function(taskserr, tasksContents){ //Get/Fetch Tasks
+			foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
+				foldersModel.getprojects(function(projectserr, projectsContents){ //Get/Fetch folders
+					contacts.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
+						functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+							functions.folderDashboardContent(moment, (foldersContents), (tasksContents), (contactsContents['contactdata'])).then((folderDashboardData)=>{
+								functions.taskGanntChart(moment, (tasksContents),null, (contactsContents['contactdata']), (foldersContents)).then((tasksGanttChartContents)=>{
+									res.render('theme/charts', {
+										layout: 'layout2',
+										'roles': JSON.stringify(functions.buildUserRoleData(users)),
+										'users': JSON.stringify(users),
+										'tasks': JSON.stringify(tasksContents), 
+										'tasksGanttChartContents': JSON.stringify(tasksGanttChartContents),
+										'folders': JSON.stringify(foldersContents),
+										'folderDashboardData': folderDashboardData, 
+										//'foldersHeiraricalData': foldersHeiraricalData[0],
+										'foldermenu':  foldersHeiraricalData,
+										'workflows': workflowsContents,
+										'contacts': contactsContents['contactdata'],
+										'projects': JSON.stringify(projectsContents),
+										//'groups':groupsContents,
+										//'invitations':invitationsContents,
+										//'customfields':customfieldsContents,
+										//'comments':commentsContents,
+										//'timelogs':timelogsContents,
+										//'attachments':attachmentsContents,
+										'userDetails': userDetails
+									});
+								});
+							});
+						});
+					}); // End Fetching Contacts
+				});
+			}); // End Fetching folders
+		});
+	 })
 });
 
 app.post('/profile', AuthenteCheck.ensureAuthenticated, function(req, res){
