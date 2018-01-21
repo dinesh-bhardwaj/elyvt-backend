@@ -668,11 +668,11 @@
 
     const incompleteTasks = getActiveTasks(projectId)
 
-    const percentFinished = planned.length ? (filteredCompletedTasks.length / planned.length) * 100 : 100
+    const plannedForProject = getPlannedTasks(projectId)
+
+    const percentFinished = plannedForProject.length ? (filteredCompletedTasks.length / plannedForProject.length) * 100 : 100
 
     const progressText = percentFinished === 100 ? 'No tasks left' : `${percentFinished.toFixed(2)}%`
-
-    console.log(percentFinished, filteredCompletedTasks.length, planned.length)
 
     if (percentFinished < 25) progressStatus = 'progress-bar-danger'
     else if (percentFinished < 50) progressStatus = 'progress-bar-warning'
