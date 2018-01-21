@@ -540,9 +540,9 @@
     completedTasksTable.clear()
     overdueTasksTable.clear()
 
-    const milestones = getMilestones(projectId).map(milestone => [
-      milestone.title,
-      findProject(milestone.parentFolderIds[0]).title,
+    const milestones = getMilestones(projectId).map(task => [
+      task.title,
+      findProject(task.parentFolderIds[0]).title,
       task.authorIds && task.authorIds[0] ? `${task.authorIds[0].firstname || ''} ${task.authorIds[0].lastname || ''}` : '',
     ])
 
