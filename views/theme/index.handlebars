@@ -422,6 +422,7 @@
   $('#project-selector').html(projectOptions)
 
   var chartUpcomingTasks = document.getElementById("upcomingTasks").getContext("2d");
+  var chartUpcomingTasks = document.getElementById("activeTasks").getContext("2d");
 
   function findProject(folderId) {
     const folder = folders.find(folder => folderId === folder._id)
