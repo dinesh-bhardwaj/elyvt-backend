@@ -576,6 +576,9 @@
         }]
       },
       options: {
+        legend: {
+          display: false
+        },
         maintainAspectRatio: false,
         scales: {
           yAxes: [{
@@ -639,6 +642,7 @@
     $('#ms-progress').css('width', `${percentFinished}%`).removeClass('progress-bar-success progress-bar-alert progress-bar-warning').addClass(progressStatus).html(progressText)
 
     upcomingTasks.update()
+    activeTasksChart.update()
 
     completedTasksTable.rows.add(filteredCompletedTasks)
     completedTasksTable.draw()
