@@ -1,5 +1,6 @@
   <body class="nav-md">
     <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
     <div class="container body">
       <div class="main_container_db">
@@ -46,14 +47,14 @@
        <div class="form-group col-md-6   ">
           <label for="task_name" class="">Start Date</label>
           <div class="col-sm-12 row">
-            <input type="datetime-local" class="form-control" name="startDate" id="startDate" value="{{{ taskdetails.dates.start}}}" class="form-control">
+            <input type="text" class="form-control" name="startDate" id="startDate" value="{{{ taskdetails.dates.start}}}" class="form-control datepicker">
           </div>
         </div>
 
         <div class="form-group col-md-6   ">
-          <label for="task_name" class="">Due Date</label>
+          <label for="task_name" class="">End Date</label>
           <div class="col-sm-12 row">
-            <input type="datetime-local" class="form-control" name="due" id="due" placeholder="due..." value="{{{ taskdetails.dates.due}}}" class="form-control">
+            <input type="text" class="form-control" name="due" id="due" placeholder="due..." value="{{{ taskdetails.dates.due}}}" class="form-control datepicker">
           </div>
         </div>
 
@@ -206,6 +207,14 @@
         }
       }); 
     }
+  </script>
+
+   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    $( "#startDate" ).datepicker();
+    $( "#due" ).datepicker();
+  } );
   </script>
   
   <script src="https://www.google.com/jsapi?key=AIzaSyDL2PCa-Hwx4eptVzJfLHY9Ihq0goWV_JQ"></script>

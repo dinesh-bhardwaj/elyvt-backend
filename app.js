@@ -29,6 +29,8 @@ var tasks = require('./models/tasks');
 var foldersModel = require('./models/folders');
 
 
+
+
 var accounts = require('./models/accounts');
 var workflows = require('./models/workflows');
 var invitations = require('./models/invitations');
@@ -231,15 +233,15 @@ app.get('/', user.can('dashboard'), function(req, res){
 foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
 	userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
 		foldersModel.getprojects(function(folderserr, projectContents){ //Get/Fetch folders
-			//console.log('get Contacts');
+			console.log('get Contacts');
 			 functions.getTaskByFolder(moment, contactsContents, projectId).then((tasksContents)=>{ //Get/Fetch Tasks
-	 			//console.log('tasksContents');
+	 			console.log('tasksContents');
 				functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-					//console.log("herirecy Done");
+					console.log("herirecy Done");
 				 	functions.folderDashboardContent(moment, (foldersContents), (tasksContents), (contactsContents)).then((folderDashboardData)=>{
-				 		//console.log("Dashboard Done");
+				 		console.log("Dashboard Done");
 				 		functions.buildMilestonesTable(moment, (foldersContents), (tasksContents), (contactsContents), projectId).then((MilestonesTableContent)=>{
-				 		 	//console.log("Milestone Done");
+				 		 	console.log("Milestone Done");
 
 				 		 	projectsDropdown = '';
 				 		 	    projectsDropdown = '<option value="null">All Project</option>'
@@ -298,7 +300,7 @@ app.get('/gantt-chart',  AuthenteCheck.ensureAuthenticated, function(req, res){
 	 			}
 	 			userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
 					 functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-					 	////console.log("projectId", req.query.id);
+
 				 	    functions.taskGanntChart(moment, (tasksContents), req.query.id, (contactsContents), (foldersContents)).then((tasksGanttChartContents)=>{
 				 		 	
 				 	    	//console.log("tasksGanttChartContents Line 294", tasksGanttChartContents);
@@ -392,7 +394,47 @@ app.get('/edit/project/', AuthenteCheck.ensureAuthenticated, function(req, res){
  	}); // End Fetching folders
 
 });
+app.get('/edit/folderdata/', AuthenteCheck.ensureAuthenticated, function(req, res){
+	 //var foldersContents = fs.readFileSync("data/folders.json");
+	 //var contactsContents = fs.readFileSync("data/contacts.json");
+	 var projectId = req.query.id
+	 var userDetails = req.user;
 
+	 foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
+ 		userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
+			 functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+				foldersModel.getfolderbyId(projectId, function(err, projectData){
+//console.log("Narendra yadav new ",contactsContents);
+					contactsDropdownHTML = '<option value="">Select</option>';
+					for(var item in contactsContents){
+						contactsDropdownHTML += '<option value="'+contactsContents[item]['id']+'"';
+
+						if((projectData["projectManager"]) && contactsContents[item]['id']){
+
+									if(projectData['projectManager'].indexOf(contactsContents[item]['id']) != -1)
+									{
+										contactsDropdownHTML += " selected";
+									}
+								}
+
+						contactsDropdownHTML += '>'+contactsContents[item]['firstname']+' '+contactsContents[item]['title']+')</option>';
+
+					}
+					
+					res.render('theme/folder_editdata', {
+								layout: 'layout2',
+								'foldermenu':  foldersHeiraricalData,
+								'userDetails': userDetails,
+								'contactsDropdownHTML': contactsDropdownHTML,
+								'projectData': projectData
+							});
+
+				});
+			 });
+		}); // End Fetching Contacts
+ 	}); // End Fetching folders
+
+});
 
 app.post('/edit/project/', AuthenteCheck.ensureAuthenticated, function(req, res){
 
@@ -615,7 +657,7 @@ app.get('/task', AuthenteCheck.ensureAuthenticated, function(req, res){
 										dependenciesDropdownHtml += " selected";
 									}
 								//}								
-								dependenciesDropdownHtml += '>"'+tasksContents[item]['title']+'"</option>';
+								dependenciesDropdownHtml += '>'+tasksContents[item]['title']+'</option>';
 							}
 							}
 
@@ -831,16 +873,10 @@ app.get('/workflows', AuthenteCheck.ensureAuthenticated, function(req, res){
 });
 
 app.get('/contacts', AuthenteCheck.ensureAuthenticated, function(req, res){
-
-	//var contactsContents = fs.readFileSync("data/contacts.json");
- 	//var foldersContents = fs.readFileSync("data/folders.json");
- 	var userDetails = req.user;
-
+	var userDetails = req.user;
  	foldersModel.getfolders(function(folderserr, foldersContents){
-    //contacts.getcontacts(function(contactserr, contactsContents){	//Get/Fetch folders
-	userModel.getAllUser(function(contactserr, userdata){
-	////console.log('=============userdata line 820==========', userdata);
-	 	 functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+    	userModel.getAllUser(function(contactserr, userdata){
+			functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
 		 		functions.getcontacts(userdata).then((contactsHTML)=>{
 					res.render('theme/contacts', {
 						layout: 'layout2',
@@ -971,8 +1007,18 @@ app.get('/emailDashboard', function(req, res){
 		    						daysLeftText = daysLeft
 		    					}
 		    					if(value['projectManager']){
-									var projectManager = value['projectManager']['profiles'][0]['firstname']+' '+value['projectManager']['profiles'][0]['lastname'];
-			    					var projectManagerEmail = value['projectManager']['profiles'][0]['email'];
+		    						console.log("Line 1010, ", value['projectManager']);
+		    						if(value['projectManager']['firstname'] != "undefined"){
+		    							var projectManager = value['projectManager']['firstname']+' '+value['projectManager']['lastname'];
+			    						var projectManagerEmail = value['projectManager']['email'];
+			    					}else if(value['projectManager']['name']){
+			    						var projectManager = value['projectManager']['name'];
+			    						var projectManagerEmail = value['projectManager']['email'];
+			    					}else{
+			    						var projectManager = value['user'][0]['firstname']+' '+value['user'][0]['lastname'];
+			    						var projectManagerEmail = value['user'][0]['email'];
+			    					}
+									
 						 		}else{
 			    					var projectManager = value['user'][0]['firstname']+' '+value['user'][0]['lastname'];
 			    					var projectManagerEmail = value['user'][0]['email'];
@@ -1162,57 +1208,9 @@ app.get('/profile', AuthenteCheck.ensureAuthenticated, function(req, res){
 	});
 
 app.get('/charts', AuthenteCheck.ensureAuthenticated, function(req, res) {
-	// Get content from file
-	 //var tasksContents = fs.readFileSync("data/tasks.json");
-	 //var foldersContents = fs.readFileSync("data/folders.json");
-	 var workflowsContents = fs.readFileSync("data/workflows.json");
-	 var accountsContents = fs.readFileSync("data/accounts.json");
-	 //var contactsContents = fs.readFileSync("data/contacts.json");
-	 //var groupsContents = fs.readFileSync("data/groups.json");
-	 //var invitationsContents = fs.readFileSync("data/invitations.json");
-	 //var customfieldsContents = fs.readFileSync("data/customfields.json");
-	 //var commentsContents = fs.readFileSync("data/comments.json");
-	 //var timelogsContents = fs.readFileSync("data/timelogs.json");
-	 //var attachmentsContents = fs.readFileSync("data/attachments.json");
-	 var userDetails = req.user;
-
-	 userModel.getAllUsers(function(userserr, users) {
-	 	tasks.getalltasks(function(taskserr, tasksContents){ //Get/Fetch Tasks
-			foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
-				foldersModel.getprojects(function(projectserr, projectsContents){ //Get/Fetch folders
-					contacts.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
-						functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-							functions.folderDashboardContent(moment, (foldersContents), (tasksContents), (contactsContents['contactdata'])).then((folderDashboardData)=>{
-								functions.taskGanntChart(moment, (tasksContents),null, (contactsContents['contactdata']), (foldersContents)).then((tasksGanttChartContents)=>{
-									res.render('theme/charts', {
-										layout: 'layout3',
-										'roles': JSON.stringify(functions.buildUserRoleData(users)),
-										'users': JSON.stringify(users),
-										'tasks': JSON.stringify(tasksContents), 
-										'tasksGanttChartContents': JSON.stringify(tasksGanttChartContents),
-										'folders': JSON.stringify(foldersContents),
-										'folderDashboardData': folderDashboardData, 
-										//'foldersHeiraricalData': foldersHeiraricalData[0],
-										'foldermenu':  foldersHeiraricalData,
-										'workflows': workflowsContents,
-										'contacts': contactsContents['contactdata'],
-										'projects': JSON.stringify(projectsContents),
-										//'groups':groupsContents,
-										//'invitations':invitationsContents,
-										//'customfields':customfieldsContents,
-										//'comments':commentsContents,
-										//'timelogs':timelogsContents,
-										//'attachments':attachmentsContents,
-										'userDetails': userDetails
-									});
-								});
-							});
-						});
-					}); // End Fetching Contacts
-				});
-			}); // End Fetching folders
-		});
-	 })
+    res.render('theme/charts', {
+		layout: 'layout3'
+	});
 });
 
 app.get('/data/json/users.json', function(req, res) {
@@ -1232,10 +1230,8 @@ app.get('/addcontacts', AuthenteCheck.ensureAuthenticated, function(req, res){
 
 });
 app.get('/edit/updatecontact', AuthenteCheck.ensureAuthenticated, function(req, res){
-	////console.log("-------narendra yadav------",req.query.id);
 	var UserId = req.query.id;
 	
-		////console.log("-----narendra",alluserdetails);
 	foldersModel.getfolders(function(folderserr, foldersContents){
 	userModel.getUserID(UserId, function(err,alluserdetails){ //Get/Fetch folders
 		functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
@@ -1248,8 +1244,8 @@ app.get('/edit/updatecontact', AuthenteCheck.ensureAuthenticated, function(req, 
 		});
 	});
 	});
+
 app.post('/edit/updatecontact/', AuthenteCheck.ensureAuthenticated, function(req, res){
-	//console.log("------narendra---",req.body._id);
 	var userID = req.query.id;
 	var email = req.body.email;
 	var fname = req.body.firstname;
@@ -1258,6 +1254,7 @@ app.post('/edit/updatecontact/', AuthenteCheck.ensureAuthenticated, function(req
 	var email = req.body.email;
 	var phone = req.body.phone;
 	var username = req.body.username;
+	var email_assignee = req.body.email_assignee;
 	//var userDetails = req.user;
 	var updateData = {
 		'firstname': fname,
@@ -1265,7 +1262,8 @@ app.post('/edit/updatecontact/', AuthenteCheck.ensureAuthenticated, function(req
 		'title': title,
 		'email': email,
 		'phone': phone,
-		'username': username
+		'username': username,
+		'email_assignee': email_assignee
 
 	}
 	userModel.findOneAndUpdate({_id: userID}, updateData, function(err, userData) {
@@ -1290,8 +1288,30 @@ app.post('/profile', AuthenteCheck.ensureAuthenticated, function(req, res){
 	});
 });
 
+app.get('/folderedit', AuthenteCheck.ensureAuthenticated, function(req, res){
+	var accountsContents = fs.readFileSync("data/accounts.json");
+	 var userDetails = req.user;
 
+	 foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
+ 		userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
+			 functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+				 functions.getfolderdata(moment, (foldersContents), (contactsContents)).then((projectsData)=>{
+				 	//console.log(JSON.stringify(projectsData));
+				 	res.render('theme/allfolderdata', {
+				 		layout: 'layout2',
+				 		'folders': foldersContents,
+						//'foldermenu':  foldersHeiraricalData,
+						'projectsData': projectsData,
+						'accounts': accountsContents, 
+						'contacts': contactsContents, 
+						'userDetails': userDetails
+				 	})
+				 });
+			 });
+		}); // End Fetching Contacts
+ 	}); // End Fetching folders
 
+});
 // Set Port
 app.set('port', (process.env.PORT || 3000));
 

@@ -91,7 +91,7 @@ router.get('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, res
 				contactsDropdownHTML = '<option value="">Select</option>';
 				for(var item in contactsContents){
 					contactsDropdownHTML += '<option value="'+contactsContents[item]['_id']+'"';
-					contactsDropdownHTML += '>'+contactsContents[item]['email']+'('+contactsContents[item]['title']+')</option>';
+					contactsDropdownHTML += '>'+contactsContents[item]['firstname']+contactsContents[item]['lastname']+'('+contactsContents[item]['title']+')</option>';
 				}
 				
 					////console.log(foldersData['foldersdata']['data']);
@@ -129,8 +129,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'status': 'Completed', 
 						          'dates':  {
 						          	'type': 'Planned',
-						          	'start': moment().subtract(2, 'months').add(12, 'months').format('YYYY-MM-DDTHH:mm'),
-						          	'due': moment().subtract(2, 'months').add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm')
+						          	'start': moment().subtract(2, 'months').add(12, 'months').format('YYYY-MM-DD'),
+						          	'due': moment().subtract(2, 'months').add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DD')
 						          }
 						        },
 						        {
@@ -139,8 +139,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'status': 'Completed', 
 						          'dates':  {
 						          	'type': 'Planned',
-						          	'start': moment().subtract(2, 'months').add(12, 'months').format('YYYY-MM-DDTHH:mm'),
-						          	'due': moment().subtract(2, 'months').add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm')
+						          	'start': moment().subtract(2, 'months').add(12, 'months').format('YYYY-MM-DD'),
+						          	'due': moment().subtract(2, 'months').add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DD')
 						          }
 						        },
 						        {
@@ -149,13 +149,13 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'status': 'Completed', 
 						          'dates':  {
 						          	'type': 'Planned',
-						          	'start': moment().subtract(2, 'months').add(12, 'months').format('YYYY-MM-DDTHH:mm'),
-						          	'due': moment().subtract(2, 'months').add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm'),
+						          	'start': moment().subtract(2, 'months').add(12, 'months').format('YYYY-MM-DD'),
+						          	'due': moment().subtract(2, 'months').add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DD'),
 						          	'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(12, 'months').format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(12, 'months').format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DD')
 							          }
 						          }
 						        },
@@ -165,8 +165,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'status': 'Completed', 
 						          'dates':  {
 						          	'type': 'Planned',
-						          	'start': moment().subtract(2, 'months').add(12, 'months').format('YYYY-MM-DDTHH:mm'),
-						          	'due': moment().subtract(2, 'months').add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm')
+						          	'start': moment().subtract(2, 'months').add(12, 'months').format('YYYY-MM-DD'),
+						          	'due': moment().subtract(2, 'months').add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DD')
 						          }
 						        },
 						        {
@@ -175,8 +175,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'status': 'Completed', 
 						          'dates':  {
 						          	'type': 'Planned',
-						          	'start': moment().subtract(2, 'months').add(12, 'months').format('YYYY-MM-DDTHH:mm'),
-						          	'due': moment().subtract(2, 'months').add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm')
+						          	'start': moment().subtract(2, 'months').add(12, 'months').format('YYYY-MM-DD'),
+						          	'due': moment().subtract(2, 'months').add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DD')
 						          }
 						        },
 						        {
@@ -185,8 +185,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'status': 'Completed', 
 						          'dates':  {
 						          	'type': 'Planned',
-						          	'start': moment().subtract(2, 'months').add(12, 'months').format('YYYY-MM-DDTHH:mm'),
-						          	'due': moment().subtract(2, 'months').add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm')
+						          	'start': moment().subtract(2, 'months').add(12, 'months').format('YYYY-MM-DD'),
+						          	'due': moment().subtract(2, 'months').add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DD')
 						          }
 						        },
 						        {
@@ -195,8 +195,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'status': 'Completed', 
 						          'dates':  {
 						          	'type': 'Planned',
-						          	'start': moment().subtract(2, 'months').add(12, 'months').format('YYYY-MM-DDTHH:mm'),
-						          	'due': moment().subtract(2, 'months').add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm')
+						          	'start': moment().subtract(2, 'months').add(12, 'months').format('YYYY-MM-DD'),
+						          	'due': moment().subtract(2, 'months').add(12, 'months').add(5, 'days').add('years', 1).format('YYYY-MM-DD')
 						          }
 						        }
 						      ]
@@ -209,8 +209,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'status': 'Completed', 
 						          'dates':  {
 						          	'type': 'Planned',
-						          	'start': moment().subtract(2, 'months').add(8, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-						          	'due': moment().subtract(2, 'months').add(24, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm')
+						          	'start': moment().subtract(2, 'months').add(8, 'days').add('years', 1).format('YYYY-MM-DD'),
+						          	'due': moment().subtract(2, 'months').add(24, 'days').add('years', 1).format('YYYY-MM-DD')
 						          }
 						        },
                                 {
@@ -219,8 +219,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'status': 'Completed', 
 						          'dates':  {
 						          	'type': 'Planned',
-						          	'start': moment().subtract(2, 'months').add(8, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-						          	'due': moment().subtract(2, 'months').add(8, 'days').add('years', 1).format('YYYY-MM-DDTHH:mm')
+						          	'start': moment().subtract(2, 'months').add(8, 'days').add('years', 1).format('YYYY-MM-DD'),
+						          	'due': moment().subtract(2, 'months').add(8, 'days').add('years', 1).format('YYYY-MM-DD')
 						          },
 						          'dependency': ''
 						        }
@@ -235,8 +235,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						            'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(58, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(58, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						          },
 						          {
@@ -245,8 +245,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						            'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						          },
 						          {
@@ -255,8 +255,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						            'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						          },
 						          {
@@ -265,8 +265,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						            'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(58, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(58, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						          },
 						          {
@@ -279,8 +279,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						            'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(58, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(58, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }, 
 							          'dependency': "Additional steps TBD"
 
@@ -291,8 +291,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						            'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							          'dependency': "Additional steps TBD"
 
@@ -307,8 +307,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						            'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(54, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(54, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						          },
 						          {
@@ -317,8 +317,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                                             'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(58, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(58, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						          },
 						          {
@@ -327,8 +327,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                                             'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							          'dependency': "ID ACS Platform"
 
@@ -340,8 +340,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                                             'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							          'dependency': "Intro Elevate to ACS Key Contact" 
 						          },
@@ -353,8 +353,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                                                'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							           'dependency': "Intro Elevate to ACS Key Contact" 
 
@@ -369,8 +369,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                                              'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(57, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(57, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							           'dependency': "ID VMS Platform" 
 						          },
@@ -380,8 +380,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                                             'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(58, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(58, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							          'dependency': "Intro Elevate to VMS Key Contact" 
 						          },
@@ -391,8 +391,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                                             'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(58, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(58, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							         'dependency': "Intro Elevate to VMS Key Contact" 
 						          },
@@ -402,8 +402,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                      'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(58, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(58, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							            },
 							            'dependency': "Intro Elevate to VMS Key Contact"
 						          },
@@ -413,8 +413,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                      'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(54, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(54, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          } 
 						          },
 						          {
@@ -423,8 +423,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                                              'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							          'dependency': "? - Security Y/N"
 						          }
@@ -439,8 +439,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 									'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        },
 						        {
@@ -449,8 +449,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                     'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(16, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(16, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							      'dependency': "ID/Intro Key Contact"    
 
@@ -461,8 +461,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                     'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(9, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(23, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(9, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(23, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							          'dependency': "ID/Intro Key Contact" 
 						        },
@@ -472,8 +472,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                     'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(9, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(9, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							          'dependency': "F&B Workflow Structure/Walkthrough" 
 						        },
@@ -483,8 +483,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                   'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(9, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(9, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							        'dependency': "F&B Workflow Structure/Walkthrough" 
 						        },
@@ -494,8 +494,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                                           'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(9, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(9, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							          'dependency': "F&B Workflow Structure/Walkthrough" 
 						        },
@@ -505,8 +505,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                    'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(9, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(9, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							        'dependency': "F&B Workflow Structure/Walkthrough" 
 						        },
@@ -516,8 +516,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                     'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(9, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(9, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							        'dependency': "F&B Workflow Structure/Walkthrough" 
 						        },
@@ -527,8 +527,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                    'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(9, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(9, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(38, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							       'dependency': "F&B Workflow Structure/Walkthrough" 
 						        }
@@ -542,8 +542,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                   'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        },
 						        {
@@ -552,8 +552,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                    'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							        'dependency': "ID/Intro Key Contact"
 						        },
@@ -563,8 +563,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                    'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(23, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(23, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							        'dependency': "ID/Intro Key Contact"
 						        }
@@ -578,8 +578,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                    'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        },
 						        {
@@ -588,8 +588,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                    'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							          'dependency': "ID/Intro Key Contact"
 						        },
@@ -599,8 +599,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                    'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(22, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(22, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							          'dependency': "ID/Intro Key Contact"
 						        },
@@ -610,8 +610,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
  									'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(22, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(22, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							          'dependency': "ID/Intro Key Contact"
 						        },
@@ -621,8 +621,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                    'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(22, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(22, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							          'dependency': "ID/Intro Key Contact"
 						        },
@@ -632,8 +632,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                    'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(29, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(29, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							          'dependency': "Request: Sample Events Data"
 						        }
@@ -647,8 +647,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                    'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        },
 						        {
@@ -657,8 +657,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                                           'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							          'dependency': "ID/Intro Key Contact"
 
@@ -669,8 +669,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                                           'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							           'dependency': "ID/Intro Key Contact"
 						        }
@@ -684,8 +684,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                                           'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        },
 						        {
@@ -694,8 +694,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                                           'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							           'dependency': "ID/Intro Key Contact"
 						        },
@@ -705,8 +705,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
                                                           'status': 'Completed', 
 						          'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(8, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							        'dependency': "ID/Intro Key Contact"  
 						        }
@@ -721,8 +721,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': 'Have we provided a list of items that will need to be digitally white labeled?',
                                                           'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(15, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        },
 						        {
@@ -730,8 +730,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': 'Have we gone on site to test the app?',
                                                           'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(10, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(61, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(10, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(61, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							          'dependency': "Milestone - ELVT - provide url list for white labeling to IT/Security Contact"
 						        },
@@ -740,8 +740,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': '',
                                                           'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(10, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(60, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(10, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(60, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        },
 						        {
@@ -749,8 +749,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': '',
                                                           'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(11, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(61, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(11, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(61, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        },
 						        {
@@ -758,8 +758,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': '',
                                                           'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(10, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(60, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(10, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(60, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        },
 						        {
@@ -767,8 +767,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': '',
                                                           'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(10, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(60, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(10, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(60, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        },
 						        {
@@ -776,8 +776,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': '',
                                                           'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(10, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(61, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(10, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(61, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        },
 						        {
@@ -785,8 +785,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': '',
                                                           'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(10, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(60, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(10, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(60, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        }
 						      ]
@@ -798,8 +798,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': 'Have we provided instruction on how to update the user interface(UI)?',
                                                           'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(73, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(73, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							        'dependency': "ID/Intro Key Contact"  
 						        },
@@ -808,8 +808,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': 'Have we received and uploaded the UI assets?',
                                                           'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(72, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(72, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 
 						        },
@@ -818,8 +818,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': 'Have we setup the default copy in the UI?',
                                                           'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(61, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(82, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(61, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(82, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 
 						        },
@@ -828,8 +828,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': 'Have we sent instructions on how to edit the copy with in the UI?',
                                                           'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(61, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(86, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(61, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(86, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        },
 						        {
@@ -837,8 +837,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': 'Have we onfirmed that initial UI configuration is complete?',
                                                           'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(61, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(73, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(61, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(73, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        }
 						      ]
@@ -851,8 +851,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						            'description': 'Have we provided instruction on how to tie-in the HID account?',
                                                             'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						          },
 						          {
@@ -860,8 +860,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						            'description': 'Has this instance began the HID access process?',
                                                             'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							          'dependency': "ELVT: Provide Instruction Doc For HID Acct Tie-in"
 						          },
@@ -870,8 +870,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						            'description': 'Has this instance provided the HID account access password?',
                                                             'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							         'dependency': "Client: Begin HID Access Process" 
 						          },
@@ -880,8 +880,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						            'description': 'Have we confirmed that theHIDaccounttie-inhasbeenverified?',
                                                             'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(60, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(60, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							          'dependency': "ELVT: Provide Instruction Doc For HID Acct Tie-in"
 						          },
@@ -890,8 +890,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						            'description': 'Have we confirmed that the sample Mobile ID Pool has been added to the account?',
                                                             'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(67, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(67, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							          'dependency': "ELVT - HID Acct Tie-In Verified"
 
@@ -901,8 +901,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						            'description': 'Have we confirmed that the Technical Foreground Access is active?',
                                                             'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(74, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(59, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(74, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							          'dependency': "ELVT - HID Acct Tie-In Verified" 
 						          },
@@ -911,8 +911,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						            'description': 'Where will the Beacons be placed with in this instance?',
                                                             'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(46, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(60, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(46, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(60, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						          }
 						        ]
@@ -942,8 +942,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': '',
                                                           'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(53, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(53, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 
 						        },
@@ -952,8 +952,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': '',
                                                           'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(46, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(46, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        }
 						      ]
@@ -973,8 +973,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': '',
                                                           'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(46, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(46, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        },
 						        {
@@ -982,8 +982,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': '',
                                                           'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(53, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(53, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        }
 						      ]
@@ -995,8 +995,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': '',
                                                           'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(46, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(46, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        },
 						        {
@@ -1004,8 +1004,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': '',
                                                           'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(53, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(53, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        }
 						      ]
@@ -1017,8 +1017,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': '',
                                                           'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(53, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(53, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        },
 						        {
@@ -1026,8 +1026,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
  						          'description': '',
                                                           'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(46, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(46, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        }
 						      ]
@@ -1039,8 +1039,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': '',
                                                           'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(53, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(53, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          },
 							           'dependency': "ELVT Provide Concierge Instruction (Doc(s))"
 						        },
@@ -1049,8 +1049,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': '',
                                                           'status': 'Active', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(46, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(39, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(46, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        }
 						      ]
@@ -1079,8 +1079,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': '',
                                                           'status': 'Upcoming', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(88, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(88, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(88, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(88, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        },
 						        {
@@ -1088,8 +1088,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': '',
                                    'status': 'Upcoming', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(88, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(88, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(88, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(88, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        },
 						        {
@@ -1097,8 +1097,8 @@ router.post('/new-project', AuthenteCheck.ensureAuthenticated,  function(req, re
 						          'description': '',
                                     'status': 'Upcoming', 'dates':  {
 							          	'type': 'Planned',
-							          	'start': moment().subtract(2, 'months').add(79, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm'),
-							          	'due': moment().subtract(2, 'months').add(89, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DDTHH:mm')
+							          	'start': moment().subtract(2, 'months').add(79, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD'),
+							          	'due': moment().subtract(2, 'months').add(89, 'days').add(1, 'month').add('years', 1).format('YYYY-MM-DD')
 							          }
 						        }
 						      ]
@@ -1157,7 +1157,7 @@ router.get('/createtasks', function(req, res){
 							dependenciesDropdownHtml = '<option value="">Select</option>';
 							for(var item in tasksContents){
 								dependenciesDropdownHtml += '<option value="'+tasksContents[item]['_id']+'"';
-								dependenciesDropdownHtml += '>"'+tasksContents[item]['title']+'"</option>';
+								dependenciesDropdownHtml += '>'+tasksContents[item]['title']+'</option>';
 							}
 
 				 		res.render('theme/new_task', {
@@ -1245,7 +1245,7 @@ router.post('/createtasks', function(req, res){
 			title: req.body.title,
 			description: req.body.description,
 			briefDescription: req.body.briefDescription,
-			createdDate: moment().format('YYYY-MM-DDTHH:mm'),
+			createdDate: moment().format('YYYY-MM-DD'),
 			dates: { 'type': 'backlog'},
 			status: 'Active',
 			authorIds: [req.body.authorIds],
@@ -1377,9 +1377,9 @@ module.exports.savethisFolder = function(req, title, $parentId, $scope, $isProje
 						          req.user._id
 						        ],
 						        "status": "Green",
-						        "startDate": moment().format('YYYY-MM-DDTHH:mm'),
-						        "endDate": moment().format('YYYY-MM-DDTHH:mm'),
-						        "createdDate": moment().format('YYYY-MM-DDTHH:mm')
+						        "startDate": moment().format('YYYY-MM-DD'),
+						        "endDate": moment().format('YYYY-MM-DD'),
+						        "createdDate": moment().format('YYYY-MM-DD')
 						      }
 			folderData['scope'] = 'WsFolder'
 		}
@@ -1688,7 +1688,7 @@ module.exports.createTask = function(req, title, description, parentFolderIds, d
 					parentFolderIds: parentFolderIds,
 					title: title,
 					description: description,
-					createdDate: moment().format('YYYY-MM-DDTHH:mm'),
+					createdDate: moment().format('YYYY-MM-DD'),
 					dates: dates,
 					status: status,
 					authorIds: [req.user],
@@ -1709,7 +1709,7 @@ module.exports.createTask = function(req, title, description, parentFolderIds, d
 				parentFolderIds: parentFolderIds,
 				title: title,
 				description: description,
-				createdDate: moment().format('YYYY-MM-DDTHH:mm'),
+				createdDate: moment().format('YYYY-MM-DD'),
 				dates: dates,
 				status: status,
 				authorIds: [req.user],
