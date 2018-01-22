@@ -1784,8 +1784,8 @@ legend {
     height: 280px
 }
 
-.profile_details:nth-child(3n) {
-    clear: both
+.profile_details:nth-child(2n) {
+    float: right;
 }
 
 .profile_details .profile_view {

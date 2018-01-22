@@ -7,6 +7,31 @@
   }
   </script>
 
+  <script type="text/javascript">
+    var updateTaskStatus = function(obj){
+
+      console.log("taskId, status : ", obj);
+
+      jQuery.ajax({
+        contentType: 'application/json',
+        data: JSON.stringify({
+            "taskId": obj.taskId,
+            "status":obj.status
+        }),
+        dataType: 'json',
+        success: function(data){
+            window.location.reload();
+        },
+        error: function(){
+            console.log("device control succeeded");
+        },
+        processData: false,
+        type: 'POST',
+        url: '/task/update'
+    });
+    }
+  </script>
+
   <!-- Container -->
   <div class="container body">
     <!-- Main Container -->
@@ -167,6 +192,7 @@
                             <table class="table table-bordered" id="upcomingTaskstable">
                               <thead>
                                 <tr>
+                                  <th style="width: 10%;">Mark Complete</th>
                                   <th style="width: 6%;">Health</th>
                                   {{!-- <th style="width: 17%;">Sheet Name</th> --}}
                                   <th style="width: 57%;">Task</th>
@@ -487,4 +513,3 @@ gantt.change_view_mode('Week')
   </script>
 
 </body>
-</html>

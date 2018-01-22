@@ -50,6 +50,10 @@ module.exports.getUserByUsername = function(username, callback){
 	User.findOne(query, callback);
 }
 
+module.exports.query = function(query, callback){
+	User.find(query, callback);
+}
+
 module.exports.getUserById = function(id, callback){
 	User.findById(id, callback);
 }

@@ -1222,7 +1222,7 @@ legend {
 .demo-placeholder {
     height: 280px
 }
-.profile_details:nth-child(3n) {
+.profile_details:nth-child(2n) {
     clear: both
 }
 .profile_details .profile_view {

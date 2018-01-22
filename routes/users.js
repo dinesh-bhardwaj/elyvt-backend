@@ -19,7 +19,7 @@ router.get('/register', function(req, res){
 
 // Login
 router.get('/login', function(req, res){
-  redirectURL = '/';
+  let redirectURL = '/';
   if(req.query.redirect){
     redirectURL = req.query.redirect;
   }

@@ -17,6 +17,10 @@ module.exports.getcontacts = function(callback){
 	contacts.findOne(query, callback);
 }
 
+module.exports.query = function(query, callback){
+	contacts.find(query, callback);
+}
+
 // module.exports.getfolderbyId = function(folderid, callback){
 // 	var query = {folderid: folderid};
 // 	folder.find(query, callback);
