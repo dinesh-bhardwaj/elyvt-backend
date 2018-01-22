@@ -15,6 +15,7 @@ var UserSchema = mongoose.Schema({
 	},
 	firstname: { type: String},
 	lastname: { type: String},
+	email_assignee: { type: String},
 	title: { type: String},
 	type: { type: String},
 	phone:{type:String},

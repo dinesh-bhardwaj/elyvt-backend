@@ -35,7 +35,7 @@
         <nav aria-label="breadcrumb" role="navigation">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">New Project</li>
+                    <li class="breadcrumb-item active" aria-current="page">Folder</li>
                 </ol>
             </nav>
        
@@ -48,7 +48,7 @@
               <div class="x_content">
                 <div class="row">
                   <div class="col-md-12 col-sm-12 col-xs-12 text-center">
-                    <h3>Create New Projects</h3>
+                    <h3>Edit Folder</h3>
                   </div>
 
                   <div class="clearfix"></div>
@@ -59,7 +59,7 @@
                             <div class="form-group row col-md-12   ">
                               <label for="project_name" class="pull-left col-form-label col-md-2 text-right">Project Name</label>
                               <div class="col-sm-6">
-                                <input type="text" class="form-control" name="project_name" id="project_name" placeholder="Project Name..." required="required">
+                                <input type="text" class="form-control" name="project_name" id="project_name" placeholder="Project Name..." value="{{projectData.title}}" required="required">
                               </div>
                             </div>
 
@@ -71,33 +71,10 @@
                                 </select>           
                               </div>
                             </div>
-
-                           
-                            
-                            <div class="col-md-12">
-                              <h2 class="well well-sm "><div class="col-md-offset-4">Components</div></h2>
-                            </div>
-                            <div class="col-md-16 col-md-offset-3">
-                              <div class="col-md-2">
-                                <div class="clearfix"></div>
-                                <div class="padding-left"><label> -<input type="checkbox" name="Communication" checked="true"> Communication</label></div>
-                                
-                                <div class="padding-left"><label> -<input type="checkbox"  name="Conceirge" checked="true"> Concierge</label></div>
-                                
-                                <div class="padding-left"><label> -<input type="checkbox"  name="Events" checked="true"> Events</label></div>
-                                
-                                <div class="padding-left"><label> -<input type="checkbox"  name="Facility_Booking" checked="true"> Facility Booking</label></div>
-                                
-                                <div class="padding-left"><label> -<input type="checkbox" name="f_B" checked="true"> F&B</label></div>
-                               
-                                <div class="padding-left"><label> -<input type="checkbox"  name="Security" checked="true"> Security</label></div>
-                                
-                                <div class="padding-left"><label> -<input type="checkbox" name="UI_Config" checked="true"> UI Config</label></div>
-                              </div>                              
                             </div>
                             <div class="clearfix"></div>
                             <div class="col-md-12 text-center">
-                              <button class="btn btn-primary">Create</button>
+                              <button class="btn btn-primary">Update</button>
                             </div>
                           </form>
                       </div>
@@ -109,9 +86,6 @@
                   </div>
                 </div>
               </div>
-            
-            
-
             </div>
           </div>
 
