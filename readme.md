@@ -1,6 +1,8 @@
 ####Prerequisits
 - Nodejs 
 - Wrike Account
+- NPM
+
 
 ### Installation
 - Extract the Zip Folder.
