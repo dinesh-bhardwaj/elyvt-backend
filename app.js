@@ -29,6 +29,8 @@ var tasks = require('./models/tasks');
 var foldersModel = require('./models/folders');
 
 
+
+
 var accounts = require('./models/accounts');
 var workflows = require('./models/workflows');
 var invitations = require('./models/invitations');
@@ -213,39 +215,66 @@ app.get('/getData', AuthenteCheck.ensureAuthenticated, function(req, res){
 
 
 
-app.get('/', user.can('dashboard'), function(req, res) {
-	var workflowsContents = fs.readFileSync("data/workflows.json");
-	var accountsContents = fs.readFileSync("data/accounts.json");
-	var userDetails = req.user;
+/**
+*  Dashboard
+*/
+app.get('/', user.can('dashboard'), function(req, res){
 
-	tasks.getalltasks((taskserr, tasksContents) => {
-		foldersModel.getfolders((folderserr, foldersContents) => {
-			userModel.getcontacts((contactserr, contactsContents) => {
-				foldersModel.getprojects((projectserr, projectsContents) => {
-					Promise.all([
-						functions.foldersHeierarcy(foldersContents),
-						functions.folderDashboardContent(moment, foldersContents, tasksContents, contactsContents['contactdata']),
-						functions.buildMilestonesTable(moment, foldersContents, tasksContents, contactsContents['contactdata'], null)
-					]).then(([foldersHeiraricalData, folderDashboardData, MilestonesTableContent]) => {
-						res.render('theme/index', {
-							layout: 'layout2',
-							tasks: JSON.stringify(tasksContents),
-							projects: JSON.stringify(projectsContents),
-							MilestonesTableContent: MilestonesTableContent,
-							folders: JSON.stringify(foldersContents),
-							folderDashboardData: folderDashboardData, 
-							foldermenu:  foldersHeiraricalData,
-							workflows: workflowsContents,
-							accounts: accountsContents, 
-							contacts: JSON.stringify(contactsContents['contactdata']), 
-							userDetails: userDetails
-						});
-					})
-				})
-			})
-		})
-	})
-});
+ var workflowsContents = fs.readFileSync("data/workflows.json");
+ var accountsContents = fs.readFileSync("data/accounts.json");
+ var userDetails = req.user;
+ var projectId = req.query.id;
+ if(projectId=="undefined"){
+ 	projectId = null;
+ }
+ if(projectId == "null"){
+ 	projectId = null;
+ }
+foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
+	userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
+		foldersModel.getprojects(function(folderserr, projectContents){ //Get/Fetch folders
+			console.log('get Contacts');
+			 functions.getTaskByFolder(moment, contactsContents, projectId).then((tasksContents)=>{ //Get/Fetch Tasks
+	 			console.log('tasksContents');
+				functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+					console.log("herirecy Done");
+				 	functions.folderDashboardContent(moment, (foldersContents), (tasksContents), (contactsContents)).then((folderDashboardData)=>{
+				 		console.log("Dashboard Done");
+				 		functions.buildMilestonesTable(moment, (foldersContents), (tasksContents), (contactsContents), projectId).then((MilestonesTableContent)=>{
+				 		 	console.log("Milestone Done");
+
+				 		 	projectsDropdown = '';
+				 		 	    projectsDropdown = '<option value="null">All Project</option>'
+				 		 	for(var item in projectContents){
+				 		 		projectsDropdown += '<option value="'+projectContents[item]['_id']+'"';
+				 		 		if(projectContents[item]['_id'] == projectId){
+				 		 			projectsDropdown += ' selected';
+				 		 		}
+				 		 		projectsDropdown += '>'+projectContents[item]['title']+'</option>';
+				 		 	}
+
+				 		 	res.render('theme/index', {
+			 						  layout: 'layout2',
+									  'tasks': tasksContents, 
+									  'MilestonesTableContent': MilestonesTableContent,
+									  'folders': foldersContents,
+									  'projects': projectContents,
+									  'projectsDropdown': projectsDropdown,
+									  'folderDashboardData': folderDashboardData, 
+									  'foldermenu':  foldersHeiraricalData,
+									  'workflows': workflowsContents,
+									  'accounts': accountsContents, 
+									  'contacts': contactsContents, 
+									  'userDetails': userDetails
+							});
+			 			});
+			 		});
+		 		});
+			}); // End Fetching Contacts
+		 }); // End Fetching folders
+	}); // End Fetching Projects
+  }); // End Fetching tasks
+}); // End Dashbord Function
 
 
 /**
