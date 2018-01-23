@@ -412,7 +412,7 @@
 
   const getTasksPerType = (projectId) => {
     const subset = projectId === 'all' ? tasks :
-      tasks.filter(task => findProject(task.parentFolderIds[0])._id === projectId)
+      tasks.filter(task => findProject(task.parentFolderIds)._id === projectId)
 
     return subset.reduce((acc, task) => {
       acc[task.dates.type] = acc[task.dates.type] ? acc[task.dates.type] + 1 : 1
@@ -460,7 +460,7 @@
 
       if (task.dates.type === 'Planned') {
         if (moment(task.dates.end).isSame(month, 'month')) {
-          var project = findProject(task.parentFolderIds[0]).title
+          var project = findProject(task.parentFolderIds).title
 
           acc[monthName][project] = acc[monthName][project] ? acc[monthName][project] + 1 : 1
         }
@@ -472,13 +472,13 @@
   const getMilestones = (projectId) => {
     if (projectId === 'all') {
       return projects.reduce((acc, project) => {
-        const milestones = tasks.filter(task => findProject(task.parentFolderIds[0])._id === project._id)
+        const milestones = tasks.filter(task => findProject(task.parentFolderIds)._id === project._id)
 
         return acc.concat(milestones)
       }, [])
     }
 
-    return tasks.filter(task => findProject(task.parentFolderIds[0])._id === projectId)
+    return tasks.filter(task => findProject(task.parentFolderIds)._id === projectId)
   }
 
   const getAssignee = (task) => {
@@ -490,7 +490,7 @@
       return completedTasks
     }
 
-    return completedTasks.filter(task => findProject(task.parentFolderIds[0])._id === projectId)
+    return completedTasks.filter(task => findProject(task.parentFolderIds)._id === projectId)
   }
 
   const getActiveTasks = (projectId) => {
@@ -498,7 +498,7 @@
       return activeTasks
     }
 
-    return activeTasks.filter(task => findProject(task.parentFolderIds[0])._id === projectId)
+    return activeTasks.filter(task => findProject(task.parentFolderIds)._id === projectId)
   }
 
   const getBacklogTasks = (projectId) => {
@@ -506,7 +506,7 @@
       return backlog
     }
 
-    return backlog.filter(task => findProject(task.parentFolderIds[0])._id === projectId)
+    return backlog.filter(task => findProject(task.parentFolderIds)._id === projectId)
   }
 
   const getPlannedTasks = (projectId) => {
@@ -514,7 +514,7 @@
       return planned
     }
 
-    return planned.filter(task => findProject(task.parentFolderIds[0])._id === projectId)
+    return planned.filter(task => findProject(task.parentFolderIds)._id === projectId)
   }
 
   const getOverdueTasks = (projectId) => {
@@ -522,7 +522,7 @@
       return overdueTasks
     }
 
-    return overdueTasks.filter(task => findProject(task.parentFolderIds[0])._id === projectId)
+    return overdueTasks.filter(task => findProject(task.parentFolderIds)._id === projectId)
   }
 
   const getDatasets = (selectedProjects) => {
@@ -672,7 +672,7 @@
 
     const milestones = getMilestones(projectId).map(task => [
       task.title,
-      findProject(task.parentFolderIds[0]).title,
+      findProject(task.parentFolderIds).title,
       task.authorIds && task.authorIds[0] ? `${task.authorIds[0].firstname || ''} ${task.authorIds[0].lastname || ''}` : '',
     ])
 
