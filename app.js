@@ -255,16 +255,16 @@ foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folde
 
 				 		 	res.render('theme/index', {
 			 						  layout: 'layout2',
-									  'tasks': tasksContents, 
+									  'tasks': JSON.stringify(tasksContents), 
 									  'MilestonesTableContent': MilestonesTableContent,
-									  'folders': foldersContents,
-									  'projects': projectContents,
+									  'folders': JSON.stringify(foldersContents),
+									  'projects': JSON.stringify(projectContents),
 									  'projectsDropdown': projectsDropdown,
 									  'folderDashboardData': folderDashboardData, 
 									  'foldermenu':  foldersHeiraricalData,
 									  'workflows': workflowsContents,
 									  'accounts': accountsContents, 
-									  'contacts': contactsContents, 
+									  'contacts': JSON.stringify(contactsContents), 
 									  'userDetails': userDetails
 							});
 			 			});
