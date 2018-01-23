@@ -444,6 +444,8 @@
   function findProject(folderId) {
     const folder = folders.find(folder => folderId === folder._id)
 
+    if (!folder) return null
+
     if (folder.isProject) return folder
 
     else return findProject(folder.parentId)
