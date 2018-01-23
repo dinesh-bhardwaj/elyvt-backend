@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcryptjs');
-mongoose.set('debug', true);
+//mongoose.set('debug', true);
 var Schema = mongoose.Schema;
 
 var User = require('./user.js')

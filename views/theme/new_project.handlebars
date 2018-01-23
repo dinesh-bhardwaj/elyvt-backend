@@ -62,7 +62,7 @@
                                 <input type="text" class="form-control" name="project_name" id="project_name" placeholder="Project Name..." required="required">
                               </div>
                             </div>
-
+                           
                             <div class="form-group row col-md-12 ">
                               <label for="task_name" class="pull-left col-form-label col-md-2 text-right">Project Manager</label>
                               <div class="col-sm-6">
@@ -72,7 +72,102 @@
                               </div>
                             </div>
 
-                           
+                           <div class="form-group row col-md-12 ">
+                              <label for="task_name" class="pull-left col-form-label col-md-2 text-right">Building Manager</label>
+                              <div class="col-sm-6">
+                                <select name="BuildingManager" class="form-control">
+                                  {{{contactsDropdownHTML}}}
+                                </select>           
+                              </div>
+                            </div>
+                            <div class="form-group row col-md-12 ">
+                              <label for="task_name" class="pull-left col-form-label col-md-2 text-right"> Client Manager</label>
+                              <div class="col-sm-6">
+                                <select name="clientManager" class="form-control">
+                                  {{{contactsDropdownHTML}}}
+                                </select>           
+                              </div>
+</div>
+<div class="form-group row col-md-12 ">
+                              <label for="task_name" class="pull-left col-form-label col-md-2 text-right"> UI Manager</label>
+                              <div class="col-sm-6">
+                                <select name="UIManager" class="form-control">
+                                  {{{contactsDropdownHTML}}}
+                                </select>           
+                              </div>
+                              </div>
+                              <div class="form-group row col-md-12 ">
+                              <label for="task_name" class="pull-left col-form-label col-md-2 text-right"> Security Manager</label>
+                              <div class="col-sm-6">
+                                <select name="securityManager" class="form-control">
+                                  {{{contactsDropdownHTML}}}
+                                </select>           
+                              </div>
+                              </div>
+                              <div class="form-group row col-md-12 ">
+                              <label for="task_name" class="pull-left col-form-label col-md-2 text-right"> Security Integrator Manager</label>
+                              <div class="col-sm-6">
+                                <select name="clientManager" class="form-control">
+                                  {{{contactsDropdownHTML}}}
+                                </select>           
+                              </div>
+                              </div>
+<div class="form-group row col-md-12 ">
+                              <label for="task_name" class="pull-left col-form-label col-md-2 text-right">Conceirage Manager</label>
+                              <div class="col-sm-6">
+                                <select name="conciegeManager" class="form-control">
+                                  {{{contactsDropdownHTML}}}
+                                </select>           
+                              </div>
+                              </div>
+<div class="form-group row col-md-12 ">
+                              <label for="task_name" class="pull-left col-form-label col-md-2 text-right"> Communication Manager</label>
+                              <div class="col-sm-6">
+                                <select name="communicationManager" class="form-control">
+                                  {{{contactsDropdownHTML}}}
+                                </select>           
+                              </div>
+                              </div>
+                              <div class="form-group row col-md-12 ">
+                              <label for="task_name" class="pull-left col-form-label col-md-2 text-right"> Events Manager</label>
+                              <div class="col-sm-6">
+                                <select name="eventsManager" class="form-control">
+                                  {{{contactsDropdownHTML}}}
+                                </select>           
+                              </div>
+                              </div>
+                              <div class="form-group row col-md-12 ">
+                              <label for="task_name" class="pull-left col-form-label col-md-2 text-right"> Facility Manager</label>
+                              <div class="col-sm-6">
+                                <select name="facilityManager" class="form-control">
+                                  {{{contactsDropdownHTML}}}
+                                </select>           
+                              </div>
+                              </div>
+                              <div class="form-group row col-md-12 ">
+                              <label for="task_name" class="pull-left col-form-label col-md-2 text-right"> Food And Bevarage Manager</label>
+                              <div class="col-sm-6">
+                                <select name="fandbManager" class="form-control">
+                                  {{{contactsDropdownHTML}}}
+                                </select>           
+                              </div>
+                              </div>
+                              <div class="form-group row col-md-12 ">
+                              <label for="task_name" class="pull-left col-form-label col-md-2 text-right"> Client Launch Manager</label>
+                              <div class="col-sm-6">
+                                <select name="clientlaunchManager" class="form-control">
+                                  {{{contactsDropdownHTML}}}
+                                </select>           
+                              </div>
+                            </div>
+                           <div class="form-group row col-md-12   ">
+                              <label for="project_name" class="pull-left col-form-label col-md-2 text-right">Roles</label>
+                              <div class="col-sm-6">
+                                {{#each roles as |role roleId|}}
+                                    <input type="checkbox" value="{{{role._id}}}" name="roles"> {{{role.title}}}
+                                {{/each}}
+                              </div>
+                            </div>
                             
                             <div class="col-md-12">
                               <h2 class="well well-sm "><div class="col-md-offset-4">Components</div></h2>

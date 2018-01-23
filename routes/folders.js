@@ -1371,6 +1371,17 @@ module.exports.savethisFolder = function(req, title, $parentId, $scope, $isProje
 			folderData['projectManager'] = [projectManager];
 		}
 		if(ProjectData){
+			folderData['buildingManager'] =  req.body.BuildingManager;
+   			folderData['clientprojectManager'] =  req.body.clientManager;
+   			folderData['clientlaunchManager'] =  req.body.clientlaunchManager;
+   			folderData['uiManager'] =  req.body.UIManager;
+   			folderData['securityManager'] =  req.body.securityManager;
+   			folderData['securityintegratorManager'] =  req.body.securityintegratorManager;
+   			folderData['conceirageManager'] =  req.body.conciegeManager;
+   			folderData['communicationManager'] =  req.body.communicationManager;
+   			folderData['eventsManager'] =  req.body.eventsManager;
+   			folderData['facilityManager'] =  req.body.facilityManager;
+   			folderData['foodandbeverageManager'] =  req.body.fandbManager;
 			folderData['project'] =  {
 						        "authorId": req.user._id,
 						        "ownerIds": [

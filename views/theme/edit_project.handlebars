@@ -1,5 +1,5 @@
 <body class="nav-md">
-
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <script>
   if (jQuery("body").width() < 760) {
     $('body').addClass('nav-sm');
@@ -62,7 +62,6 @@
                                 <input type="text" class="form-control" name="project_name" id="project_name" placeholder="Project Name..." value="{{projectData.title}}" required="required">
                               </div>
                             </div>
-
                             <div class="form-group row col-md-12 ">
                               <label for="task_name" class="pull-left col-form-label col-md-2 text-right">Project Manager</label>
                               <div class="col-sm-6">
@@ -71,30 +70,111 @@
                                 </select>           
                               </div>
                             </div>
-
-                             <div class="form-group row col-md-12   ">
-                              <label for="project_name" class="pull-left col-form-label col-md-2 text-right">Roles</label>
+                          <div class="form-group row col-md-12 ">
+                              <label for="task_name" class="pull-left col-form-label col-md-2 text-right">Building Manager</label>
                               <div class="col-sm-6">
-                                {{#each roles as |role roleId|}}
-                                    <input type="checkbox" value="{{{role._id}}}" name="roles"> {{{role.title}}}
-                                {{/each}}
+                                <select name="BuildingManager" class="form-control">
+                                  {{{managerDropdownHTML}}}
+                                </select>           
                               </div>
                             </div>
+                            <div class="form-group row col-md-12 ">
+                              <label for="task_name" class="pull-left col-form-label col-md-2 text-right"> Client Manager</label>
+                              <div class="col-sm-6">
+                                <select name="clientManager" class="form-control">
+                                  {{{clientmanagerDropdownHTML}}}
+                                </select>           
+                              </div>
+</div>
+<div class="form-group row col-md-12 ">
+                              <label for="task_name" class="pull-left col-form-label col-md-2 text-right"> UI Manager</label>
+                              <div class="col-sm-6">
+                                <select name="UIManager" class="form-control">
+                                  {{{UImanagerDropdownHTML}}}
+                                </select>           
+                              </div>
+                              </div>
+                              <div class="form-group row col-md-12 ">
+                              <label for="task_name" class="pull-left col-form-label col-md-2 text-right"> Security Manager</label>
+                              <div class="col-sm-6">
+                                <select name="securityManager" class="form-control">
+                                  {{{securityManagerDropdownHTML}}}
+                                </select>           
+                              </div>
+                              </div>
+                              <div class="form-group row col-md-12 ">
+                              <label for="task_name" class="pull-left col-form-label col-md-2 text-right"> Security Integrator Manager</label>
+                              <div class="col-sm-6">
+                                <select name="securityintegratorManager" class="form-control">
+                                  {{{securityintegratorManagerDropdownHTML}}}
+                                </select>           
+                              </div>
+                              </div>
+<div class="form-group row col-md-12 ">
+                              <label for="task_name" class="pull-left col-form-label col-md-2 text-right">Conceirage Manager</label>
+                              <div class="col-sm-6">
+                                <select name="conciegeManager" class="form-control">
+                                  {{{conceirageManagerDropdownHTML}}}
+                                </select>           
+                              </div>
+                              </div>
+<div class="form-group row col-md-12 ">
+                              <label for="task_name" class="pull-left col-form-label col-md-2 text-right"> Communication Manager</label>
+                              <div class="col-sm-6">
+                                <select name="communicationManager" class="form-control">
+                                  {{{communicationManagerDropdownHTML}}}
+                                </select>           
+                              </div>
+                              </div>
+                              <div class="form-group row col-md-12 ">
+                              <label for="task_name" class="pull-left col-form-label col-md-2 text-right"> Events Manager</label>
+                              <div class="col-sm-6">
+                                <select name="eventsManager" class="form-control">
+                                  {{{eventsManagerDropdownHTML}}}
+                                </select>           
+                              </div>
+                              </div>
+                              <div class="form-group row col-md-12 ">
+                              <label for="task_name" class="pull-left col-form-label col-md-2 text-right"> Facility Manager</label>
+                              <div class="col-sm-6">
+                                <select name="facilityManager" class="form-control">
+                                  {{{facilityManagerDropdownHTML}}}
+                                </select>           
+                              </div>
+                              </div>
+                              <div class="form-group row col-md-12 ">
+                              <label for="task_name" class="pull-left col-form-label col-md-2 text-right"> Food And Bevarage Manager</label>
+                              <div class="col-sm-6">
+                                <select name="fandbManager" class="form-control">
+                                  {{{foodandbeverageManagerDropdownHTML}}}
+                                </select>           
+                              </div>
+                              </div>
+                              <div class="form-group row col-md-12 ">
+                              <label for="task_name" class="pull-left col-form-label col-md-2 text-right"> Client Launch Manager</label>
+                              <div class="col-sm-6">
+                                <select name="clientlaunchManager" class="form-control">
+                                  {{{clientlaunchermanagerDropdownHTML}}}
+                                </select>           
+                              </div>
+                            </div>
+
+                             
                             
                             <div class="clearfix" style="padding:5px;"></div>
-                             <div class="form-group col-md-12   ">
+                             {{!-- <div class="form-group col-md-12   ">
                                 <label for="task_name" class="pull-left col-form-label col-md-2 text-right">Start Date</label>
                                 <div class="col-sm-6">
-                                  <input type="datetime-local" class="form-control" name="startDate" id="startDate" value="{{{ projectData.project.startDate }}}" class="form-control">
+                                  <input type="text" class="form-control" name="startDate" id="startDate" value="{{{ projectData.project.startDate }}}" class="form-control">
                                 </div>
-                              </div>
+                              </div> --}}
 
-                              <div class="form-group col-md-12   ">
+                              {{!-- <div class="form-group col-md-12   ">
                                 <label for="task_name" class="pull-left col-form-label col-md-2 text-right">Due Date</label>
                                 <div class="col-sm-6">
-                                  <input type="datetime-local" class="form-control" name="endDate" id="endDate"  value="{{{ projectData.project.endDate }}}" class="form-control">
+                                  <input type="text" class="form-control" name="endDate" id="endDate"  value="{{{ projectData.project.endDate }}}" class="form-control">
                                 </div>
-                              </div>
+                              </div> --}}
                             <div class="clearfix"></div>
                             <div class="col-md-12 text-center">
                               <button class="btn btn-primary">Update</button>
@@ -138,6 +218,15 @@
   <!-- bootstrap-daterangepicker -->
   <script src="/vendors/moment/min/moment.min.js"></script>
   <script src="/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+
+
+ <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  // <script>
+  // $( function() {
+  //   $( "#startDate" ).datepicker();
+  //   $( "#endDate" ).datepicker();
+  // } );
+  // </script>
 
   <!-- Custom Theme Scripts -->
   <script src="/build/js/custom.min.js"></script>

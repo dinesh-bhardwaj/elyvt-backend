@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-mongoose.set('debug', true);
+//mongoose.set('debug', true);
 var bcrypt = require('bcryptjs');
 var Schema = mongoose.Schema;
 
@@ -19,7 +19,20 @@ var folderSchema = new Schema({
 	project: Object,
 	isProject: { type: Boolean },
 	parentId: { type: String },
-	projectManager: Object
+	projectManager: Object,
+	buildingManager: Object,
+	clientprojectManager: Object,
+	clientlaunchManager: Object,
+	uiManager: Object,
+	securityManager: Object,
+	securityintegratorManager: Object,
+	conceirageManager: Object,
+	communicationManager: Object,
+	eventsManager: Object,
+	facilityManager: Object,
+	foodandbeverageManager: Object,
+	startDate: { type: String },
+	endDate: { type: String },
 })
 var folder = module.exports = mongoose.model('folder', folderSchema);
 

@@ -849,7 +849,7 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
     						var index = 0;
 				    		if($tasksData[taskindex]['parentFolderIds'].length>0){
 				    			if($tasksData[taskindex]['parentFolderIds'].indexOf($folderId) > -1){
-				    				var dueDate = moment($tasksData[taskindex]['dates']['due'],'YYYY-MM-DDTHH:mm:ssZ');
+				    				var dueDate = moment($tasksData[taskindex]['dates']['due'],'DD/MM/YYYY');
 				    				//dueDate.isAfter(moment()) && 
         							if((dueDate.diff(moment(), 'days') <= 40) && $tasksData[taskindex]['status']=="Active"){
         								hastasks = true;
@@ -895,7 +895,7 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 					taskbody += '<td>'+tasksArr[element][$i]['title']+'</td>'
 					for(var element2 in tasksArr){
 						if(element2 == element){
-							var startDate = moment(tasksArr[element][$i]['dates']['start'],'YYYY-MM-DDTHH:mm:ssZ');
+							var startDate = moment(tasksArr[element][$i]['dates']['start'],'DD/MM/YYYY');
 							taskbody += '<td>'+startDate.format('DD MMM YYYY')+'</td>'
 						}else{
 							taskbody += '<td>-</td>'
@@ -1042,7 +1042,7 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 			        completedTasksHTML += '</td>';
 			        completedTasksHTML += '<td bgcolor="#FFFFFF" style="font-family:Helvetica,Arial,sans-serif;font-size:14px">';
 				  	if(completedtaskList[item]['dates']['due']){
-				  		var endDateObj = moment(completedtaskList[item]['dates']['due'],'YYYY-MM-DDTHH:mm:ssZ');
+				  		var endDateObj = moment(completedtaskList[item]['dates']['due'],'DD/MM/YYYY');
 						endDate = endDateObj.format('DD MMM YYYY');
 						completedTasksHTML += endDate;
 				  	}
@@ -1052,7 +1052,7 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 			      }
 			      completedTasksHTML += '</tbody>'
 				      
-		       overdueTasksHTML = '<thead><tr><th>Tasks</th><th>Assignee</th><th>Status</th></tr></thead></tbody>'
+		       overdueTasksHTML = '<thead><tr><th>Tasks</th><th>Assignee</th><th>Days Past Due</th><th>Status</th></tr></thead></tbody>'
 		      $totalOverdueTasks = 0;
 		      for(var item in overdueTasks){
 		        $totalOverdueTasks++;
@@ -1064,6 +1064,20 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 		          overdueTasksHTML += contact['firstname']+' '+contact['lastname'];
 		        }
 		        overdueTasksHTML += '</td>';
+		        if(overdueTasks[item]['dates']['due']){
+			  		
+					var startDate = moment(overdueTasks[item]['dates']['start'],"DD/MM/YYYY");
+					var endDate = moment(overdueTasks[item]['dates']['due'],"DD/MM/YYYY");
+					//console.log(overdueTasks[item]['dates']['due'], startDate, endDate,  moment(),endDate.diff(moment(), 'days'),  "Date Difference");
+					var daysLeft = endDate.diff(moment(), 'days');
+					if (daysLeft<0){
+						daysLeftText = "overdue "+daysLeft+" days"
+					}else{
+						daysLeftText = daysLeft
+					}
+
+			  		overdueTasksHTML += '<td>'+daysLeftText+'</td>'
+		      	}
 		        overdueTasksHTML += '<td>'+overdueTasks[item]['status']+'</td>'
 		        overdueTasksHTML += '</tr>'
 		      }
@@ -1093,7 +1107,7 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 			    				folderDashboardleftMenuHTML += '<div class="x_panel widget">\
 						          <div class="x_title" style="  ">\
 						          <div class="title_tast">\
-						          	<a href="/folders/?id='+$foldersData[folderElement]['_id']+'">'+$foldersData[folderElement]['title']+'</a>\
+						          	<a href="/?id='+$foldersData[folderElement]['_id']+'">'+$foldersData[folderElement]['title']+'</a>\
 						          </div>\
 						          <div class="clearfix"></div>\
 						          </div>\
@@ -1131,7 +1145,7 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
     		console.log("__id___ 840__", );
 
     		for(var taskindex in $tasksData){
-				var startDate = moment($tasksData[taskindex]['dates']['start'],'YYYY-MM-DDTHH:mm:ssZ');
+				var startDate = moment($tasksData[taskindex]['dates']['start'],'DD/MM/YYYY');
 				//
     			if($tasksData[taskindex]['status']=="Upcoming"){
     				isupcomingTask = true;
@@ -1150,11 +1164,11 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 	                var startDate = '-'
 				  	var endDate = '-'
 				  	if($tasksData[taskindex]['dates']['start']){
-				  		var startDateObj = moment($tasksData[taskindex]['dates']['start'],'YYYY-MM-DDTHH:mm:ssZ');
+				  		var startDateObj = moment($tasksData[taskindex]['dates']['start'],'DD/MM/YYYY');
 						startDate = startDateObj.format('DD MMM YYYY');
 				  	}
 				  	if($tasksData[taskindex]['dates']['due']){
-				  		var endDateObj = moment($tasksData[taskindex]['dates']['due'],'YYYY-MM-DDTHH:mm:ssZ');
+				  		var endDateObj = moment($tasksData[taskindex]['dates']['due'],'DD/MM/YYYY');
 						endDate = endDateObj.format('DD MMM YYYY');
 				  	}
 		                upcomingTaskHTML += '<td>'+startDate+'</td>\
@@ -1208,8 +1222,8 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 		    		}
 		    		dependencies += ""
 		    		if(__thistaskData['dates']['type']=="Planned"){
-			    		var startDate = moment(__thistaskData['dates']['start'],'YYYY-MM-DDTHH:mm:ssZ');
-			    		var dueDate = moment(__thistaskData['dates']['due'],'YYYY-MM-DDTHH:mm:ssZ');
+			    		var startDate = moment(__thistaskData['dates']['start'],'DD/MM/YYYY');
+			    		var dueDate = moment(__thistaskData['dates']['due'],'DD/MM/YYYY');
 			    		var task = {
 			    			 id: __thistaskData['_id'],
 						    name: __thistaskData['title'],
@@ -1265,8 +1279,8 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 			    		}
 			    		dependencies += ""
 			    		if(__thistaskData['dates']['type']=="Planned"){
-				    		var startDate = moment(__thistaskData['dates']['start'],'YYYY-MM-DDTHH:mm:ssZ');
-				    		var dueDate = moment(__thistaskData['dates']['due'],'YYYY-MM-DDTHH:mm:ssZ');
+				    		var startDate = moment(__thistaskData['dates']['start'],'DD/MM/YYYY');
+				    		var dueDate = moment(__thistaskData['dates']['due'],'DD/MM/YYYY');
 				    		var task = {
 				    			 id: __thistaskData['_id'],
 							    name: __thistaskData['title'],
@@ -1309,7 +1323,7 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 	    	async.forEachSeries(tasksData, function(value, callback){
 				$totalElement++;
 				if(value['dates']['type']=="Planned"){
-					var dueDate = moment(value['dates']['due'],'YYYY-MM-DDTHH:mm:ssZ');
+					var dueDate = moment(value['dates']['due'],'DD/MM/YYYY');
 					console.log("====", dueDate.isBefore(A_WEEK_later), value['title']);
 					if(dueDate.isBefore(A_WEEK_later) && value['status']=="Active"){
 						reminderTaskList.push(value);
@@ -1395,7 +1409,7 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
     				} 
     				if(tasksData[Element]['dates']['type']=="Planned"){
     					taskTypes['Planned'] = taskTypes['Planned']+1;
-    					var dueDate = moment(tasksData[Element]['dates']['due'],'YYYY-MM-DDTHH:mm:ssZ');
+    					var dueDate = moment(tasksData[Element]['dates']['due'],'DD/MM/YYYY');
     					if(!dueDate.isAfter( moment()) && tasksData[Element]['status']=="Active"){
 				              //console.log("Risk Task FOund.", tasksData[Element] )
 				              overdueTasks.push(tasksData[Element])
@@ -1414,7 +1428,7 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 				for(var item in activetaskList){
 
 					if(activetaskList[item]['dates']['start']){
-						var startDate = moment(activetaskList[item]['dates']['start'],'YYYY-MM-DDTHH:mm:ssZ');
+						var startDate = moment(activetaskList[item]['dates']['start'],'DD/MM/YYYY');
 
 						activetaskListHTML += '<div class="x_panel widget">\
 						<div class="x_title" style="  ">\
@@ -1470,7 +1484,7 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 				  	}
 		  	completedTasksHTML += '<td bgcolor="#FFFFFF" style="font-family:Helvetica,Arial,sans-serif;font-size:14px">';
 		  	if(completedtaskList[item]['dates']['due']){
-		  		var endDateObj = moment(completedtaskList[item]['dates']['due'],'YYYY-MM-DDTHH:mm:ssZ');
+		  		var endDateObj = moment(completedtaskList[item]['dates']['due'],'DD/MM/YYYY');
 				endDate = endDateObj.format('DD MMM YYYY');
 				completedTasksHTML += endDate;
 		  	}
@@ -1501,6 +1515,21 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 			      	}else{
 				  		overdueTasksHTML += '<td bgcolor="#FFFFFF" style="font-family:Helvetica,Arial,sans-serif;font-size:14px"></td>'
 				  	}
+				  	if(overdueTasks[item]['dates']['due']){
+				  		var endDateObj = moment(overdueTasks[item]['dates']['due'],'DD/MM/YYYY');
+						endDate = endDateObj.format('DD MMM YYYY');
+						var daysLeft =0;
+						var startDate = moment(overdueTasks[item]['dates']['start'],'DD/MM/YYYY');
+    					var endDate = moment(overdueTasks[item]['dates']['due'],'DD/MM/YYYY');
+    					daysLeft = endDate.diff(moment(), 'days');
+    					if (daysLeft<0){
+    						daysLeftText = "overdue "+daysLeft+" days"
+    					}else{
+    						daysLeftText = daysLeft
+    					}
+
+				  		overdueTasksHTML += '<td bgcolor="#FFFFFF" style="font-family:Helvetica,Arial,sans-serif;font-size:14px">'+daysLeftText+'</td>'
+			      	}
 			      	overdueTasksHTML += '<td bgcolor="#FFFFFF" style="font-family:Helvetica,Arial,sans-serif;font-size:14px">'+overdueTasks[item]['status']+'</td>'
 			      	overdueTasksHTML += '</tr>'
 			      }
@@ -1512,7 +1541,7 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 			       $k=0;
 			       upcomingTaskHTML = ''
 			      for(var taskindex in tasksData){
-				var startDate = moment(tasksData[taskindex]['dates']['start'],'YYYY-MM-DDTHH:mm:ssZ');
+				var startDate = moment(tasksData[taskindex]['dates']['start'],'DD/MM/YYYY');
 				//
 				console.log("Upcoming Tasks: "+tasksData[taskindex]['status']);
     			if(tasksData[taskindex]['status']=="Upcoming"){
@@ -1529,11 +1558,11 @@ getfolderTasks :function(moment, $tasksData, $contactsData,  $folderId, tasksArr
 	                var startDate = '-'
 				  	var endDate = '-'
 				  	if(tasksData[taskindex]['dates']['start']){
-				  		var startDateObj = moment(tasksData[taskindex]['dates']['start'],'YYYY-MM-DDTHH:mm:ssZ');
+				  		var startDateObj = moment(tasksData[taskindex]['dates']['start'],'DD/MM/YYYY');
 						startDate = startDateObj.format('DD MMM YYYY');
 				  	}
 				  	if(tasksData[taskindex]['dates']['due']){
-				  		var endDateObj = moment(tasksData[taskindex]['dates']['due'],'YYYY-MM-DDTHH:mm:ssZ');
+				  		var endDateObj = moment(tasksData[taskindex]['dates']['due'],'DD/MM/YYYY');
 						endDate = endDateObj.format('DD MMM YYYY');
 				  	}
 		                upcomingTaskHTML += '<td bgcolor="#FFFFFF" style="font-family:Helvetica,Arial,sans-serif;font-size:14px">'+startDate+'</td>\

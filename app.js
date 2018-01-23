@@ -28,9 +28,6 @@ var userModel = require('./models/user');
 var tasks = require('./models/tasks');
 var foldersModel = require('./models/folders');
 
-
-
-
 var accounts = require('./models/accounts');
 var workflows = require('./models/workflows');
 var invitations = require('./models/invitations');
@@ -64,7 +61,7 @@ app.engine('handlebars', exphbs({
 	defaultLayout:'layout', 
 	helpers: {
 		'ifEquals': function(arg1, arg2, options) {
-		    return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+			return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
 		}
 	}	
 }));
@@ -81,9 +78,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Express Session
 app.use(session({
-    secret: 'secret',
-    saveUninitialized: true,
-    resave: true
+	secret: 'secret',
+	saveUninitialized: true,
+	resave: true
 }));
 
 // Passport init
@@ -92,20 +89,20 @@ app.use(passport.session());
 
 // Express Validator
 app.use(expressValidator({
-  errorFormatter: function(param, msg, value) {
-      var namespace = param.split('.')
-      , root    = namespace.shift()
-      , formParam = root;
+	errorFormatter: function(param, msg, value) {
+		var namespace = param.split('.')
+		, root    = namespace.shift()
+		, formParam = root;
 
-    while(namespace.length) {
-      formParam += '[' + namespace.shift() + ']';
-    }
-    return {
-      param : formParam,
-      msg   : msg,
-      value : value
-    };
-  }
+		while(namespace.length) {
+			formParam += '[' + namespace.shift() + ']';
+		}
+		return {
+			param : formParam,
+			msg   : msg,
+			value : value
+		};
+	}
 }));
 
 // Connect Flash
@@ -113,15 +110,15 @@ app.use(flash());
 
 // Global Vars
 app.use(function (req, res, next) {
-  res.locals.success_msg = req.flash('success_msg');
-  res.locals.error_msg = req.flash('error_msg');
-  res.locals.error = req.flash('error');
-  res.locals.user = req.user || null;
-  next();
+	res.locals.success_msg = req.flash('success_msg');
+	res.locals.error_msg = req.flash('error_msg');
+	res.locals.error = req.flash('error');
+	res.locals.user = req.user || null;
+	next();
 });
 
 var user = new ConnectRoles({
-  failureHandler: function (req, res, action) {
+	failureHandler: function (req, res, action) {
     // optional function to customise code that runs when
     // user fails authorisation
     // var accept = req.headers.accept || '';
@@ -132,14 +129,14 @@ var user = new ConnectRoles({
     //   res.send('Access Denied - You don\'t have permission to: ' + action);
     // }
     req.flash('error_msg','You are not logged in');
-	res.redirect('/users/login');
-  }
+    res.redirect('/users/login');
+}
 });
 
 app.use(user.middleware());
 //admin users can access all pages
 user.use(function (req, action) {
-  if(!req.isAuthenticated()) return false;
+	if(!req.isAuthenticated()) return false;
   //if (req.user.role === 'admin') {
     //return true;
   //}
@@ -210,7 +207,7 @@ app.get('/authorize', AuthenteCheck.ensureAuthenticated, function (req, res) {
 
 
 app.get('/getData', AuthenteCheck.ensureAuthenticated, function(req, res){
-		res.render('theme/getData');
+	res.render('theme/getData');
 });
 
 
@@ -220,56 +217,56 @@ app.get('/getData', AuthenteCheck.ensureAuthenticated, function(req, res){
 */
 app.get('/', user.can('dashboard'), function(req, res){
 
- var workflowsContents = fs.readFileSync("data/workflows.json");
- var accountsContents = fs.readFileSync("data/accounts.json");
- var userDetails = req.user;
- var projectId = req.query.id;
- if(projectId=="undefined"){
- 	projectId = null;
- }
- if(projectId == "null"){
- 	projectId = null;
- }
+	var workflowsContents = fs.readFileSync("data/workflows.json");
+	var accountsContents = fs.readFileSync("data/accounts.json");
+	var userDetails = req.user;
+	var projectId = req.query.id;
+	if(projectId=="undefined"){
+		projectId = null;
+	}
+	if(projectId == "null"){
+		projectId = null;
+	}
 foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
 	userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
 		foldersModel.getprojects(function(folderserr, projectContents){ //Get/Fetch folders
 			console.log('get Contacts');
 			 functions.getTaskByFolder(moment, contactsContents, projectId).then((tasksContents)=>{ //Get/Fetch Tasks
-	 			console.log('tasksContents');
-				functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-					console.log("herirecy Done");
-				 	functions.folderDashboardContent(moment, (foldersContents), (tasksContents), (contactsContents)).then((folderDashboardData)=>{
-				 		console.log("Dashboard Done");
-				 		functions.buildMilestonesTable(moment, (foldersContents), (tasksContents), (contactsContents), projectId).then((MilestonesTableContent)=>{
-				 		 	console.log("Milestone Done");
+			 	console.log('tasksContents');
+			 	functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+			 		console.log("herirecy Done");
+			 		functions.folderDashboardContent(moment, (foldersContents), (tasksContents), (contactsContents)).then((folderDashboardData)=>{
+			 			console.log("Dashboard Done");
+			 			functions.buildMilestonesTable(moment, (foldersContents), (tasksContents), (contactsContents), projectId).then((MilestonesTableContent)=>{
+			 				console.log("Milestone Done");
 
-				 		 	projectsDropdown = '';
-				 		 	    projectsDropdown = '<option value="null">All Project</option>'
-				 		 	for(var item in projectContents){
-				 		 		projectsDropdown += '<option value="'+projectContents[item]['_id']+'"';
-				 		 		if(projectContents[item]['_id'] == projectId){
-				 		 			projectsDropdown += ' selected';
-				 		 		}
-				 		 		projectsDropdown += '>'+projectContents[item]['title']+'</option>';
-				 		 	}
+			 				projectsDropdown = '';
+			 				projectsDropdown = '<option value="null">All Project</option>'
+			 				for(var item in projectContents){
+			 					projectsDropdown += '<option value="'+projectContents[item]['_id']+'"';
+			 					if(projectContents[item]['_id'] == projectId){
+			 						projectsDropdown += ' selected';
+			 					}
+			 					projectsDropdown += '>'+projectContents[item]['title']+'</option>';
+			 				}
 
-				 		 	res.render('theme/index', {
-			 						  layout: 'layout2',
-									  'tasks': JSON.stringify(tasksContents), 
-									  'MilestonesTableContent': MilestonesTableContent,
-									  'folders': JSON.stringify(foldersContents),
-									  'projects': JSON.stringify(projectContents),
-									  'projectsDropdown': projectsDropdown,
-									  'folderDashboardData': folderDashboardData, 
-									  'foldermenu':  foldersHeiraricalData,
-									  'workflows': workflowsContents,
-									  'accounts': accountsContents, 
-									  'contacts': JSON.stringify(contactsContents), 
-									  'userDetails': userDetails
-							});
+			 				res.render('theme/index', {
+			 					layout: 'layout2',
+			 					'tasks': tasksContents, 
+			 					'MilestonesTableContent': MilestonesTableContent,
+			 					'folders': foldersContents,
+			 					'projects': projectContents,
+			 					'projectsDropdown': projectsDropdown,
+			 					'folderDashboardData': folderDashboardData, 
+			 					'foldermenu':  foldersHeiraricalData,
+			 					'workflows': workflowsContents,
+			 					'accounts': accountsContents, 
+			 					'contacts': contactsContents, 
+			 					'userDetails': userDetails
+			 				});
 			 			});
 			 		});
-		 		});
+			 	});
 			}); // End Fetching Contacts
 		 }); // End Fetching folders
 	}); // End Fetching Projects
@@ -282,41 +279,41 @@ foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folde
 * Return Void
 */
 app.get('/gantt-chart',  AuthenteCheck.ensureAuthenticated, function(req, res){
-	 var projectId = req.query.id;
-	 var accountsContents = fs.readFileSync("data/accounts.json");
-	 var userDetails = req.user;
+	var projectId = req.query.id;
+	var accountsContents = fs.readFileSync("data/accounts.json");
+	var userDetails = req.user;
    ////console.log("narendra yadav", projectId);
 	 tasks.getalltasks(function(taskserr, tasksContents){ //Get/Fetch Tasks
 	 	foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
 	 		foldersModel.getprojects(function(projectserr, projectContents){ //Get/Fetch folders
 	 			var projectDropdown = '';
 	 			projectDropdown += "<option value=\"null\">Select Project</option>";
-	 			 for(var item in projectContents){
+	 			for(var item in projectContents){
 	 				projectDropdown += '<option value="'+projectContents[item]['_id']+'"';
-	 				 if(projectId == projectContents[item]['_id']){
+	 				if(projectId == projectContents[item]['_id']){
 	 					projectDropdown += 'selected'
 	 				}
 	 				projectDropdown += '>'+projectContents[item]['title']+'</option>';
 	 			}
 	 			userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
-					 functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+	 				functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
 
-				 	    functions.taskGanntChart(moment, (tasksContents), req.query.id, (contactsContents), (foldersContents)).then((tasksGanttChartContents)=>{
-				 		 	
+	 					functions.taskGanntChart(moment, (tasksContents), req.query.id, (contactsContents), (foldersContents)).then((tasksGanttChartContents)=>{
+
 				 	    	//console.log("tasksGanttChartContents Line 294", tasksGanttChartContents);
-				 		 	res.render('theme/gantt_chart', {
-	 						  layout: 'layout2',
-							  'tasks': tasksContents, 
-							  'tasksGanttChartContents': JSON.stringify(tasksGanttChartContents),
-							  'folders': foldersContents,
-							  'foldermenu':  foldersHeiraricalData,
-							  'accounts': accountsContents, 
-							  'contacts': contactsContents, 
-							  'userDetails': userDetails,
-							  'projectDropdown': projectDropdown
-							});
-	 		   			});
-				    });
+				 	    	res.render('theme/gantt_chart', {
+				 	    		layout: 'layout2',
+				 	    		'tasks': tasksContents, 
+				 	    		'tasksGanttChartContents': JSON.stringify(tasksGanttChartContents),
+				 	    		'folders': foldersContents,
+				 	    		'foldermenu':  foldersHeiraricalData,
+				 	    		'accounts': accountsContents, 
+				 	    		'contacts': contactsContents, 
+				 	    		'userDetails': userDetails,
+				 	    		'projectDropdown': projectDropdown
+				 	    	});
+				 	    });
+	 				});
 				 }); // End Fetching Contacts
 				}); // End Fetching Folders
 	 	}); // End Fetching folders
@@ -333,23 +330,22 @@ app.get('/projects', AuthenteCheck.ensureAuthenticated, function(req, res){
 
 	 foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
  		userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
-			 functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-				 functions.getProjects(moment, (foldersContents), (contactsContents)).then((projectsData)=>{
+ 			functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+ 				functions.getProjects(moment, (foldersContents), (contactsContents)).then((projectsData)=>{
 				 	////console.log(JSON.stringify(projectsData));
 				 	res.render('theme/projects', {
 				 		layout: 'layout2',
 				 		'folders': foldersContents,
-						'foldermenu':  foldersHeiraricalData,
-						'projectsData': projectsData,
-						'accounts': accountsContents, 
-						'contacts': contactsContents, 
-						'userDetails': userDetails
+				 		'foldermenu':  foldersHeiraricalData,
+				 		'projectsData': projectsData,
+				 		'accounts': accountsContents, 
+				 		'contacts': contactsContents, 
+				 		'userDetails': userDetails
 				 	})
 				 });
-			 });
+ 			});
 		}); // End Fetching Contacts
  	}); // End Fetching folders
-
 });
 
 
@@ -361,106 +357,308 @@ app.get('/edit/project/', AuthenteCheck.ensureAuthenticated, function(req, res){
 
 	 foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
  		userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
-			 functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-				foldersModel.getfolderbyId(projectId, function(err, projectData){
-					roles.getallroles(function(roleErr, rolesDetails){
+ 			functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+ 				foldersModel.getfolderbyId(projectId, function(err, projectData){
+ 					roles.getallroles(function(roleErr, rolesDetails){
 
-						contactsDropdownHTML = '<option value="">Select</option>';
-						for(var item in contactsContents){
-							contactsDropdownHTML += '<option value="'+contactsContents[item]['_id']+'"';
-							if((projectData["projectManager"]) && contactsContents[item]['_id']){
-										if(projectData['projectManager'].indexOf(contactsContents[item]['_id']) != -1)
-										{
-											contactsDropdownHTML += " selected";
-										}
-									}
-							contactsDropdownHTML += '>'+contactsContents[item]['email']+' '+contactsContents[item]['title']+')</option>';
-						}
-						
-						res.render('theme/edit_project', {
-									layout: 'layout2',
-									'foldermenu':  foldersHeiraricalData,
-									'userDetails': userDetails,
-									'contactsDropdownHTML': contactsDropdownHTML,
-									'projectData': projectData,
-									'roles': rolesDetails ,
-								});
+ 						contactsDropdownHTML = '<option value="">Select</option>';
+ 						for(var item in contactsContents){
+ 							contactsDropdownHTML += '<option value="'+contactsContents[item]['_id']+'"';
+ 							if((projectData["projectManager"]) && contactsContents[item]['_id']){
+ 								if(projectData['projectManager'].indexOf(contactsContents[item]['_id']) != -1)
+ 								{
+ 									contactsDropdownHTML += " selected";
+ 								}
+ 							}
 
-					});
+ 							contactsDropdownHTML += '>'+contactsContents[item]['firstname']+' '+contactsContents[item]['title']+')</option>';
 
+ 						}
+ 						managerDropdownHTML = '<option value="">Select</option>';
+ 						for(var item in contactsContents){
+ 							managerDropdownHTML += '<option value="'+contactsContents[item]['id']+'"';
+
+ 							if((projectData["buildingManager"]) && contactsContents[item]['id']){
+
+ 								if(projectData['buildingManager'].indexOf(contactsContents[item]['id']) != -1)
+ 								{
+ 									managerDropdownHTML += " selected";
+ 								}
+ 							}
+
+ 							managerDropdownHTML += '>'+contactsContents[item]['firstname']+''+contactsContents[item]['title']+'</option>';
+
+ 						}
+ 						clientmanagerDropdownHTML = '<option value="">Select</option>';
+ 						for(var item in contactsContents){
+ 							clientmanagerDropdownHTML += '<option value="'+contactsContents[item]['id']+'"';
+
+ 							if((projectData["clientprojectManager"]) && contactsContents[item]['id']){
+
+ 								if(projectData['clientprojectManager'].indexOf(contactsContents[item]['id']) != -1)
+ 								{
+ 									clientmanagerDropdownHTML += " selected";
+ 								}
+ 							}
+
+ 							clientmanagerDropdownHTML += '>'+contactsContents[item]['firstname']+''+contactsContents[item]['title']+'</option>';
+
+ 						}
+ 						clientlaunchermanagerDropdownHTML = '<option value="">Select</option>';
+ 						for(var item in contactsContents){
+ 							clientlaunchermanagerDropdownHTML += '<option value="'+contactsContents[item]['id']+'"';
+
+ 							if((projectData["clientlaunchManager"]) && contactsContents[item]['id']){
+
+ 								if(projectData['clientlaunchManager'].indexOf(contactsContents[item]['id']) != -1)
+ 								{
+ 									clientlaunchermanagerDropdownHTML += " selected";
+ 								}
+ 							}
+
+ 							clientlaunchermanagerDropdownHTML += '>'+contactsContents[item]['firstname']+''+contactsContents[item]['title']+'</option>';
+
+ 						}
+ 						UImanagerDropdownHTML = '<option value="">Select</option>';
+ 						for(var item in contactsContents){
+ 							UImanagerDropdownHTML += '<option value="'+contactsContents[item]['id']+'"';
+
+ 							if((projectData["uiManager"]) && contactsContents[item]['id']){
+
+ 								if(projectData['uiManager'].indexOf(contactsContents[item]['id']) != -1)
+ 								{
+ 									UImanagerDropdownHTML += " selected";
+ 								}
+ 							}
+
+ 							UImanagerDropdownHTML += '>'+contactsContents[item]['firstname']+''+contactsContents[item]['title']+'</option>';
+
+ 						}
+ 						securityManagerDropdownHTML = '<option value="">Select</option>';
+ 						for(var item in contactsContents){
+ 							securityManagerDropdownHTML += '<option value="'+contactsContents[item]['id']+'"';
+
+ 							if((projectData["securityManager"]) && contactsContents[item]['id']){
+
+ 								if(projectData['securityManager'].indexOf(contactsContents[item]['id']) != -1)
+ 								{
+ 									securityManagerDropdownHTML += " selected";
+ 								}
+ 							}
+
+ 							securityManagerDropdownHTML+= '>'+contactsContents[item]['firstname']+''+contactsContents[item]['title']+'</option>';
+
+ 						}
+ 						securityintegratorManagerDropdownHTML = '<option value="">Select</option>';
+ 						for(var item in contactsContents){
+ 							securityintegratorManagerDropdownHTML += '<option value="'+contactsContents[item]['id']+'"';
+
+ 							if((projectData["securityintegratorManager"]) && contactsContents[item]['id']){
+
+ 								if(projectData['securityintegratorManager'].indexOf(contactsContents[item]['id']) != -1)
+ 								{
+ 									securityintegratorManagerDropdownHTML += " selected";
+ 								}
+ 							}
+
+ 							securityintegratorManagerDropdownHTML+= '>'+contactsContents[item]['firstname']+''+contactsContents[item]['title']+'</option>';
+
+ 						}
+ 						conceirageManagerDropdownHTML = '<option value="">Select</option>';
+ 						for(var item in contactsContents){
+ 							conceirageManagerDropdownHTML += '<option value="'+contactsContents[item]['id']+'"';
+
+ 							if((projectData["conceirageManager"]) && contactsContents[item]['id']){
+
+ 								if(projectData['conceirageManager'].indexOf(contactsContents[item]['id']) != -1)
+ 								{
+ 									conceirageManagerDropdownHTML += " selected";
+ 								}
+ 							}
+
+ 							conceirageManagerDropdownHTML+= '>'+contactsContents[item]['firstname']+''+contactsContents[item]['title']+'</option>';
+
+ 						}
+ 						communicationManagerDropdownHTML = '<option value="">Select</option>';
+ 						for(var item in contactsContents){
+ 							communicationManagerDropdownHTML += '<option value="'+contactsContents[item]['id']+'"';
+
+ 							if((projectData["communicationManager"]) && contactsContents[item]['id']){
+
+ 								if(projectData['communicationManager'].indexOf(contactsContents[item]['id']) != -1)
+ 								{
+ 									communicationManagerDropdownHTML += " selected";
+ 								}
+ 							}
+
+ 							communicationManagerDropdownHTML+= '>'+contactsContents[item]['firstname']+''+contactsContents[item]['title']+'</option>';
+
+ 						}
+ 						eventsManagerDropdownHTML = '<option value="">Select</option>';
+ 						for(var item in contactsContents){
+ 							eventsManagerDropdownHTML += '<option value="'+contactsContents[item]['id']+'"';
+
+ 							if((projectData["eventsManager"]) && contactsContents[item]['id']){
+
+ 								if(projectData['eventsManager'].indexOf(contactsContents[item]['id']) != -1)
+ 								{
+ 									eventsManagerDropdownHTML += " selected";
+ 								}
+ 							}
+
+ 							eventsManagerDropdownHTML+= '>'+contactsContents[item]['firstname']+''+contactsContents[item]['title']+'</option>';
+
+ 						}
+ 						facilityManagerDropdownHTML = '<option value="">Select</option>';
+ 						for(var item in contactsContents){
+ 							facilityManagerDropdownHTML += '<option value="'+contactsContents[item]['id']+'"';
+
+ 							if((projectData["facilityManager"]) && contactsContents[item]['id']){
+
+ 								if(projectData['facilityManager'].indexOf(contactsContents[item]['id']) != -1)
+ 								{
+ 									facilityManagerDropdownHTML += " selected";
+ 								}
+ 							}
+
+ 							facilityManagerDropdownHTML+= '>'+contactsContents[item]['firstname']+''+contactsContents[item]['title']+'</option>';
+
+ 						}
+ 						foodandbeverageManagerDropdownHTML = '<option value="">Select</option>';
+ 						for(var item in contactsContents){
+ 							foodandbeverageManagerDropdownHTML += '<option value="'+contactsContents[item]['id']+'"';
+
+ 							if((projectData["foodandbeverageManager"]) && contactsContents[item]['id']){
+
+ 								if(projectData['foodandbeverageManager'].indexOf(contactsContents[item]['id']) != -1)
+ 								{
+ 									foodandbeverageManagerDropdownHTML += " selected";
+ 								}
+ 							}
+
+ 							foodandbeverageManagerDropdownHTML+= '>'+contactsContents[item]['firstname']+''+contactsContents[item]['title']+'</option>';
+
+ 						}
+ 						res.render('theme/edit_project', {
+ 							layout: 'layout2',
+ 							'foldermenu':  foldersHeiraricalData,
+ 							'userDetails': userDetails,
+ 							'managerDropdownHTML':managerDropdownHTML,
+ 							'clientmanagerDropdownHTML': clientmanagerDropdownHTML,
+ 							'clientlaunchermanagerDropdownHTML':clientlaunchermanagerDropdownHTML,
+ 							'contactsDropdownHTML': contactsDropdownHTML,
+ 							'UImanagerDropdownHTML':UImanagerDropdownHTML,
+ 							'securityManagerDropdownHTML': securityManagerDropdownHTML,
+ 							'securityintegratorManagerDropdownHTML':securityintegratorManagerDropdownHTML,
+ 							'conceirageManagerDropdownHTML': conceirageManagerDropdownHTML,
+ 							'communicationManagerDropdownHTML':communicationManagerDropdownHTML,
+ 							'eventsManagerDropdownHTML': eventsManagerDropdownHTML,
+ 							'facilityManagerDropdownHTML': facilityManagerDropdownHTML,
+ 							'foodandbeverageManagerDropdownHTML': foodandbeverageManagerDropdownHTML,
+ 							'projectData': projectData
+ 						});
+
+ 					});
 				});
-			 });
 		}); // End Fetching Contacts
  	}); // End Fetching folders
-
 });
+});
+
+
 app.get('/edit/folderdata/', AuthenteCheck.ensureAuthenticated, function(req, res){
 	 //var foldersContents = fs.readFileSync("data/folders.json");
 	 //var contactsContents = fs.readFileSync("data/contacts.json");
 	 var projectId = req.query.id
 	 var userDetails = req.user;
 
-	 foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
- 		userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
-			 functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-				foldersModel.getfolderbyId(projectId, function(err, projectData){
-//console.log("Narendra yadav new ",contactsContents);
-					contactsDropdownHTML = '<option value="">Select</option>';
-					for(var item in contactsContents){
-						contactsDropdownHTML += '<option value="'+contactsContents[item]['id']+'"';
+	 foldersModel.getfolders(function(folderserr, foldersContents){ 
+	 	userModel.getcontacts(function(contactserr, contactsContents){ 
+	 		functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+	 			foldersModel.getfolderbyId(projectId, function(err, projectData){
+	 				contactsDropdownHTML = '<option value="">Select</option>';
+	 				for(var item in contactsContents){
+	 					contactsDropdownHTML += '<option value="'+contactsContents[item]['id']+'"';
 
-						if((projectData["projectManager"]) && contactsContents[item]['id']){
+	 					if((projectData["projectManager"]) && contactsContents[item]['id']){
 
-									if(projectData['projectManager'].indexOf(contactsContents[item]['id']) != -1)
-									{
-										contactsDropdownHTML += " selected";
-									}
-								}
+	 						if(projectData['projectManager'].indexOf(contactsContents[item]['id']) != -1)
+	 						{
+	 							contactsDropdownHTML += " selected";
+	 						}
+	 					}
 
-						contactsDropdownHTML += '>'+contactsContents[item]['firstname']+' '+contactsContents[item]['title']+')</option>';
+	 					contactsDropdownHTML += '>'+contactsContents[item]['firstname']+' '+contactsContents[item]['title']+')</option>';
 
-					}
-					
-					res.render('theme/folder_editdata', {
-								layout: 'layout2',
-								'foldermenu':  foldersHeiraricalData,
-								'userDetails': userDetails,
-								'contactsDropdownHTML': contactsDropdownHTML,
-								'projectData': projectData
-							});
+	 				}
 
-				});
-			 });
+	 				res.render('theme/folder_editdata', {
+	 					layout: 'layout2',
+	 					'foldermenu':  foldersHeiraricalData,
+	 					'userDetails': userDetails,
+	 					'contactsDropdownHTML': contactsDropdownHTML,
+	 					'projectData': projectData
+	 				});
+
+	 			});
+	 		});
 		}); // End Fetching Contacts
  	}); // End Fetching folders
-
+	
 });
+
+
+
+app.post('/edit/folderdata/', AuthenteCheck.ensureAuthenticated, function(req, res){
+	 
+	 var folderId = req.query.id
+	var userDetails = req.user;
+	 var myquery = { _id: folderId };
+	  var newvalues = {
+			title: req.body.project_name,
+			startDate: req.body.startDate,
+			endDate: req.body.endDate,
+		};
+	  foldersModel.updateFolder(myquery, newvalues, function(err, data){
+	  	//console.log(data);		
+	  	res.redirect('/edit/folderdata/?id='+folderId);
+	 });
+});
+
+
 
 app.post('/edit/project/', AuthenteCheck.ensureAuthenticated, function(req, res){
 
 	var projectId = req.query.id
-	 var userDetails = req.user;
+	var userDetails = req.user;
 
-	 if(projectId != null){
-		  var myquery = { _id: projectId };
-		  var newvalues = {
-		  	title: req.body.project_name,
-   			projectManager: req.body.projectManager,
-   			project : {
-		        "status" : "Green",
-		        "startDate" : req.body.startDate,
-		        "endDate" : req.body.endDate
-		    },
-   		};
-		  foldersModel.updateFolder(myquery, newvalues, function(err, data){
+	if(projectId != null){
+		var myquery = { _id: projectId };
+		var newvalues = {
+			title: req.body.project_name,
+			projectManager: req.body.projectManager,
+			buildingManager: req.body.BuildingManager,
+			clientprojectManager: req.body.clientManager,
+			clientlaunchManager: req.body.clientlaunchManager,
+			uiManager: req.body.UIManager,
+			securityManager: req.body.securityManager,
+			securityintegratorManager: req.body.securityintegratorManager,
+			conceirageManager: req.body.conciegeManager,
+			communicationManager: req.body.communicationManager,
+			eventsManager: req.body.eventsManager,
+			facilityManager: req.body.facilityManager,
+			foodandbeverageManager: req.body.fandbManager
+
+		};
+		foldersModel.updateFolder(myquery, newvalues, function(err, data){
 		  	//console.log(data);			
-		 });
+		  });
 	}
 
 	res.redirect('/edit/project/?id='+projectId);
 
 
-	});
+});
 
 
 
@@ -488,15 +686,15 @@ app.get('/tasks', AuthenteCheck.ensureAuthenticated, function(req, res){
  tasks.getalltasks(function(taskserr, tasksContents){ //Get/Fetch Tasks
  	foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
  		userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
-			functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-			 	functions.folderDashboardContent(moment, (foldersContents), (tasksContents), (contactsContents)).then((folderDashboardData)=>{
-			 		functions.taskGanntChart(moment, (tasksContents),null, (contactsContents), (foldersContents)).then((tasksGanttChartContents)=>{
-			 		 	res.render('theme/tasks', {
-		 						  layout: 'layout2',
-								  'tasks': tasksContents, 
-								  'tasksGanttChartContents': JSON.stringify(tasksGanttChartContents),
-								  'folders': foldersContents,
-								  'folderDashboardData': folderDashboardData, 
+ 			functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+ 				functions.folderDashboardContent(moment, (foldersContents), (tasksContents), (contactsContents)).then((folderDashboardData)=>{
+ 					functions.taskGanntChart(moment, (tasksContents),null, (contactsContents), (foldersContents)).then((tasksGanttChartContents)=>{
+ 						res.render('theme/tasks', {
+ 							layout: 'layout2',
+ 							'tasks': tasksContents, 
+ 							'tasksGanttChartContents': JSON.stringify(tasksGanttChartContents),
+ 							'folders': foldersContents,
+ 							'folderDashboardData': folderDashboardData, 
 								  //'foldersHeiraricalData': foldersHeiraricalData[0],
 								  'foldermenu':  foldersHeiraricalData,
 								  'workflows': workflowsContents,
@@ -509,10 +707,10 @@ app.get('/tasks', AuthenteCheck.ensureAuthenticated, function(req, res){
 								  //'timelogs':timelogsContents,
 								  //'attachments':attachmentsContents,
 								  'userDetails': userDetails
-						});
-		 			});
-		 		});
-	 		});
+								});
+ 					});
+ 				});
+ 			});
 		}); // End Fetching Contacts
 	 }); // End Fetching folders
   }); // End Fetching tasks
@@ -524,10 +722,9 @@ app.get('/settings', AuthenteCheck.ensureAuthenticated, function(req, res){
 	// var contactsContents = fs.readFileSync("data/contacts.json");
  	//var foldersContents = fs.readFileSync("data/folders.json");
  	var userDetails = req.user;
-
  	foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
-	 	functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-	 		mail_settings.get_mail_settings(function(err, mailSettingsData){
+ 		functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+ 			mail_settings.get_mail_settings(function(err, mailSettingsData){
 	 			//console.log(mailSettingsData);
 
 	 			var day_of_week_arr = {
@@ -544,96 +741,96 @@ app.get('/settings', AuthenteCheck.ensureAuthenticated, function(req, res){
 	 				day_of_week_dropdown += '<option value="1" ';
 	 				if(mailSettingsData.day_of_week){
 	 					if(mailSettingsData.day_of_week==index){ day_of_week_dropdown += "selected"}
-		 			}
-		 			day_of_week_dropdown += '>'+day_of_week_arr[index]+'</option>';
+	 				}
+	 			day_of_week_dropdown += '>'+day_of_week_arr[index]+'</option>';
+	 		}
+
+	 		var hour_of_day_dropdown = '';
+	 		for($i=0; $i<=24;$i++){
+	 			hour_of_day_dropdown += '<option value="1" ';
+	 			if(mailSettingsData.hour_of_day){
+	 				if(mailSettingsData.hour_of_day==$i){ hour_of_day_dropdown += "selected"}
 	 			}
-
-	 			var hour_of_day_dropdown = '';
-	 			for($i=0; $i<=24;$i++){
-	 				hour_of_day_dropdown += '<option value="1" ';
-	 				if(mailSettingsData.hour_of_day){
-		 				if(mailSettingsData.hour_of_day==$i){ hour_of_day_dropdown += "selected"}
-		 			}
-		 			hour_of_day_dropdown += '>'+$i+'</option>';
-	 			}
+	 		hour_of_day_dropdown += '>'+$i+'</option>';
+	 	}
 
 
-				res.render('theme/settings', {
-					layout: 'layout2',
-					'foldermenu':  foldersHeiraricalData,
-					'mailSettingsData': mailSettingsData,
-					'userDetails': userDetails,
-					'day_of_week_dropdown': day_of_week_dropdown,
-					'hour_of_day_dropdown': hour_of_day_dropdown
-				});
+	 	res.render('theme/settings', {
+	 		layout: 'layout2',
+	 		'foldermenu':  foldersHeiraricalData,
+	 		'mailSettingsData': mailSettingsData,
+	 		'userDetails': userDetails,
+	 		'day_of_week_dropdown': day_of_week_dropdown,
+	 		'hour_of_day_dropdown': hour_of_day_dropdown
+	 	});
 
-			});
-		});
+	 });
+ 		});
 	 }); // End Fetching folders
-})
+ })
 
 app.post('/settings', AuthenteCheck.ensureAuthenticated, function(req, res){
-		var from_email = req.body.from_email;
-		var day_of_week = req.body.day_of_week;
-		var hour_of_day = req.body.hour_of_day;
-		var minute_of_hour = req.body.minute_of_hour;
-		
-		var mailSettings = new mail_settings({
-			from_email: from_email,
-			day_of_week:day_of_week,
-			hour_of_day: hour_of_day,
-			minute_of_hour: minute_of_hour
-		});
+	var from_email = req.body.from_email;
+	var day_of_week = req.body.day_of_week;
+	var hour_of_day = req.body.hour_of_day;
+	var minute_of_hour = req.body.minute_of_hour;
 
-		mailSettings.save(function(err) {
+	var mailSettings = new mail_settings({
+		from_email: from_email,
+		day_of_week:day_of_week,
+		hour_of_day: hour_of_day,
+		minute_of_hour: minute_of_hour
+	});
+
+	mailSettings.save(function(err) {
 	       //console.log('mail settings saved')
-	    });
+	   });
 
-		req.flash('success_msg', 'Settings Successfully Saved');
+	req.flash('success_msg', 'Settings Successfully Saved');
 
-		res.redirect('/settings');
+	res.redirect('/settings');
 });
 
 app.get('/task', AuthenteCheck.ensureAuthenticated, function(req, res){
 	var taskID = req.query.id;
 
- 	var userDetails = req.user;
+	var userDetails = req.user;
  	tasks.getalltasks(function(taskserr, tasksContents){ //Get/Fetch Tasks
 
 	tasks.gettaskbyId(taskID, function(taskserr, taskdetails){ //Get/Fetch Tasks
 		foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
 	 		userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
-				functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-					question_answer.getQuestionAnswers(taskID, function(err, QuestionAnswersData){ 
-						roles.getallroles(function(roleErr, rolesDetails){
+	 			functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+	 				question_answer.getQuestionAnswers(taskID, function(err, QuestionAnswersData){ 
+	 					roles.getallroles(function(roleErr, rolesDetails){
 
-							if(taskdetails){
-								taskStatusOptions = '<option value="">Select</option>\
-										              <option value="Active"';
-								if(taskdetails.status=="Active"){
-										taskStatusOptions += 'selected';
-					            }
-								taskStatusOptions += '>In Progress</option>\
-													<option value="Upcoming"';
-								if(taskdetails.status=="Upcoming"){
-										taskStatusOptions += 'selected';
-					            }
-								taskStatusOptions += '>Upcoming</option>\
-										              <option value="Completed"';
-								if(taskdetails.status=="Completed"){
-										taskStatusOptions += 'selected';
-					            }
-								taskStatusOptions += '>Completed</option>';
+	 						if(taskdetails){
+	 							taskStatusOptions = '<option value="">Select</option>\
+	 							<option value="Active"';
+	 							if(taskdetails.status=="Active"){
+	 								taskStatusOptions += 'selected';
+	 							}
+	 							taskStatusOptions += '>In Progress</option>\
+	 							<option value="Upcoming"';
+	 							if(taskdetails.status=="Upcoming"){
+	 								taskStatusOptions += 'selected';
+	 							}
+	 							taskStatusOptions += '>Upcoming</option>\
+	 							<option value="Completed"';
+	 							if(taskdetails.status=="Completed"){
+	 								taskStatusOptions += 'selected';
+	 							}
+	 							taskStatusOptions += '>Completed</option>';
 
 
 
-								var attachents = '';
-								if(taskdetails['attachents'] != '' && taskdetails['attachents']){
-									attachents = JSON.parse(taskdetails['attachents']);
-								}
-							
-							
-							
+	 							var attachents = '';
+	 							if(taskdetails['attachents'] != '' && taskdetails['attachents']){
+	 								attachents = JSON.parse(taskdetails['attachents']);
+	 							}
+
+
+
 							////console.log(taskdetails['attachents'], typeof(attachents), attachents.title)
 							
 							contactsDropdownHTML = '<option value="">Select</option>';
@@ -659,7 +856,7 @@ app.get('/task', AuthenteCheck.ensureAuthenticated, function(req, res){
 								//}								
 								dependenciesDropdownHtml += '>'+tasksContents[item]['title']+'</option>';
 							}
-							}
+						}
 
 							//console.log(taskdetails);
 
@@ -678,13 +875,13 @@ app.get('/task', AuthenteCheck.ensureAuthenticated, function(req, res){
 								'attachents': attachents,
 							});
 						});	
-					});					
-				});
+	 				});					
+	 			});
 			}); // End Fetching Contacts
 	    }); // End Fetching folders
 	}); // End Fetching tasks
-	});
 });
+ });
 
 app.post('/task/update', AuthenteCheck.ensureAuthenticated, function(req, res){
 	var taskId = req.body.taskId;
@@ -713,37 +910,37 @@ app.post('/task/update', AuthenteCheck.ensureAuthenticated, function(req, res){
 
 
 	tasks.findOneAndUpdate({_id: taskId}, taskentrydata, function(err, taskentrydata) {
-	  
-	  tasks.findOne({dependencyIds: taskId}, function(err, dependecydata) {
+
+		tasks.findOne({dependencyIds: taskId}, function(err, dependecydata) {
 	  	//console.log('dependecydata',dependecydata);
 	  	if(dependecydata != null){
-		  	if(req.body.startDate){
-				dependecydata['dates'] = {
-					'type': 'Planned',
-					'start': req.body.due,
-					'due': dependecydata['dates']['due']
-				}
-				tasks.findOneAndUpdate({_id: dependecydata['_id']}, dependecydata, function(err, dependencyUpdatesdata) {
+	  		if(req.body.startDate){
+	  			dependecydata['dates'] = {
+	  				'type': 'Planned',
+	  				'start': req.body.due,
+	  				'due': dependecydata['dates']['due']
+	  			}
+	  			tasks.findOneAndUpdate({_id: dependecydata['_id']}, dependecydata, function(err, dependencyUpdatesdata) {
 					//console.log("Task Updated");
-		  			res.redirect('/task/?id='+taskId);
+					res.redirect('/task/?id='+taskId);
 				});
-			}else{
+	  		}else{
 				//console.log("Task Updated");
-		  		res.redirect('/task/?id='+taskId);
+				res.redirect('/task/?id='+taskId);
 			}
 		}else{
 				//console.log("Task Updated");
-		  		res.redirect('/task/?id='+taskId);
+				res.redirect('/task/?id='+taskId);
 			}
 
-	  });
+		});
 
 	});
 });
 
 app.get('/task/delete', AuthenteCheck.ensureAuthenticated, function(req, res){
 	var taskID = req.query.id;
- 	var userDetails = req.user;
+	var userDetails = req.user;
 	tasks.deletetask(taskID, function(taskserr, taskdetails){ //Get/Fetch Tasks
 		//question_answers.handlebars
 		res.redirect('/');
@@ -757,28 +954,28 @@ app.get('/task/answer', function(req, res){
 	var username = req.query.user;
 	var taskId = req.query.taskId;
 	//console.log(username);
-	 	var userDetails = req.user
+	var userDetails = req.user
 	 	foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
 		 		userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
-					functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+		 			functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
 						question_answer.getQuestionbyId(questionID, function(questionserr, questiondetails){ //Get/Fetch Tasks
 							//console.log(questiondetails);
 							res.render('theme/question_answers', {
-													layout: 'layout2',
-													'taskId': taskId,
-													'questionID': questionID,
-													'questiondetails': questiondetails,
-													'contacts':  contactsContents,
-													'foldermenu':  foldersHeiraricalData,
-													'userDetails': userDetails
-												});
+								layout: 'layout2',
+								'taskId': taskId,
+								'questionID': questionID,
+								'questiondetails': questiondetails,
+								'contacts':  contactsContents,
+								'foldermenu':  foldersHeiraricalData,
+								'userDetails': userDetails
+							});
 							//res.send('success');
 							//res.redirect('/');
 						}); // End Fetching tasks
 					}); // End Fetching Contacts
 		    }); // End Fetching folders
 		}); // End Fetching tasks
-});
+	 });
 
 
 app.post('/task/createquestions', AuthenteCheck.ensureAuthenticated,  function(req, res){
@@ -798,17 +995,17 @@ app.post('/task/createquestions', AuthenteCheck.ensureAuthenticated,  function(r
        if(req.body.answer==''){
 		//send Mail if answer is empty
 		mail_settings.get_mail_settings(function(err, mailSettingsData){
-		 var from_email = mailSettingsData.from_email;
-		 res.render('theme/email/questionAnswers', {
-				 						  layout: 'layout2',
-										  'question': req.body.question, 
-										  'answerLink': answerLink,
-										  'taskLink': taskLink
-										  },  function(err, list){
+			var from_email = mailSettingsData.from_email;
+			res.render('theme/email/questionAnswers', {
+				layout: 'layout2',
+				'question': req.body.question, 
+				'answerLink': answerLink,
+				'taskLink': taskLink
+			},  function(err, list){
 											  ////console.log(list);							
 											  const sgMail = require('@sendgrid/mail');
-										      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-										      const msg = {
+											  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+											  const msg = {
 										        //to: userDetails.email,
 										        to: 'aswing@accesselevate.com',
 										        //to: 'dinesh829269@gmail.com',
@@ -819,15 +1016,15 @@ app.post('/task/createquestions', AuthenteCheck.ensureAuthenticated,  function(r
 										        subject: 'Elevate: Question- 1 Main Street',
 										        text: 'Elevate: Answer the Questions.\n',
 										        html: list
-										      };
-										      emailResponse = sgMail.send(msg); 
-										      res.redirect('/task/?id='+req.body.taskId);
-											});
-			});
-		}else{
-			res.redirect('/task/?id='+req.body.taskId);
-		}
-    });
+										    };
+										    emailResponse = sgMail.send(msg); 
+										    res.redirect('/task/?id='+req.body.taskId);
+										});
+		});
+	}else{
+		res.redirect('/task/?id='+req.body.taskId);
+	}
+});
 });
 
 
@@ -849,35 +1046,35 @@ app.post('/task/updatequestions',  function(req, res){
 
 app.get('/workflows', AuthenteCheck.ensureAuthenticated, function(req, res){
 	var taskID = req.query.id;
- 	
+
 	var tasksContents = fs.readFileSync("data/tasks.json");
 	var contactsContents = fs.readFileSync("data/contacts.json");
- 	var foldersContents = fs.readFileSync("data/folders.json");
- 	var userDetails = req.user;
+	var foldersContents = fs.readFileSync("data/folders.json");
+	var userDetails = req.user;
     /*tasks.getalltasks(function(taskserr, tasksContents){ //Get/Fetch Tasks
 		foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
 			contacts.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts*/
 				functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-						res.render('theme/taskdetails', {
-							layout: 'layout2',
-							'tasks':  tasksContents,
-							'taskID': taskID,
-							'contacts':  contactsContents,
-							'foldermenu':  foldersHeiraricalData,
-							'userDetails': userDetails
-						});
+					res.render('theme/taskdetails', {
+						layout: 'layout2',
+						'tasks':  tasksContents,
+						'taskID': taskID,
+						'contacts':  contactsContents,
+						'foldermenu':  foldersHeiraricalData,
+						'userDetails': userDetails
+					});
 				});
 			/*}); // End Fetching Contacts
 		}); // End Fetching folders
-    }); // End Fetching tasks*/
+	}); // End Fetching tasks*/
 });
 
 app.get('/contacts', AuthenteCheck.ensureAuthenticated, function(req, res){
 	var userDetails = req.user;
- 	foldersModel.getfolders(function(folderserr, foldersContents){
-    	userModel.getAllUser(function(contactserr, userdata){
+	foldersModel.getfolders(function(folderserr, foldersContents){
+		userModel.getAllUser(function(contactserr, userdata){
 			functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-		 		functions.getcontacts(userdata).then((contactsHTML)=>{
+				functions.getcontacts(userdata).then((contactsHTML)=>{
 					res.render('theme/contacts', {
 						layout: 'layout2',
 						//'contacts':  contactsContents['contactdata'],
@@ -898,74 +1095,74 @@ app.get('/kanban', AuthenteCheck.ensureAuthenticated, function(req, res){
 	var kanbanHTML = '';
 	foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
 	 	userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
-		 	functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+	 		functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
 				//res.render('partials/sidebar',{'foldermenu':  foldersHeiraricalData,}, function (err, sidebardata){
 					//kanbanHTML += sidebardata;
 					sidebarHtml = '<div class="left_col_db sd_t">\
-							          <div class="left_col scroll-view">\
-							         <div class="navbar nav_title" style="border: 0;">\
-							              <a href="/" class="site_title">\
-							                <img src="../build/images/logo_elevate_main.png" style="float: left;width: 255px;padding-top:4px"/>\
-							              </a>\
-							            </div>\
-							            <div class="clearfix"></div>\
-							            <!-- menu profile quick info -->\
-							            <div class="profile clearfix">\
-							              <div class="profile_pic">\
-							                <img src="https://www.wrike.com/avatars//4A/F9/Box_ff3f9d3f_70-78_v1.png" alt="..." class="img-circle profile_img">\
-							              </div>\
-							              <div class="profile_info">\
-							                <span>Welcome, </span>\
-							                <h2>'+ userDetails.name +'</h2>\
-							              </div>\
-							            </div>\
-							            <!-- /menu profile quick info -->\
-							            <br />\
-							            <!-- sidebar menu -->\
-							            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">\
-							              <div class="menu_section">\
-							              <ul class="nav side-menu">\
-							                  <li><a><i class="fa fa-sitemap"></i>Folders</a>\
-							                    <div id="root"></div>'+ foldersHeiraricalData +'\
-							                  </li>\
-							                </ul>\
-							                <h3>General</h3>\
-							                <ul class="nav side-menu">\
-							                  <li><a href="/tasks" ><i class="fa fa-tasks"></i>Tasks</a><li>\
-							                  <li><a href="/projects" ><i class="fa fa-briefcase"></i>Projects</a><li>\
-							                  <li><a href="/gantt-chart" ><i class="fa fa-briefcase"></i>Gantt Chart</a><li>\
-							                  <li><a href="/workflows" ><i class=" fa fa-cogs"></i>Workflows</a><li>\
-							                  <li><a href="/contacts"><i class="fa fa-users"></i>Users</a><li>\
-							                  <li><a href="/profile"><i class="fa fa-user"></i>Me</a><li>\
-							                </ul>\
-							              </div>\
-							            </div>\
-							            <!-- /sidebar menu -->\
-							            <!-- /menu footer buttons -->\
-							            <div class="sidebar-footer hidden-small">\
-							              <a data-toggle="tooltip" data-placement="top" title="Settings">\
-							                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>\
-							              </a>\
-							              <a data-toggle="tooltip" data-placement="top" title="FullScreen">\
-							                <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>\
-							              </a>\
-							              <a data-toggle="tooltip" data-placement="top" title="Lock">\
-							                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>\
-							              </a>\
-							              <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">\
-							                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>\
-							              </a>\
-							            </div>\
-							            <!-- /menu footer buttons -->\
-							          </div>\
-							         </div>';
+					<div class="left_col scroll-view">\
+					<div class="navbar nav_title" style="border: 0;">\
+					<a href="/" class="site_title">\
+					<img src="../build/images/logo_elevate_main.png" style="float: left;width: 255px;padding-top:4px"/>\
+					</a>\
+					</div>\
+					<div class="clearfix"></div>\
+					<!-- menu profile quick info -->\
+					<div class="profile clearfix">\
+					<div class="profile_pic">\
+					<img src="https://www.wrike.com/avatars//4A/F9/Box_ff3f9d3f_70-78_v1.png" alt="..." class="img-circle profile_img">\
+					</div>\
+					<div class="profile_info">\
+					<span>Welcome, </span>\
+					<h2>'+ userDetails.name +'</h2>\
+					</div>\
+					</div>\
+					<!-- /menu profile quick info -->\
+					<br />\
+					<!-- sidebar menu -->\
+					<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">\
+					<div class="menu_section">\
+					<ul class="nav side-menu">\
+					<li><a><i class="fa fa-sitemap"></i>Folders</a>\
+					<div id="root"></div>'+ foldersHeiraricalData +'\
+					</li>\
+					</ul>\
+					<h3>General</h3>\
+					<ul class="nav side-menu">\
+					<li><a href="/tasks" ><i class="fa fa-tasks"></i>Tasks</a><li>\
+					<li><a href="/projects" ><i class="fa fa-briefcase"></i>Projects</a><li>\
+					<li><a href="/gantt-chart" ><i class="fa fa-briefcase"></i>Gantt Chart</a><li>\
+					<li><a href="/workflows" ><i class=" fa fa-cogs"></i>Workflows</a><li>\
+					<li><a href="/contacts"><i class="fa fa-users"></i>Users</a><li>\
+					<li><a href="/profile"><i class="fa fa-user"></i>Me</a><li>\
+					</ul>\
+					</div>\
+					</div>\
+					<!-- /sidebar menu -->\
+					<!-- /menu footer buttons -->\
+					<div class="sidebar-footer hidden-small">\
+					<a data-toggle="tooltip" data-placement="top" title="Settings">\
+					<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>\
+					</a>\
+					<a data-toggle="tooltip" data-placement="top" title="FullScreen">\
+					<span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>\
+					</a>\
+					<a data-toggle="tooltip" data-placement="top" title="Lock">\
+					<span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>\
+					</a>\
+					<a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">\
+					<span class="glyphicon glyphicon-off" aria-hidden="true"></span>\
+					</a>\
+					</div>\
+					<!-- /menu footer buttons -->\
+					</div>\
+					</div>';
 
 					fs.readFile('views/theme/kanban.html',function (err, data){
 						res.writeHead(200, {'Content-Type': 'text/html','Content-Length':data.length});
 						kanbanHTML += data;
-				        res.write(kanbanHTML);
-				        res.end();
-				    });
+						res.write(kanbanHTML);
+						res.end();
+					});
 				//});
 			});
 		}); // End Fetching Contacts
@@ -980,65 +1177,65 @@ app.get('/kanban', AuthenteCheck.ensureAuthenticated, function(req, res){
 app.get('/emailDashboard', function(req, res){
 
 	mail_settings.get_mail_settings(function(err, mailSettingsData){
-	 var from_email = mailSettingsData.from_email;
-	 
+		var from_email = mailSettingsData.from_email;
+
  	foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
  		userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
  			functions.getProjects(moment, (foldersContents), (contactsContents)).then((projectsData)=>{
-			 	$projectsDataloop = 0;
-			 	async.forEachSeries(projectsData['foldersArr'], function(value, callback){
-			 		$projectsDataloop++;
-			 		var item = projectsData['foldersArr'].indexOf(value);
-			 		projectId  = value['_id'];
-			 		tasksContents = [];
-			 		tasksContentData = [];
-			 		MilestonesTableContent = [];
+ 				$projectsDataloop = 0;
+ 				async.forEachSeries(projectsData['foldersArr'], function(value, callback){
+ 					$projectsDataloop++;
+ 					var item = projectsData['foldersArr'].indexOf(value);
+ 					projectId  = value['_id'];
+ 					tasksContents = [];
+ 					tasksContentData = [];
+ 					MilestonesTableContent = [];
 			 		tasks.getTasksByProject(projectId, function(taskserr, tasksContents){ //Get/Fetch Tasks
-						functions.tasksEmailContent(moment, foldersContents, tasksContents, contactsContents).then((tasksContentData)=>{
+			 			functions.tasksEmailContent(moment, foldersContents, tasksContents, contactsContents).then((tasksContentData)=>{
 					 	    //console.log("====", projectsData['foldersArr'][item]['_id'], tasksContents);					 	
-						 	functions.buildMilestonesEmailTable(moment, (foldersContents), (tasksContents), (contactsContents), value['_id']).then((MilestonesTableContent)=>{
-						 		console.log('milestone finishpro');
-						 		var dueDate = moment(value['project']['endDate'],'YYYY-MM-DDTHH:mm:ssZ');
-	    						var daysLeft = dueDate.diff(moment(), 'days');
-	    						var launchDate = dueDate.format('DD MMM, YYYY');
-		    					if (daysLeft<0){
-		    						daysLeftText = "overdue "+daysLeft+" days"
-		    					}else{
-		    						daysLeftText = daysLeft
-		    					}
-		    					if(value['projectManager']){
-		    						console.log("Line 1010, ", value['projectManager']);
-		    						if(value['projectManager']['firstname'] != "undefined"){
-		    							var projectManager = value['projectManager']['firstname']+' '+value['projectManager']['lastname'];
-			    						var projectManagerEmail = value['projectManager']['email'];
-			    					}else if(value['projectManager']['name']){
-			    						var projectManager = value['projectManager']['name'];
-			    						var projectManagerEmail = value['projectManager']['email'];
-			    					}else{
-			    						var projectManager = value['user'][0]['firstname']+' '+value['user'][0]['lastname'];
-			    						var projectManagerEmail = value['user'][0]['email'];
-			    					}
-									
-						 		}else{
-			    					var projectManager = value['user'][0]['firstname']+' '+value['user'][0]['lastname'];
-			    					var projectManagerEmail = value['user'][0]['email'];
-						 		}
-		    					console.log("projectManagerEmail", projectManagerEmail);
-						 		res.render('theme/email/dashboard', {
-					 						  layout: 'layout2',
-											  'tasks': tasksContentData, 
-											  'MilestonesTableContent': MilestonesTableContent,
-											  'project': value['title'],
-											  'daysLeft': daysLeft,
-											  'launchDate': launchDate,
-											  'projectManager': projectManager,
-											  'projectManagerEmail': projectManagerEmail
+					 	    functions.buildMilestonesEmailTable(moment, (foldersContents), (tasksContents), (contactsContents), value['_id']).then((MilestonesTableContent)=>{
+					 	    	console.log('milestone finishpro');
+					 	    	var dueDate = moment(value['project']['endDate'],'YYYY-MM-DDTHH:mm:ssZ');
+					 	    	var daysLeft = dueDate.diff(moment(), 'days');
+					 	    	var launchDate = dueDate.format('DD MMM, YYYY');
+					 	    	if (daysLeft<0){
+					 	    		daysLeftText = "overdue "+daysLeft+" days"
+					 	    	}else{
+					 	    		daysLeftText = daysLeft
+					 	    	}
+					 	    	if(value['projectManager']){
+					 	    		console.log("Line 1010, ", value['projectManager']);
+					 	    		if(value['projectManager']['firstname'] != "undefined"){
+					 	    			var projectManager = value['projectManager']['firstname']+' '+value['projectManager']['lastname'];
+					 	    			var projectManagerEmail = value['projectManager']['email'];
+					 	    		}else if(value['projectManager']['name']){
+					 	    			var projectManager = value['projectManager']['name'];
+					 	    			var projectManagerEmail = value['projectManager']['email'];
+					 	    		}else{
+					 	    			var projectManager = value['user'][0]['firstname']+' '+value['user'][0]['lastname'];
+					 	    			var projectManagerEmail = value['user'][0]['email'];
+					 	    		}
 
-											  },  
-											  function(err, list){
+					 	    	}else{
+					 	    		var projectManager = value['user'][0]['firstname']+' '+value['user'][0]['lastname'];
+					 	    		var projectManagerEmail = value['user'][0]['email'];
+					 	    	}
+					 	    	console.log("projectManagerEmail", projectManagerEmail);
+					 	    	res.render('theme/email/dashboard', {
+					 	    		layout: 'layout2',
+					 	    		'tasks': tasksContentData, 
+					 	    		'MilestonesTableContent': MilestonesTableContent,
+					 	    		'project': value['title'],
+					 	    		'daysLeft': daysLeft,
+					 	    		'launchDate': launchDate,
+					 	    		'projectManager': projectManager,
+					 	    		'projectManagerEmail': projectManagerEmail
+
+					 	    	},  
+					 	    	function(err, list){
 												////console.log(list);							
 												const sgMail = require('@sendgrid/mail');
-											      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+												sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 											      //console.log(process.env.SENDGRID_API_KEY);
 											      const msg = {
 											        //to: projectManagerEmail,
@@ -1051,28 +1248,28 @@ app.get('/emailDashboard', function(req, res){
 											        subject: 'Elevate Weekly Dashboard: '+ value['title']+' , '+moment().format('DD MMM, YYYY'),
 											        text: 'Elevate Weekly Dashboard: '+ value['title']+' , '+moment().format('DD MMM, YYYY')+'.\n',
 											        html: list
-											      };
-											      emailResponse = sgMail.send(msg); 
-											     console.log($projectsDataloop, projectsData['foldersArr'].length, emailResponse)
-											     if($projectsDataloop == projectsData['foldersArr'].length){
-											     	res.send('list')
-											     }
-											     callback()											      
+											    };
+											    emailResponse = sgMail.send(msg); 
+											    console.log($projectsDataloop, projectsData['foldersArr'].length, emailResponse)
+											    if($projectsDataloop == projectsData['foldersArr'].length){
+											    	res.send('list')
+											    }
+											    callback()											      
 											});
-						 			});
-						 		});
+					 	    });
+					 	});
 
-				 			});						 	
-						 });
-						 
-						 
-					 
-				});
-	 		});
-	 	});
-	});
+			 		});						 	
+			 	});
+
+
+
+ 			});
+ 		});
 });
-	
+});
+});
+
 
 
 /**
@@ -1080,46 +1277,46 @@ app.get('/emailDashboard', function(req, res){
 */
 app.get('/taskReminder', function(req, res){
 	mail_settings.get_mail_settings(function(err, mailSettingsData){
-	 var from_email = mailSettingsData.from_email;
+		var from_email = mailSettingsData.from_email;
 	 tasks.getalltasks(function(taskserr, tasksContents){ //Get/Fetch Tasks
 	 	foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
 	 		userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
 	 			functions.tasksEmailContent(moment, foldersContents, tasksContents, contactsContents).then((tasksContentData)=>{
-				 	functions.getProjects(moment, (foldersContents), (contactsContents)).then((projectsData)=>{
-					 	for(var item in projectsData['foldersArr']){
+	 				functions.getProjects(moment, (foldersContents), (contactsContents)).then((projectsData)=>{
+	 					for(var item in projectsData['foldersArr']){
 					 		////console.log("====", projectsData['foldersArr'][item], tasksContents);					 	
-						 	functions.taskReminderEmailTable(moment, tasksContents, (contactsContents['contactdata'])).then((taskReminderTableContent)=>{
-						 		var dueDate = moment(projectsData['foldersArr'][item]['project']['endDate'],'YYYY-MM-DDTHH:mm:ssZ');
-	    						var daysLeft = dueDate.diff(moment(), 'days');
-	    						var launchDate = dueDate.format('DD MMM, YYYY');
-		    					if (daysLeft<0){
-		    						daysLeftText = "overdue "+daysLeft+" days"
-		    					}else{
-		    						daysLeftText = daysLeft
-		    					}
-		    					if(projectsData['foldersArr'][item]['projectManager']){
-									var projectManager = projectsData['foldersArr'][item]['projectManager']['firstname']+' '+projectsData['foldersArr'][item]['projectManager']['lastname'];
-			    					var projectManagerEmail = projectsData['foldersArr'][item]['projectManager']['profiles'][0]['email'];
-						 		}else{
-			    					var projectManager = projectsData['foldersArr'][item]['user'][0]['firstname']+' '+projectsData['foldersArr'][item]['user'][0]['lastname'];
-			    					var projectManagerEmail = projectsData['foldersArr'][item]['user'][0]['email'];
-						 		}
+					 		functions.taskReminderEmailTable(moment, tasksContents, (contactsContents['contactdata'])).then((taskReminderTableContent)=>{
+					 			var dueDate = moment(projectsData['foldersArr'][item]['project']['endDate'],'YYYY-MM-DDTHH:mm:ssZ');
+					 			var daysLeft = dueDate.diff(moment(), 'days');
+					 			var launchDate = dueDate.format('DD MMM, YYYY');
+					 			if (daysLeft<0){
+					 				daysLeftText = "overdue "+daysLeft+" days"
+					 			}else{
+					 				daysLeftText = daysLeft
+					 			}
+					 			if(projectsData['foldersArr'][item]['projectManager']){
+					 				var projectManager = projectsData['foldersArr'][item]['projectManager']['firstname']+' '+projectsData['foldersArr'][item]['projectManager']['lastname'];
+					 				var projectManagerEmail = projectsData['foldersArr'][item]['projectManager']['profiles'][0]['email'];
+					 			}else{
+					 				var projectManager = projectsData['foldersArr'][item]['user'][0]['firstname']+' '+projectsData['foldersArr'][item]['user'][0]['lastname'];
+					 				var projectManagerEmail = projectsData['foldersArr'][item]['user'][0]['email'];
+					 			}
 		    					//console.log("projectManagerEmail", projectManagerEmail);
-						 		res.render('theme/email/task_reminder', {
-					 						  layout: 'layout2',
-											  'tasks': tasksContentData, 
-											  'taskReminderTableContent': taskReminderTableContent,
-											  'project': projectsData['foldersArr'][item]['title'],
-											  'daysLeft': daysLeft,
-											  'launchDate': launchDate,
-											  'projectManager': projectManager,
-											  'projectManagerEmail': projectManagerEmail
+		    					res.render('theme/email/task_reminder', {
+		    						layout: 'layout2',
+		    						'tasks': tasksContentData, 
+		    						'taskReminderTableContent': taskReminderTableContent,
+		    						'project': projectsData['foldersArr'][item]['title'],
+		    						'daysLeft': daysLeft,
+		    						'launchDate': launchDate,
+		    						'projectManager': projectManager,
+		    						'projectManagerEmail': projectManagerEmail
 
-											  },  
-											  function(err, list){
+		    					},  
+		    					function(err, list){
 												////console.log(list);							
 												const sgMail = require('@sendgrid/mail');
-											      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+												sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 											      //console.log(process.env.SENDGRID_API_KEY);
 											      const msg = {
 											        //to: projectManagerEmail,
@@ -1132,22 +1329,22 @@ app.get('/taskReminder', function(req, res){
 											        subject: 'Elevate Task Reminder: '+ projectsData['foldersArr'][item]['title']+' , '+moment().format('DD MMM, YYYY'),
 											        text: 'Elevate Task Reminder: '+ projectsData['foldersArr'][item]['title']+' , '+moment().format('DD MMM, YYYY')+'.\n',
 											        html: list
-											      };
-											      emailResponse = sgMail.send(msg); 
+											    };
+											    emailResponse = sgMail.send(msg); 
 											      ////console.log(emailResponse)											      
-											});
-						 		});						 	
-						 }
-						 res.send('list')
+											  });
+		    				});						 	
+					 	}
+					 	res.send('list')
 					 });
 
-				 	});
-				});
+	 			});
 	 		});
 	 	});
+	 });
 	});
 });
-	
+
 
 
 /**
@@ -1198,34 +1395,34 @@ app.get('/profile', AuthenteCheck.ensureAuthenticated, function(req, res){
 	userModel.getUserID(UserId, function(err, userDetails){//Get/Fetch folders
 		functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
 			res.render('theme/profile', {
-					layout: 'layout2',
-					'foldermenu':  foldersHeiraricalData,
-					'userDetails': userDetails,
-				});
+				layout: 'layout2',
+				'foldermenu':  foldersHeiraricalData,
+				'userDetails': userDetails,
 			});
 		});
 	});
-	});
+});
+});
 
 app.get('/charts', AuthenteCheck.ensureAuthenticated, function(req, res) {
-    res.render('theme/charts', {
+	res.render('theme/charts', {
 		layout: 'layout3'
 	});
 });
 
 app.get('/data/json/users.json', function(req, res) {
-    var usersData = fs.readFileSync("data/json/users.json");
-    res.send(usersData);
+	var usersData = fs.readFileSync("data/json/users.json");
+	res.send(usersData);
 });
 
 
 app.get('/data/json/tasks.json', function(req, res) {
-    var tasksData = fs.readFileSync("data/json/tasks.json");
-    res.send(tasksData);
+	var tasksData = fs.readFileSync("data/json/tasks.json");
+	res.send(tasksData);
 });
 
 app.get('/addcontacts', AuthenteCheck.ensureAuthenticated, function(req, res){
-        res.render('theme/contactregister');
+	res.render('theme/contactregister');
 
 
 });
@@ -1236,14 +1433,14 @@ app.get('/edit/updatecontact', AuthenteCheck.ensureAuthenticated, function(req, 
 	userModel.getUserID(UserId, function(err,alluserdetails){ //Get/Fetch folders
 		functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
 			res.render('theme/updatecontact', {
-					layout: 'layout2',
-					'foldermenu':  foldersHeiraricalData,
-					'alluserdetails': alluserdetails,
-				});
+				layout: 'layout2',
+				'foldermenu':  foldersHeiraricalData,
+				'alluserdetails': alluserdetails,
 			});
 		});
 	});
-	});
+});
+});
 
 app.post('/edit/updatecontact/', AuthenteCheck.ensureAuthenticated, function(req, res){
 	var userID = req.query.id;
@@ -1276,7 +1473,7 @@ app.post('/profile', AuthenteCheck.ensureAuthenticated, function(req, res){
 	var fname = req.body.firstname;
 	var lname = req.body.lastname;
 	var email = req.body.email;
-    var userDetails = req.user;
+	var userDetails = req.user;
 	var updateData = {
 		'firstname': fname,
 		'lastname': lname,
@@ -1290,12 +1487,12 @@ app.post('/profile', AuthenteCheck.ensureAuthenticated, function(req, res){
 
 app.get('/folderedit', AuthenteCheck.ensureAuthenticated, function(req, res){
 	var accountsContents = fs.readFileSync("data/accounts.json");
-	 var userDetails = req.user;
+	var userDetails = req.user;
 
 	 foldersModel.getfolders(function(folderserr, foldersContents){ //Get/Fetch folders
  		userModel.getcontacts(function(contactserr, contactsContents){ //Get/Fetch Contacts
-			 functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
-				 functions.getfolderdata(moment, (foldersContents), (contactsContents)).then((projectsData)=>{
+ 			functions.foldersHeierarcy((foldersContents)).then((foldersHeiraricalData)=>{
+ 				functions.getfolderdata(moment, (foldersContents), (contactsContents)).then((projectsData)=>{
 				 	//console.log(JSON.stringify(projectsData));
 				 	res.render('theme/allfolderdata', {
 				 		layout: 'layout2',
@@ -1305,13 +1502,15 @@ app.get('/folderedit', AuthenteCheck.ensureAuthenticated, function(req, res){
 						'accounts': accountsContents, 
 						'contacts': contactsContents, 
 						'userDetails': userDetails
-				 	})
+					})
 				 });
-			 });
+ 			});
 		}); // End Fetching Contacts
  	}); // End Fetching folders
 
-});
+	});
+
+
 // Set Port
 app.set('port', (process.env.PORT || 3000));
 
