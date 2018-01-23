@@ -29,8 +29,6 @@ var tasks = require('./models/tasks');
 var foldersModel = require('./models/folders');
 
 
-
-
 var accounts = require('./models/accounts');
 var workflows = require('./models/workflows');
 var invitations = require('./models/invitations');
@@ -222,7 +220,7 @@ app.get('/', user.can('dashboard'), function(req, res) {
 
 	tasks.getalltasks((taskserr, tasksContents) => {
 		foldersModel.getfolders((folderserr, foldersContents) => {
-			contacts.getcontacts((contactserr, contactsContents) => {
+			userModel.getcontacts((contactserr, contactsContents) => {
 				foldersModel.getprojects((projectserr, projectsContents) => {
 					Promise.all([
 						functions.foldersHeierarcy(foldersContents),
