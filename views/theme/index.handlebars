@@ -473,7 +473,7 @@
   const getMilestones = (projectId) => {
     if (projectId === 'all') {
       return projects.reduce((acc, project) => {
-        const milestones = tasks.filter(task => findProject(task.parentFolderIds)._id === project._id)
+        const milestones = tasks.filter(task => findProject(task.parentFolderIds)._id === project._id && task.dates && task.dates.type === 'Planned')
 
         return acc.concat(milestones)
       }, [])
@@ -687,6 +687,21 @@
       task.status
     ])
 
+    const filteredCompletedTasksAssignees = filteredCompletedTasks.reduce((acc, task) => {
+      const authorName = task.authorIds && task.authorIds[0] ? `${task.authorIds[0].firstname || ''} ${task.authorIds[0].lastname || ''}` : ''
+
+      if (acc[task.authorIds[0]]) {
+        acc[task.authorIds[0]].tasks += 1
+      } else {
+        acc[task.authorIds[0]] = {
+          name: authorName,
+          tasks: 1
+        }
+      }
+
+      return acc
+    }, {})
+
     const incompleteTasks = getActiveTasks(projectId)
 
     const plannedForProject = getPlannedTasks(projectId)
@@ -703,6 +718,21 @@
       task.authorIds && task.authorIds[0] ? `${task.authorIds[0].firstname || ''} ${task.authorIds[0].lastname || ''}` : '',
       task.status
     ])
+
+    const filteredOverdueTasksAssignees = filteredOverdueTasks.reduce((acc, task) => {
+      const authorName = task.authorIds && task.authorIds[0] ? `${task.authorIds[0].firstname || ''} ${task.authorIds[0].lastname || ''}` : ''
+
+      if (acc[task.authorIds[0]]) {
+        acc[task.authorIds[0]].tasks += 1
+      } else {
+        acc[task.authorIds[0]] = {
+          name: authorName,
+          tasks: 1
+        }
+      }
+
+      return acc
+    }, {})
 
     if (projectId !== 'all') {
       const selectedProject = projects.filter(project => project._id === projectId)
